@@ -13,14 +13,14 @@ export default function Home() {
             const response = await fetch(
                 process.env.NEXT_PUBLIC_BACKEND_URL + "auth/user/",
                 {
-                    headers: useToken ? { Authorization: "Bearer " + session?.access_token } : {},
+                    headers: useToken ? { Authorization: "Bearer " + session?.accessToken } : {},
                 }
             );
             const responseData = await response.json();
             if (response.ok) {
                 setResponse(JSON.stringify(responseData));
             } else {
-                setResponse("An error occurred.");
+                setResponse("An error occurred: " + `${response.status} ${response.statusText}`);
             }
         } catch (error) {
             if (error instanceof Error) {
