@@ -146,8 +146,8 @@ const callbacks = {
             );
             const responseData = await response.json();
             if (response.ok) {
-                token["access_token"] = responseData.access;
-                token["refresh_token"] = responseData.refresh;
+                token["accessToken"] = responseData.access;
+                token["refreshToken"] = responseData.refresh;
                 token["ref"] = getCurrentEpochTime() + BACKEND_ACCESS_TOKEN_LIFETIME;
             } else {
                 console.error('An error occured while refreshing tokens: ', response.statusText);
