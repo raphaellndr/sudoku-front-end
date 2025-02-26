@@ -28,14 +28,14 @@ const SIGN_IN_HANDLERS: SignInHandlers = {
         // Handled by authorize()
         return true;
     },
-    google: async (userAgent, MdAccountBalance, profile, email, credentials) => {
+    google: async (user, account, profile, email, credentials) => {
         try {
             const response = await fetch(
                 process.env.NEXTAUTH_BACKEND_URL + "auth/google/",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ access_token: account["id_token"] }),
+                    body: JSON.stringify({ access_token: account["access_token"] }),
                 }
             )
             const responseData = await response.json();
