@@ -1,25 +1,27 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./style.css";
-import { NextFont } from "next/dist/compiled/@next/font";
+"use client";
 
-const inter: NextFont = Inter({subsets: ["latin"]});
+import { Inter } from "next/font/google"
+import Provider from "../components/ui/provider"
+import { SessionProvider } from "next-auth/react"
 
-export const metadata: Metadata = {
-  title: "Sudoku solver",
-  description: "Sudoku solving app",
-};
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+})
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <main className="sudoku-container">{children}</main>
+    <html className={inter.className} suppressHydrationWarning>
+      <head />
+      <body>
+        <SessionProvider>
+          <Provider>{children}</Provider>
+        </SessionProvider>
       </body>
     </html>
-  );
+  )
 }
