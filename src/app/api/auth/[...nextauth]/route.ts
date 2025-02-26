@@ -5,6 +5,7 @@ import { NextAuthOptions, User, Account, Profile } from 'next-auth';
 import { JWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Provider } from "next-auth/providers/index";
+import GoogleProvider from "next-auth/providers/google";
 
 const BACKEND_ACCESS_TOKEN_LIFETIME: number = 45 * 60; // 45 minutes
 const BACKEND_REFRESH_TOKEN_LIFETIME: number = 6 * 24 * 60 * 60; // 6 days
@@ -24,8 +25,33 @@ type SignInHandlers = {
 // Used with social authentication
 const SIGN_IN_HANDLERS: SignInHandlers = {
     credentials: async (user, account, profile, email, credentials) => {
+        // Handled by authorize()
         return true;
     },
+    google: async (userAgent, MdAccountBalance, profile, email, credentials) => {
+        try {
+            const response = await fetch(
+                process.env.NEXTAUTH_BACKEND_URL + "auth/google/",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ access_token: account["id_token"] }),
+                }
+            )
+            const responseData = await response.json();
+            if (response.ok) {
+                account["meta"] = responseData;
+                return true;
+            } else {
+                console.error("Failed to authenticate with Google:", response.statusText);
+                console.error("Error details:", responseData);
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    }
 };
 const SIGN_IN_PROVIDERS: string[] = Object.keys(SIGN_IN_HANDLERS);
 
@@ -65,6 +91,18 @@ const providers: Provider[] = [
             }
             return null;
         },
+    }),
+    // See: https://next-auth.js.org/providers/google
+    GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        authorization: {
+            params: {
+                prompt: "consent",
+                access_type: "offline",
+                response_type: "code"
+            }
+        }
     }),
 ];
 
