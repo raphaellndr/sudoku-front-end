@@ -38,10 +38,10 @@ export const RegistrationPage = () => {
         }
 
         const userData = {
-            username: data.username,
             email: data.email,
             password1: data.password,
             password2: data.confirmPassword,
+            ...(data.username && { username: data.username })
         };
         // Send registration request to the server
         try {
