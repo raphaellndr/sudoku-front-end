@@ -1,12 +1,13 @@
 "use client"
 
-import { RegistrationPage } from "@/components/ui/registration/registration-page";
 import { Center } from "@chakra-ui/react";
+
+import RegistrationForm from "@/components/ui/registration/registration-form";
 
 export default function Home() {
     return (
         <Center height="100vh">
-            <RegistrationPage />
+            <RegistrationForm />
         </Center>
     )
 }

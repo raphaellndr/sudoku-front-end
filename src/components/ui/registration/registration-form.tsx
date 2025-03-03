@@ -1,12 +1,11 @@
-import { Box, Button, Input, Separator, Stack, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
-import { useForm, SubmitHandler } from 'react-hook-form';
-
-import { Field } from '../field';
-import { PasswordInput } from '../password-input';
-import { signIn } from 'next-auth/react';
-import { FcGoogle } from 'react-icons/fc';
+import { Button, Input, Separator, Stack } from "@chakra-ui/react"
+import { Field } from "../field"
+import { SubmitHandler, useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { toast, ToastContainer } from "react-toastify";
+import { PasswordInput } from "../password-input";
+import AccountAlreadyExists from "./account-already-exists";
+import SocialRegistration from "./social-registration";
 
 interface FormValues {
     username: string;
@@ -15,15 +14,13 @@ interface FormValues {
     confirmPassword: string;
 }
 
-export const RegistrationPage = () => {
+const RegistrationForm = () => {
     const {
         register,
         reset,
         handleSubmit,
         formState: { errors },
     } = useForm<FormValues>();
-
-    const router = useRouter();
 
     const notifyAccountCreated = () => toast.success("Successfully created account!");
     const notifyError = (message: string) => toast.error(
@@ -56,7 +53,7 @@ export const RegistrationPage = () => {
                 }
             )
             if (response.ok) {
-                // Empty the form
+                // Empty the form, notify and log in with provided credentials
                 reset();
                 notifyAccountCreated();
                 await signIn("credentials", {
@@ -75,14 +72,6 @@ export const RegistrationPage = () => {
             notifyError(`An error occurred while creating your account: ${error.message}`);
         }
     };
-
-    const handleLogin = () => {
-        signIn(undefined, { callbackUrl: '/profile' });
-    };
-
-    const handleSocialRegistration = (socials: string) => {
-        signIn(socials, { callbackUrl: '/profile' });
-    }
 
     return (
         <div>
@@ -133,23 +122,13 @@ export const RegistrationPage = () => {
                     </Field>
                     <Button type="submit">Create account</Button>
                     <Separator size="sm" />
-                    <Text>Sign up using socials</Text>
-                    <Button w={'full'} variant={'outline'} onClick={() => handleSocialRegistration("google")}>
-                        Sign in with Google <FcGoogle />
-                    </Button>
+                    <SocialRegistration />
                     <Separator size="sm" />
-                    <Text>Already have an account? </Text>
-                    <Box>
-                        <Text
-                            as="span"
-                            color="blue.500"
-                            cursor="pointer"
-                            onClick={handleLogin}
-                        >
-                            Sign in.
-                        </Text></Box>
+                    <AccountAlreadyExists />
                 </Stack>
             </form>
         </div>
     )
 }
+
+export default RegistrationForm;
