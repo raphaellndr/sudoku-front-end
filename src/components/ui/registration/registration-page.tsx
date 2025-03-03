@@ -1,10 +1,12 @@
-import { Button, Input, Stack } from '@chakra-ui/react';
+import { Box, Button, Input, Separator, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { Field } from '../field';
 import { PasswordInput } from '../password-input';
+import { signIn } from 'next-auth/react';
+import { FcGoogle } from 'react-icons/fc';
 
 interface FormValues {
     username: string;
@@ -57,7 +59,12 @@ export const RegistrationPage = () => {
                 // Empty the form
                 reset();
                 notifyAccountCreated();
-                router.push("/login");
+                await signIn("credentials", {
+                    email: data.email,
+                    password: data.password,
+                    redirect: true,
+                    callbackUrl: "/profile",
+                })
             } else {
                 const errorData = await response.json();
                 console.log("Error data: ", errorData)
@@ -67,13 +74,21 @@ export const RegistrationPage = () => {
             const error = e as Error;
             notifyError(`An error occurred while creating your account: ${error.message}`);
         }
+    };
+
+    const handleLogin = () => {
+        signIn(undefined, { callbackUrl: '/profile' });
+    };
+
+    const handleSocialRegistration = (socials: string) => {
+        signIn(socials, { callbackUrl: '/profile' });
     }
 
     return (
         <div>
             <ToastContainer />
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack gap="4" align="flex-start" maxW="sm">
+                <Stack gap="4" align="stretch" maxW="sm">
                     <Field
                         label="Username"
                         invalid={!!errors.username}
@@ -116,7 +131,23 @@ export const RegistrationPage = () => {
                             {...register("confirmPassword", { required: "Password confirmation is required" })} type="password"
                         />
                     </Field>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Create account</Button>
+                    <Separator size="sm" />
+                    <Text>Sign up using socials</Text>
+                    <Button w={'full'} variant={'outline'} onClick={() => handleSocialRegistration("google")}>
+                        Sign in with Google <FcGoogle />
+                    </Button>
+                    <Separator size="sm" />
+                    <Text>Already have an account? </Text>
+                    <Box>
+                        <Text
+                            as="span"
+                            color="blue.500"
+                            cursor="pointer"
+                            onClick={handleLogin}
+                        >
+                            Sign in.
+                        </Text></Box>
                 </Stack>
             </form>
         </div>
