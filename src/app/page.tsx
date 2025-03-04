@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 
 import SudokuCreator from '@/components/ui/sudoku/sudoku-creator';
 import SudokuList from '@/components/ui/sudoku/sudoku-list';
+import { ToastContainer } from 'react-toastify';
 
 // Dynamically import the AppBar component to avoid hydration errors
 const AppBar = dynamic(() => import("@/components/ui/home-page/app-bar"), { ssr: false });
@@ -17,6 +18,7 @@ const HomePage = () => {
 
   return (
     <>
+      <ToastContainer />
       <AppBar />
       <SudokuCreator />
       <Separator />

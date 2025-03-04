@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Box, SimpleGrid, Input, VStack, Button } from "@chakra-ui/react";
+import { Box, SimpleGrid, Input, VStack, Button, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { Difficulty } from "@/types/enums";
 
 const SudokuGrid = () => {
     const { data: session, status } = useSession();
     const [sudokuGrid, setSudokuGrid] = useState<number[][]>(Array(9).fill(Array(9).fill(0)));
 
+    const notifySuccess = (message: string) => toast.success(message);
     const notifyError = (message: string) => toast.error(
         message,
         {
@@ -25,6 +26,10 @@ const SudokuGrid = () => {
     const gridToString = () => {
         return sudokuGrid.map(row => row.join("")).join("");
     };
+
+    const handleResetSudoku = () => {
+        setSudokuGrid(Array(9).fill(Array(9).fill(0)))
+    }
 
     const handleCreateSudoku = async () => {
         if (session) {
@@ -46,7 +51,8 @@ const SudokuGrid = () => {
                     }
                 )
                 if (response.ok) {
-                    toast.success("Successfully created sudoku!");
+                    notifySuccess("Successfully created sudoku!");
+                    handleResetSudoku();
                 } else {
                     const errorData = await response.json();
                     notifyError("Failed to create sudoku: " + errorData);
@@ -60,7 +66,6 @@ const SudokuGrid = () => {
 
     return (
         <>
-            <ToastContainer />
             <Box p={5}>
                 <VStack>
                     <h1>Sudoku Creator</h1>
@@ -81,7 +86,10 @@ const SudokuGrid = () => {
                             ))
                         )}
                     </SimpleGrid>
-                    <Button onClick={handleCreateSudoku}>Create sudoku</Button>
+                    <HStack>
+                        <Button onClick={handleResetSudoku}>Reset sudoku</Button>
+                        <Button onClick={handleCreateSudoku}>Create sudoku</Button>
+                    </HStack>
                 </VStack>
             </Box>
         </>
