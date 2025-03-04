@@ -12,26 +12,13 @@ import { ColorModeButton, useColorModeValue } from '../color-mode'
 import { MenuContent, MenuItem, MenuItemGroup, MenuRoot, MenuSeparator, MenuTrigger } from '../menu'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 export default function AppBar() {
     const { data: session, status } = useSession()
     const [username, setUsername] = useState(session ? session.user.username : "Unknown Person");
-    const [logButtonText, setLogButtonText] = useState(session ? "Log out" : "Log in");
     const boxBgColor = useColorModeValue('gray.200', 'gray.900');
     const router = useRouter();
-
-    const handleProfileButton = () => {
-        router.push("profile/")
-    }
-
-    const handleLogInOutButton = () => {
-        if (session) {
-            signOut();
-        } else {
-            router.push("registration/")
-        }
-    };
 
     return (
         <Box bgColor={boxBgColor} px={4}>
@@ -60,10 +47,21 @@ export default function AppBar() {
                             <MenuItemGroup title="Account">
                                 {(() => {
                                     if (session) {
-                                        return <MenuItem textAlign="center" value="profile" onClick={handleProfileButton}>Profile</MenuItem>
+                                        return (
+                                            <>
+                                                <MenuItem textAlign="center" value="profile" onClick={() => router.push("profile/")}>Profile</MenuItem>
+                                                <MenuItem textAlign="center" value="logout" onClick={() => signOut()}>Log out</MenuItem>
+                                            </>
+                                        )
+                                    } else {
+                                        return (
+                                            <>
+                                                <MenuItem textAlign="center" value="signup" onClick={() => router.push("registration/")}>Sign up</MenuItem>
+                                                <MenuItem textAlign="center" value="login" onClick={() => signIn(undefined, { callbackUrl: '/' })}>Log in</MenuItem>
+                                            </>
+                                        )
                                     }
                                 })()}
-                                <MenuItem textAlign="center" value="logout" onClick={handleLogInOutButton}>{logButtonText}</MenuItem>
                             </MenuItemGroup>
                         </MenuContent>
                     </MenuRoot>
