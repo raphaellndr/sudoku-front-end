@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { Box, Button, Code, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const { data: session, status } = useSession({ required: true });
     const [response, setResponse] = useState("{}");
+    const router = useRouter()
 
     const getUserDetails = async (useToken: boolean) => {
         try {
@@ -51,6 +53,9 @@ export default function Home() {
                     </Button>
                     <Button colorScheme="orange" onClick={() => getUserDetails(false)}>
                         User details (without token)
+                    </Button>
+                    <Button colorScheme="red" onClick={() => router.push("/")}>
+                        Back to home page
                     </Button>
                     <Button colorScheme="red" onClick={() => signOut({ callbackUrl: "/" })}>
                         Sign out
