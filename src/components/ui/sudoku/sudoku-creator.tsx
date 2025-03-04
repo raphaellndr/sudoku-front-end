@@ -28,7 +28,6 @@ const SudokuGrid = () => {
         if (session) {
             console.log("Session:", session);
             const data = {
-                // user: session.user,
                 title: "New Sudoku", // Default title for now
                 difficulty: Difficulty.Unknown, // Default difficulty for now
                 grid: gridToString(),
