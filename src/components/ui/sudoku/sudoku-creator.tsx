@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import { Box, SimpleGrid, Input, VStack, Button } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { toast, ToastContainer } from "react-toastify";
-
-enum Difficulty {
-    Unknown = "UNKNOWN",
-    Easy = "EASY",
-    Medium = "MEDIUM",
-    Hard = "HARD",
-}
+import { Difficulty } from "@/types/enums";
 
 const SudokuGrid = () => {
     const { data: session, status } = useSession();
