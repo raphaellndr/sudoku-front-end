@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 
 const AccountAlreadyExists = () => {
     const handleLogin = () => {
-        signIn(undefined, { callbackUrl: '/profile' });
+        signIn(undefined, { callbackUrl: '/' });
     };
 
     return (

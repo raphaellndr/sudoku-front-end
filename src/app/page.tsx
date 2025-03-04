@@ -1,16 +1,26 @@
 "use client";
 
-import { Button, Center } from "@chakra-ui/react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { Spinner } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 
-import RegistrationForm from "@/components/ui/registration/registration-form";
+// Dynamically import the AppBar component to avoid hydration errors
+const AppBar = dynamic(() => import("@/components/ui/home-page/app-bar"), { ssr: false });
 
 const HomePage = () => {
+  const { data: session, status } = useSession()
+
+  if (status === "loading") return <Spinner />;
+
   return (
-    <Center height="100vh">
-      <RegistrationForm />
-    </Center>
+    <>
+      <AppBar />
+      {status === "authenticated" ? (
+        <p>You are already signed in.</p>
+      ) : (
+        <p>Please sign in to access the home page.</p>
+      )}
+    </>
   );
 };
 

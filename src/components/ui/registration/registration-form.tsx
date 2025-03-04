@@ -60,7 +60,7 @@ const RegistrationForm = () => {
                     email: data.email,
                     password: data.password,
                     redirect: true,
-                    callbackUrl: "/profile",
+                    callbackUrl: "/",
                 })
             } else {
                 const errorData = await response.json();

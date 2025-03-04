@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc"
 
 const SocialRegistration = () => {
     const handleSocialRegistration = (socials: string) => {
-        signIn(socials, { callbackUrl: '/profile' });
+        signIn(socials, { callbackUrl: '/' });
     }
 
     return (
