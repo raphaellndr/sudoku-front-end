@@ -1,7 +1,7 @@
 import { Sudoku } from "@/types/types";
 import { Box, Button, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 interface SudokuGridProps {
@@ -76,6 +76,10 @@ const SudokuList = () => {
             }
         }
     };
+
+    useEffect(() => {
+        fetchAllSudokus();
+    }, []);
 
     return (
         <>
