@@ -1,18 +1,15 @@
 import { Button, Input, Separator, Stack } from "@chakra-ui/react"
-import { Field } from "../field"
 import { SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { toast, ToastContainer } from "react-toastify";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Field } from "../field"
 import { PasswordInput } from "../password-input";
 import AccountAlreadyExists from "./account-already-exists";
 import SocialRegistration from "./social-registration";
-
-interface FormValues {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
+import { UserFormValues } from "@/types/types";
+import { UserFormSchema } from "@/types/schemas";
 
 const RegistrationForm = () => {
     const {
@@ -20,7 +17,9 @@ const RegistrationForm = () => {
         reset,
         handleSubmit,
         formState: { errors },
-    } = useForm<FormValues>();
+    } = useForm<UserFormValues>({
+        resolver: zodResolver(UserFormSchema),
+    });
 
     const notifyAccountCreated = () => toast.success("Successfully created account!");
     const notifyError = (message: string) => toast.error(
@@ -30,12 +29,7 @@ const RegistrationForm = () => {
         }
     );
 
-    const onSubmit: SubmitHandler<FormValues> = async (data) => {
-        if (data.password !== data.confirmPassword) {
-            notifyError('Passwords do not match');
-            return;
-        }
-
+    const onSubmit: SubmitHandler<UserFormValues> = async (data) => {
         const userData = {
             email: data.email,
             password1: data.password,
@@ -95,10 +89,6 @@ const RegistrationForm = () => {
                         <Input
                             {...register("email", {
                                 required: "Email is required",
-                                pattern: {
-                                    value: /^\S+@\S+$/i,
-                                    message: "Invalid email address",
-                                },
                             })}
                         />
                     </Field>
