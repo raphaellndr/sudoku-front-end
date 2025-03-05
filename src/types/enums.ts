@@ -1,8 +1,5 @@
 // Custom enums
 
-export enum Difficulty {
-    Unknown = "UNKNOWN",
-    Easy = "EASY",
-    Medium = "MEDIUM",
-    Hard = "HARD",
-}
+import { z } from "zod";
+
+export const SudokuDifficultyEnum = z.enum(["Unknown", "Easy", "Medium", "Hard"]);
