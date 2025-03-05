@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Box, SimpleGrid, Input, VStack, Button, HStack } from "@chakra-ui/react";
+import { Box, VStack, Button, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 
 import { SudokuDifficultyEnum } from "@/types/enums";
 import DifficultySelect from "./difficulty-select";
+import SudokuGrid from "./sudoku-grid";
 
-const SudokuGrid = () => {
+const SudokuCreator = () => {
     const { data: session, status } = useSession();
     const [sudokuGrid, setSudokuGrid] = useState<number[][]>(Array(9).fill(Array(9).fill(0)));
     const [difficulty, setDifficulty] = useState(SudokuDifficultyEnum.options[0]);
@@ -18,13 +19,6 @@ const SudokuGrid = () => {
             position: "bottom-right",
         }
     );
-
-    const handleChange = (rowIndex: number, colIndex: number, value: string) => {
-        const newSudokuGrid = sudokuGrid.map((row, rIndex) =>
-            row.map((cell, cIndex) => (rIndex === rowIndex && cIndex === colIndex ? parseInt(value) || 0 : cell))
-        );
-        setSudokuGrid(newSudokuGrid);
-    };
 
     const gridToString = () => {
         return sudokuGrid.map(row => row.join("")).join("");
@@ -72,23 +66,7 @@ const SudokuGrid = () => {
             <Box p={5}>
                 <VStack>
                     <h1>Sudoku Creator</h1>
-                    <SimpleGrid columns={9}>
-                        {sudokuGrid.map((row, rowIndex) =>
-                            row.map((cell, colIndex) => (
-                                <Input
-                                    key={`${rowIndex}-${colIndex}`}
-                                    width="35px"
-                                    type="text"
-                                    inputMode="numeric"
-                                    pattern="[1-9]"
-                                    maxLength={1}
-                                    value={cell !== 0 ? cell : ""}
-                                    onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
-                                    textAlign="center"
-                                />
-                            ))
-                        )}
-                    </SimpleGrid>
+                    <SudokuGrid grid={sudokuGrid} setGrid={setSudokuGrid} />
                     <HStack>
                         {/* Ignore setDifficulty type
                         // @ts-ignore */}
@@ -102,4 +80,4 @@ const SudokuGrid = () => {
     );
 };
 
-export default SudokuGrid;
+export default SudokuCreator;

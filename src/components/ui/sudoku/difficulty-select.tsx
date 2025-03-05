@@ -13,7 +13,7 @@ const difficulties = createListCollection({
 
 interface DifficultySelectProps {
     selectedDifficulty: string;
-    setSelectedDifficulty: React.Dispatch<React.SetStateAction<string>>
+    setSelectedDifficulty: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const DifficultySelect: React.FC<DifficultySelectProps> = ({ selectedDifficulty, setSelectedDifficulty }) => {
