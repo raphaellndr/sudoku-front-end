@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Box, SimpleGrid, Input, VStack, Button, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import { Difficulty } from "@/types/enums";
+
+import { SudokuDifficultyEnum } from "@/types/enums";
+import DifficultySelect from "./difficulty-select";
 
 const SudokuGrid = () => {
     const { data: session, status } = useSession();
     const [sudokuGrid, setSudokuGrid] = useState<number[][]>(Array(9).fill(Array(9).fill(0)));
+    const [difficulty, setDifficulty] = useState(SudokuDifficultyEnum.options[0]);
 
     const notifySuccess = (message: string) => toast.success(message);
     const notifyError = (message: string) => toast.error(
@@ -35,7 +38,7 @@ const SudokuGrid = () => {
         if (session) {
             const data = {
                 title: "New Sudoku", // Default title for now
-                difficulty: Difficulty.Unknown, // Default difficulty for now
+                difficulty: difficulty,
                 grid: gridToString(),
             };
             try {
@@ -87,6 +90,9 @@ const SudokuGrid = () => {
                         )}
                     </SimpleGrid>
                     <HStack>
+                        {/* Ignore setDifficulty type
+                        // @ts-ignore */}
+                        <DifficultySelect selectedDifficulty={difficulty} setSelectedDifficulty={setDifficulty} />
                         <Button onClick={handleResetSudoku}>Reset sudoku</Button>
                         <Button onClick={handleCreateSudoku}>Create sudoku</Button>
                     </HStack>
