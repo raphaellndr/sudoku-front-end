@@ -2,30 +2,26 @@ import React, { useState } from "react";
 
 import { Box, VStack, Button, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { toast } from "react-toastify";
 
 import { SudokuDifficultyEnum } from "@/types/enums";
 import DifficultySelect from "./difficulty-select";
 import SudokuGrid from "./sudoku-grid";
+import { notifyError, notifySuccess } from "@/toasts/toast";
 
-const SudokuCreator = () => {
+interface SudokuCreatorProps {
+    onSudokuCreated: () => Promise<void>;
+}
+
+const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
     const { data: session, status } = useSession();
     const [sudokuGrid, setSudokuGrid] = useState<number[][]>(Array(9).fill(Array(9).fill(0)));
     const [difficulty, setDifficulty] = useState(SudokuDifficultyEnum.options[0]);
-
-    const notifySuccess = (message: string) => toast.success(message);
-    const notifyError = (message: string) => toast.error(
-        message,
-        {
-            position: "bottom-right",
-        }
-    );
 
     const gridToString = () => {
         return sudokuGrid.map(row => row.join("")).join("");
     };
 
-    const handleResetSudoku = () => {
+    const resetSudokuGrid = () => {
         setSudokuGrid(Array(9).fill(Array(9).fill(0)))
     }
 
@@ -50,7 +46,8 @@ const SudokuCreator = () => {
                 )
                 if (response.ok) {
                     notifySuccess("Successfully created sudoku!");
-                    handleResetSudoku();
+                    resetSudokuGrid();
+                    onSudokuCreated(); // Trigger parent component to fetch new sudokus list
                 } else {
                     const errorData = await response.json();
                     notifyError("Failed to create sudoku: " + errorData);
@@ -72,7 +69,7 @@ const SudokuCreator = () => {
                         {/* Ignore setDifficulty type
                         // @ts-ignore */}
                         <DifficultySelect selectedDifficulty={difficulty} setSelectedDifficulty={setDifficulty} />
-                        <Button onClick={handleResetSudoku}>Reset sudoku</Button>
+                        <Button onClick={resetSudokuGrid}>Reset sudoku</Button>
                         <Button onClick={handleCreateSudoku}>Create sudoku</Button>
                     </HStack>
                 </VStack>
