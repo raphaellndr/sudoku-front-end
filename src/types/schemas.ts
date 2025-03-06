@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SudokuDifficultyEnum } from "./enums";
 
 export const UserFormSchema = z.object({
     username: z
@@ -17,4 +18,20 @@ export const UserFormSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
+})
+
+export const SudokuSchema = z.object({
+    id: z
+        .string(),
+    title: z
+        .string(),
+    difficulty: z
+        .enum(SudokuDifficultyEnum.options),
+    grid: z
+        .string()
+        .length(81, { message: "Sudoku must contain 81 characters" }),
+    created_at: z
+        .string(),
+    updated_at: z
+        .string(),
 })

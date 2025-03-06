@@ -36,7 +36,7 @@ const DisplaySudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid }) => {
 
 const SudokuList = () => {
     const { data: session, status } = useSession();
-    const [sudokuGrids, setSudokuGrids] = useState<string[]>([]);
+    const [sudokus, setSudokus] = useState<Sudoku[]>([]);
 
     const notifyError = (message: string) => toast.error(
         message,
@@ -46,6 +46,7 @@ const SudokuList = () => {
     );
 
     const fetchAllSudokus = async () => {
+        console.log(sudokus)
         if (session) {
             try {
                 const response = await fetch(
@@ -64,7 +65,7 @@ const SudokuList = () => {
                     sudokus.forEach((sudoku: Sudoku) => {
                         grids.push(sudoku.grid);
                     });
-                    setSudokuGrids(grids);
+                    setSudokus(sudokus);
                 } else {
                     console.error('Failed to fetch Sudoku grids');
                     notifyError('Failed to fetch Sudoku grids');
@@ -88,10 +89,10 @@ const SudokuList = () => {
                 <Button size="sm" width="150px" onClick={fetchAllSudokus}>
                     Fetch Sudokus
                 </Button>
-                {sudokuGrids.map((grid, index) => (
+                {sudokus.map((sudoku, index) => (
                     <Box key={index}>
                         <Text mb={2}>Sudoku {index + 1}</Text>
-                        <DisplaySudokuGrid sudokuGrid={grid} />
+                        <DisplaySudokuGrid sudokuGrid={sudoku.grid} />
                     </Box>
                 ))}
             </VStack>
