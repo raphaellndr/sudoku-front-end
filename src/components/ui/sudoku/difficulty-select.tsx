@@ -20,7 +20,7 @@ const DifficultySelect: React.FC<DifficultySelectProps> = ({ selectedDifficulty,
     return (
         <SelectRoot
             collection={difficulties}
-            width="320px"
+            width="200px"
             value={[selectedDifficulty]}
             onValueChange={(e) => setSelectedDifficulty(e.value[0])}
         >
