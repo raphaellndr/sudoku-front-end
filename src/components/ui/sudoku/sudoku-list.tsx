@@ -8,7 +8,7 @@ interface SudokuGridProps {
     sudokuGrid: string;
 };
 
-const DisplaySudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid }) => {
+const SudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid }) => {
     return (
         <Box p={5}>
             <SimpleGrid columns={9}>
@@ -46,7 +46,6 @@ const SudokuList = () => {
     );
 
     const fetchSudokus = async () => {
-        console.log(sudokus)
         if (session) {
             try {
                 const response = await fetch(
@@ -67,12 +66,10 @@ const SudokuList = () => {
                     });
                     setSudokus(sudokus);
                 } else {
-                    console.error('Failed to fetch Sudoku grids');
                     notifyError('Failed to fetch Sudoku grids');
                 }
             } catch (e: unknown) {
                 const error = e as Error;
-                console.error('Error fetching Sudoku grids:', error);
                 notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
             }
         }
@@ -91,8 +88,8 @@ const SudokuList = () => {
                 </Button>
                 {sudokus.map((sudoku, index) => (
                     <Box key={index}>
-                        <Text mb={2}>Sudoku {index + 1}</Text>
-                        <DisplaySudokuGrid sudokuGrid={sudoku.grid} />
+                        <Text mb={2}>Sudoku {sudoku.id} - {sudoku.difficulty}</Text>
+                        <SudokuGrid sudokuGrid={sudoku.grid} />
                     </Box>
                 ))}
             </VStack>
