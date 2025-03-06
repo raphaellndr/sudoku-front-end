@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { SudokuDifficultyEnum } from "./enums";
 
 export const UserFormSchema = z.object({

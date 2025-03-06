@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { signOut, useSession } from "next-auth/react";
 import { Box, Button, Code, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
 
 export default function Home() {
     const { data: session, status } = useSession({ required: true });

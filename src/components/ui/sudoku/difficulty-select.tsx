@@ -1,6 +1,7 @@
 "use client";
 
 import { createListCollection } from "@chakra-ui/react";
+
 import { SudokuDifficultyEnum } from "@/types/enums";
 import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from "../select";
 
