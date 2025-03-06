@@ -45,7 +45,7 @@ const SudokuList = () => {
         }
     );
 
-    const fetchAllSudokus = async () => {
+    const fetchSudokus = async () => {
         console.log(sudokus)
         if (session) {
             try {
@@ -79,14 +79,14 @@ const SudokuList = () => {
     };
 
     useEffect(() => {
-        fetchAllSudokus();
+        fetchSudokus();
     }, []);
 
     return (
         <>
             <ToastContainer />
             <VStack p={5}>
-                <Button size="sm" width="150px" onClick={fetchAllSudokus}>
+                <Button size="sm" width="150px" onClick={fetchSudokus}>
                     Fetch Sudokus
                 </Button>
                 {sudokus.map((sudoku, index) => (
