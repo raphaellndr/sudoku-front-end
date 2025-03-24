@@ -27,35 +27,41 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
 
     const handleCreateSudoku = async () => {
         if (session) {
-            const data = {
-                title: "New Sudoku", // Default title for now
-                difficulty: difficulty,
-                grid: gridToString(),
-            };
-            try {
-                const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "sudoku/sudokus/",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + session.accessToken
-                        },
-                        body: JSON.stringify(data),
+            const stringGrid = gridToString();
+            if (/^0+$/.test(stringGrid)) {
+                notifyError("Cannot create a sudoku with an empty grid!");
+            } else {
+                const data = {
+                    title: "New Sudoku", // Default title for now
+                    difficulty: difficulty,
+                    grid: stringGrid,
+                };
+                try {
+                    const response = await fetch(
+                        process.env.NEXT_PUBLIC_BACKEND_URL + "sudoku/sudokus/",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + session.accessToken
+                            },
+                            body: JSON.stringify(data),
+                        }
+                    )
+                    if (response.ok) {
+                        notifySuccess("Successfully created sudoku!");
+                        resetSudokuGrid();
+                        onSudokuCreated(); // Trigger parent component to fetch new sudokus list
+                    } else {
+                        const errorData = await response.json();
+                        notifyError("Failed to create sudoku: " + errorData);
                     }
-                )
-                if (response.ok) {
-                    notifySuccess("Successfully created sudoku!");
-                    resetSudokuGrid();
-                    onSudokuCreated(); // Trigger parent component to fetch new sudokus list
-                } else {
-                    const errorData = await response.json();
-                    notifyError("Failed to create sudoku: " + errorData);
+                } catch (e: unknown) {
+                    const error = e as Error;
+                    notifyError(`An error occurred while creating sudoku: ${error.message}`);
                 }
-            } catch (e: unknown) {
-                const error = e as Error;
-                notifyError(`An error occurred while creating sudoku: ${error.message}`);
             }
+
         }
     }
 
