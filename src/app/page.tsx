@@ -33,7 +33,8 @@ const HomePage = () => {
           }
         );
         if (response.ok) {
-          const sudokus = await response.json();
+          const responseData = await response.json();
+          const sudokus = responseData["results"]
           const grids: string[] = [];
           sudokus.forEach((sudoku: Sudoku) => {
             grids.push(sudoku.grid);
