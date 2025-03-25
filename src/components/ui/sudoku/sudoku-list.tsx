@@ -20,7 +20,8 @@ const DisplaySudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) 
             {Array.from({ length: 81 }).map((_, index) => {
                 const rowIndex = Math.floor(index / 9);
                 const colIndex = index % 9;
-                const cellValue = solution ? solution[index] : sudokuGrid[index];
+                const originalValue = sudokuGrid[index];
+                const solutionValue = solution ? solution[index] : null;
 
                 return (
                     <Box
@@ -36,9 +37,18 @@ const DisplaySudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) 
                         borderTop={rowIndex === 0 ? "1px solid black" : ""}
                         borderLeft={colIndex === 0 ? "1px solid black" : ""}
                         fontSize="xl"
-                        fontWeight="bold"
                     >
-                        {cellValue === "0" ? "" : cellValue}
+                        {solutionValue ? (
+                            <Text fontWeight={originalValue !== "0" ? "bold" : "normal"}>
+                                {solutionValue}
+                            </Text>
+                        ) : (
+                            originalValue !== "0" && (
+                                <Text fontWeight="bold">
+                                    {originalValue}
+                                </Text>
+                            )
+                        )}
                     </Box>
                 );
             })}
@@ -185,14 +195,14 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
             {sudokus.map((sudoku) => (
                 <Box key={sudoku.id} borderWidth={1} borderRadius="md" p={4}>
                     <VStack align="center">
-                            <Text fontWeight="bold">
-                                Sudoku {sudoku.id} - {sudoku.difficulty}
-                            </Text>
-                            <Badge
-                                colorPalette={getStatusColor(statuses[sudoku.id])}
-                            >
-                                {statuses[sudoku.id] || "created"}
-                            </Badge>
+                        <Text fontWeight="bold">
+                            Sudoku {sudoku.id} - {sudoku.difficulty}
+                        </Text>
+                        <Badge
+                            colorPalette={getStatusColor(statuses[sudoku.id])}
+                        >
+                            {statuses[sudoku.id] || "created"}
+                        </Badge>
 
                         <DisplaySudokuGrid
                             sudokuGrid={sudoku.grid}
