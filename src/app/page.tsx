@@ -16,53 +16,53 @@ import { notifyError } from '@/toasts/toast';
 const AppBar = dynamic(() => import("@/components/ui/home-page/app-bar"), { ssr: false });
 
 const HomePage = () => {
-  const { data: session, status } = useSession()
-  const [sudokus, setSudokus] = useState<Sudoku[]>([]);
+    const { data: session, status } = useSession()
+    const [sudokus, setSudokus] = useState<Sudoku[]>([]);
 
-  const fetchSudokus = async () => {
-    if (session) {
-      try {
-        const response = await fetch(
-          process.env.NEXT_PUBLIC_BACKEND_URL + "sudoku/sudokus/",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + session.accessToken,
-            },
-          }
-        );
-        if (response.ok) {
-          const responseData = await response.json();
-          const sudokus = responseData["results"]
-          const grids: string[] = [];
-          sudokus.forEach((sudoku: Sudoku) => {
-            grids.push(sudoku.grid);
-          });
-          setSudokus(sudokus);
-        } else {
-          notifyError('Failed to fetch Sudoku grids');
+    const fetchSudokus = async () => {
+        if (session) {
+            try {
+                const response = await fetch(
+                    process.env.NEXT_PUBLIC_BACKEND_URL + "sudoku/sudokus/",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + session.accessToken,
+                        },
+                    }
+                );
+                if (response.ok) {
+                    const responseData = await response.json();
+                    const sudokus = responseData["results"]
+                    const grids: string[] = [];
+                    sudokus.forEach((sudoku: Sudoku) => {
+                        grids.push(sudoku.grid);
+                    });
+                    setSudokus(sudokus);
+                } else {
+                    notifyError('Failed to fetch Sudoku grids');
+                }
+            } catch (e: unknown) {
+                const error = e as Error;
+                notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
+            }
         }
-      } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
-      }
-    }
-  };
+    };
 
-  return (
-    <>
-      {status === "loading" ? <Spinner /> :
+    return (
         <>
-          <ToastContainer />
-          <AppBar />
-          <SudokuCreator onSudokuCreated={fetchSudokus} />
-          <Separator />
-          <SudokuList sudokus={sudokus} onFetchSudokus={fetchSudokus} />
+            {status === "loading" ? <Spinner /> :
+                <>
+                    <ToastContainer />
+                    <AppBar />
+                    <SudokuCreator onSudokuCreated={fetchSudokus} />
+                    <Separator />
+                    <SudokuList sudokus={sudokus} onFetchSudokus={fetchSudokus} />
+                </>
+            }
         </>
-      }
-    </>
-  );
+    );
 };
 
 export default HomePage;
