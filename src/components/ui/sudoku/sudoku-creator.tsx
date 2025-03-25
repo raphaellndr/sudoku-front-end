@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 import { SudokuDifficultyEnum } from "@/types/enums";
 import DifficultySelect from "./difficulty-select";
-import SudokuGrid from "./sudoku-grid";
+import SudokuGridCreator from "./sudoku-grid-creator";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 
 interface SudokuCreatorProps {
@@ -70,7 +70,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
             <Box p={5}>
                 <VStack>
                     <h1>Sudoku Creator</h1>
-                    <SudokuGrid grid={sudokuGrid} setGrid={setSudokuGrid} />
+                    <SudokuGridCreator grid={sudokuGrid} setGrid={setSudokuGrid} />
                     <HStack>
                         {/* Ignore setDifficulty type
                         // @ts-ignore */}
