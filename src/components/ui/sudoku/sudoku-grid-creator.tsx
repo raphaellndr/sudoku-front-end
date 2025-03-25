@@ -1,4 +1,4 @@
-import { Input, SimpleGrid } from "@chakra-ui/react";
+import { Box, Grid, Input, SimpleGrid } from "@chakra-ui/react";
 
 interface SudokuGridProps {
     grid: number[][];
@@ -14,23 +14,47 @@ const SudokuGridCreator: React.FC<SudokuGridProps> = ({ grid, setGrid }) => {
     };
 
     return (
-        <SimpleGrid columns={9}>
-            {grid.map((row, rowIndex) =>
+        <Grid
+            templateColumns="repeat(9, 1fr)"
+            border="2px solid black"
+            width="fit-content"
+        >
+            {grid.flatMap((row, rowIndex) =>
                 row.map((cell, colIndex) => (
-                    <Input
+                    <Box
                         key={`${rowIndex}-${colIndex}`}
-                        width="35px"
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[1-9]"
-                        maxLength={1}
-                        value={cell !== 0 ? cell : ""}
-                        onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
-                        textAlign="center"
-                    />
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        border="1px solid lightgray"
+                        borderRight={(colIndex + 1) % 3 === 0 ? "2px solid black" : ""}
+                        borderBottom={(rowIndex + 1) % 3 === 0 ? "2px solid black" : ""}
+                        borderTop={rowIndex === 0 ? "1px solid black" : ""}
+                        borderLeft={colIndex === 0 ? "1px solid black" : ""}
+                    >
+                        <Input
+                            width="40px"
+                            height="40px"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[1-9]"
+                            maxLength={1}
+                            value={cell !== 0 ? cell.toString() : ""}
+                            onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
+                            textAlign="center"
+                            fontSize="xl"
+                            fontWeight="bold"
+                            border="none"
+                            _focus={{
+                                outline: "1px solid black",
+                                outlineOffset: "1px",
+                                borderRadius: "0px",
+                            }}
+                        />
+                    </Box>
                 ))
             )}
-        </SimpleGrid>
+        </Grid>
     );
 }
 
