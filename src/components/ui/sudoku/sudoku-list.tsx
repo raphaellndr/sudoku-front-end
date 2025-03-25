@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Box, Button, SimpleGrid, Text, VStack, Badge, HStack, Grid } from "@chakra-ui/react";
+import { Box, Button, Text, VStack, Badge, HStack, Grid } from "@chakra-ui/react";
 
 import { Sudoku } from "@/types/types";
 import { useSession } from "next-auth/react";
