@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Box, Button, SimpleGrid, Text, VStack, Badge, HStack } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Text, VStack, Badge, HStack, Grid } from "@chakra-ui/react";
 
 import { Sudoku } from "@/types/types";
 import { useSession } from "next-auth/react";
@@ -12,29 +12,37 @@ interface SudokuGridProps {
 
 const DisplaySudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) => {
     return (
-        <Box p={5}>
-            <SimpleGrid columns={9}>
-                {Array.from({ length: 9 }).map((_, rowIndex) =>
-                    Array.from({ length: 9 }).map((_, colIndex) => {
-                        const cellIndex = rowIndex * 9 + colIndex;
-                        const cellValue = solution ? solution[cellIndex] : sudokuGrid[cellIndex];
-                        return (
-                            <Box
-                                key={`${rowIndex}-${colIndex}`}
-                                width="35px"
-                                height="35px"
-                                borderWidth="1px"
-                                alignContent="center"
-                            >
-                                <Text key={`${rowIndex}-${colIndex}`} textAlign="center">
-                                    {cellValue === "0" ? "" : cellValue}
-                                </Text>
-                            </Box>
-                        )
-                    })
-                )}
-            </SimpleGrid>
-        </Box>
+        <Grid
+            templateColumns="repeat(9, 1fr)"
+            border="2px solid black"
+            width="fit-content"
+        >
+            {Array.from({ length: 81 }).map((_, index) => {
+                const rowIndex = Math.floor(index / 9);
+                const colIndex = index % 9;
+                const cellValue = solution ? solution[index] : sudokuGrid[index];
+
+                return (
+                    <Box
+                        key={index}
+                        width="40px"
+                        height="40px"
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        border="1px solid lightgray"
+                        borderRight={(colIndex + 1) % 3 === 0 ? "2px solid black" : ""}
+                        borderBottom={(rowIndex + 1) % 3 === 0 ? "2px solid black" : ""}
+                        borderTop={rowIndex === 0 ? "1px solid black" : ""}
+                        borderLeft={colIndex === 0 ? "1px solid black" : ""}
+                        fontSize="xl"
+                        fontWeight="bold"
+                    >
+                        {cellValue === "0" ? "" : cellValue}
+                    </Box>
+                );
+            })}
+        </Grid>
     );
 };
 
@@ -176,8 +184,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
         <VStack p={5} width="full">
             {sudokus.map((sudoku) => (
                 <Box key={sudoku.id} borderWidth={1} borderRadius="md" p={4}>
-                    <VStack align="stretch">
-                        <HStack justifyContent="space-between">
+                    <VStack align="center">
                             <Text fontWeight="bold">
                                 Sudoku {sudoku.id} - {sudoku.difficulty}
                             </Text>
@@ -186,7 +193,6 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
                             >
                                 {statuses[sudoku.id] || "created"}
                             </Badge>
-                        </HStack>
 
                         <DisplaySudokuGrid
                             sudokuGrid={sudoku.grid}
