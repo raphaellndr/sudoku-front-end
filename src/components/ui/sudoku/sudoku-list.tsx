@@ -27,7 +27,7 @@ const DisplaySudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) 
                                 alignContent="center"
                             >
                                 <Text key={`${rowIndex}-${colIndex}`} textAlign="center">
-                                    {cellValue || ""}
+                                    {cellValue === "0" ? "" : cellValue}
                                 </Text>
                             </Box>
                         )
