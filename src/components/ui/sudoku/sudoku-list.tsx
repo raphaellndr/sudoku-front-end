@@ -1,60 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Box, Button, Text, VStack, Badge, HStack, Grid } from "@chakra-ui/react";
+import { Box, Button, Text, VStack, Badge, HStack } from "@chakra-ui/react";
 
 import { Sudoku } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 
-interface SudokuGridProps {
-    sudokuGrid: string;
-    solution?: string;
-};
-
-const DisplaySudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) => {
-    return (
-        <Grid
-            templateColumns="repeat(9, 1fr)"
-            border="2px solid black"
-            width="fit-content"
-        >
-            {Array.from({ length: 81 }).map((_, index) => {
-                const rowIndex = Math.floor(index / 9);
-                const colIndex = index % 9;
-                const originalValue = sudokuGrid[index];
-                const solutionValue = solution ? solution[index] : null;
-
-                return (
-                    <Box
-                        key={index}
-                        width="40px"
-                        height="40px"
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        border="1px solid lightgray"
-                        borderRight={(colIndex + 1) % 3 === 0 ? "2px solid black" : ""}
-                        borderBottom={(rowIndex + 1) % 3 === 0 ? "2px solid black" : ""}
-                        borderTop={rowIndex === 0 ? "1px solid black" : ""}
-                        borderLeft={colIndex === 0 ? "1px solid black" : ""}
-                        fontSize="xl"
-                    >
-                        {solutionValue ? (
-                            <Text fontWeight={originalValue !== "0" ? "bold" : "normal"}>
-                                {solutionValue}
-                            </Text>
-                        ) : (
-                            originalValue !== "0" && (
-                                <Text fontWeight="bold">
-                                    {originalValue}
-                                </Text>
-                            )
-                        )}
-                    </Box>
-                );
-            })}
-        </Grid>
-    );
-};
+import SudokuGrid from "./sudoku-grid";
 
 interface SudokuListProps {
     sudokus: Sudoku[];
@@ -204,7 +155,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
                             {statuses[sudoku.id] || "created"}
                         </Badge>
 
-                        <DisplaySudokuGrid
+                        <SudokuGrid
                             sudokuGrid={sudoku.grid}
                             solution={solutions[sudoku.id]}
                         />
