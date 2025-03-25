@@ -5,7 +5,7 @@ interface SudokuGridProps {
     setGrid: React.Dispatch<React.SetStateAction<number[][]>>;
 }
 
-const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, setGrid }) => {
+const SudokuGridCreator: React.FC<SudokuGridProps> = ({ grid, setGrid }) => {
     const handleChange = (rowIndex: number, colIndex: number, value: string) => {
         const newSudokuGrid = grid.map((row, rIndex) =>
             row.map((cell, cIndex) => (rIndex === rowIndex && cIndex === colIndex ? parseInt(value) || 0 : cell))
@@ -34,4 +34,4 @@ const SudokuGrid: React.FC<SudokuGridProps> = ({ grid, setGrid }) => {
     );
 }
 
-export default SudokuGrid;
+export default SudokuGridCreator;
