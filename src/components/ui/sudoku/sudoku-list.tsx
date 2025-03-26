@@ -7,6 +7,18 @@ import { notifyError, notifySuccess } from "@/toasts/toast";
 
 import SudokuGrid from "./sudoku-grid";
 
+const getStatusColor = (status?: string) => {
+    switch (status) {
+        case "completed": return "green";
+        case "running": return "blue";
+        case "pending": return "yellow";
+        case "failed": return "red";
+        case "invalid": return "red";
+        case "aborted": return "orange";
+        default: return "gray";
+    }
+};
+
 interface SudokuListProps {
     sudokus: Sudoku[];
     onFetchSudokus: () => Promise<void>;
@@ -21,18 +33,6 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
     useEffect(() => {
         onFetchSudokus();
     }, []);
-
-    const getStatusColor = (status?: string) => {
-        switch (status) {
-            case "completed": return "green";
-            case "running": return "blue";
-            case "pending": return "yellow";
-            case "failed": return "red";
-            case "invalid": return "red";
-            case "aborted": return "orange";
-            default: return "gray";
-        }
-    };
 
     const handleFetchStatus = useCallback(async (sudoku: Sudoku) => {
         if (session) {
@@ -54,7 +54,6 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
                     notifySuccess("Status fetched successfully!")
                     setStatuses(prev => ({ ...prev, [sudoku.id]: responseData.status }));
 
-                    // If status is completed, fetch solution
                     if (responseData.status === "completed") {
                         const solutionResponse = await fetch(
                             process.env.NEXT_PUBLIC_BACKEND_URL + `sudoku/sudokus/${sudoku.id}/solution/`,
