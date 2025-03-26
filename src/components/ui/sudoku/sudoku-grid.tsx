@@ -34,7 +34,10 @@ const SudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) => {
                         fontSize="xl"
                     >
                         {solutionValue ? (
-                            <Text fontWeight={originalValue !== "0" ? "bold" : "normal"}>
+                            <Text
+                                fontWeight={originalValue !== "0" ? "bold" : "normal"}
+                                color={originalValue !== "0" ? "black" : "gray"}
+                            >
                                 {solutionValue}
                             </Text>
                         ) : (
