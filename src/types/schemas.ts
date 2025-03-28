@@ -30,9 +30,7 @@ export const SudokuSolutionSchema = z.object({
         .uuid({ message: "Must be a valid UUID" }),
     grid: z
         .string()
-        .length(81, { message: "Solution grid must contain 81 characters" })
-        .nullable()
-        .optional(),
+        .length(81, { message: "Solution grid must contain 81 characters" }),
     created_at: z
         .string(),
     updated_at: z
