@@ -54,7 +54,6 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
                         notifySuccess("Successfully created sudoku!");
                         resetSudokuGrid();
                         const sudoku = responseData as Sudoku;
-                        console.log(sudoku)
                         onSudokuCreated((prevSudokus) => [sudoku, ...prevSudokus]);
                     } else {
                         notifyError("Failed to create sudoku: " + responseData);
