@@ -147,12 +147,12 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                     };
 
                     newSocket.onerror = (error) => {
-                        console.error(`WebSocket error for Sudoku ${sudoku.id}:`, error);
+                        console.error(`WebSocket error for Sudoku ${sudokuId}:`, error);
                         notifyError("WebSocket connection error");
                     };
 
                     newSocket.onclose = () => {
-                        console.log(`WebSocket closed for Sudoku ${sudoku.id}`);
+                        console.log(`WebSocket closed for Sudoku ${sudokuId}`);
                     };
                 } else {
                     notifyError("Failed to run task: " + responseData);
