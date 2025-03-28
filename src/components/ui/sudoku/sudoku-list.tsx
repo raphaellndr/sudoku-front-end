@@ -29,7 +29,6 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
     const { data: session } = useSession();
     const [solutions, setSolutions] = useState<{ [key: string]: string }>({});
     const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
-    const [sockets, setSockets] = useState<Record<string, WebSocket>>({});
 
     useEffect(() => {
         if (session) {
@@ -63,44 +62,6 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
             fetchSudokus();
         };
     }, [session]);
-
-    useEffect(() => {
-        if (session) {
-            const newSockets: Record<string, WebSocket> = {};
-
-            sudokus.forEach((sudoku) => {
-                const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/sudokus/${sudoku.id}/status/`);
-
-                newSocket.onopen = () => {
-                    console.log(`WebSocket connected for Sudoku ${sudoku.id}`);
-                };
-
-                newSocket.onmessage = (event) => {
-                    const data = JSON.parse(event.data);
-                    if (data.type === "status_update") {
-                        const { sudoku_id, status } = data;
-                        setStatuses((prev) => ({ ...prev, [sudoku_id]: status }));
-                        if (status === SudokuStatusEnum.Values.completed) {
-                            fetchSolution(sudoku_id);
-                        }
-                    }
-                };
-
-                newSocket.onerror = (error) => {
-                    console.error(`WebSocket error for Sudoku ${sudoku.id}:`, error);
-                    notifyError("WebSocket connection error");
-                };
-
-                newSockets[sudoku.id] = newSocket;
-            });
-
-            setSockets(newSockets);
-
-            return () => {
-                Object.values(newSockets).forEach((socket) => socket.close());
-            };
-        }
-    }, [sudokus]);
 
     const fetchSolution = useCallback(async (sudokuId: string) => {
         if (session) {
@@ -171,6 +132,34 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 const responseData = await response.json()
                 if (response.ok) {
                     notifySuccess("Task run successfully!")
+                    
+                    const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/sudokus/${sudoku.id}/status/`);
+
+                    newSocket.onopen = () => {
+                        console.log(`WebSocket connected for Sudoku ${sudoku.id}`);
+                    };
+
+                    newSocket.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+                        if (data.type === "status_update") {
+                            const { sudoku_id, status } = data;
+                            setStatuses((prev) => ({ ...prev, [sudoku_id]: status }));
+
+                            if (status === SudokuStatusEnum.Values.completed) {
+                                fetchSolution(sudoku_id);
+                                newSocket.close();
+                            }
+                        }
+                    };
+
+                    newSocket.onerror = (error) => {
+                        console.error(`WebSocket error for Sudoku ${sudoku.id}:`, error);
+                        notifyError("WebSocket connection error");
+                    };
+
+                    newSocket.onclose = () => {
+                        console.log(`WebSocket closed for Sudoku ${sudoku.id}`);
+                    };
                 } else {
                     notifyError("Failed to run task: " + responseData);
                 }
