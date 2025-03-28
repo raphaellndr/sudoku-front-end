@@ -1,7 +1,9 @@
-import { Sudoku } from "@/types/types";
-import { Badge, Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 import { memo } from "react";
+
+import { Badge, Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
+
 import SudokuGrid from "./sudoku-grid";
+import { Sudoku } from "@/types/types";
 
 const getStatusColor = (status?: string) => {
     switch (status) {

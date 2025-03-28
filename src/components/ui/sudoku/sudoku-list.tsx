@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { VStack } from "@chakra-ui/react";
 
-import { Sudoku, SudokuSolution } from "@/types/types";
+import { VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { notifyError, notifySuccess } from "@/toasts/toast";
 
 import SudokuItem from "./sudoku-item";
+import { Sudoku, SudokuSolution } from "@/types/types";
+import { notifyError, notifySuccess } from "@/toasts/toast";
 import { SudokuStatusEnum } from "@/types/enums";
 
 interface SudokuListProps {
