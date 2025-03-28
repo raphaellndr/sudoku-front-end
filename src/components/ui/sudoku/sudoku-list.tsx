@@ -1,24 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Box, Button, Text, VStack, Badge, HStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 
-import { Sudoku } from "@/types/types";
+import { Sudoku, SudokuSolution } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 
-import SudokuGrid from "./sudoku-grid";
+import SudokuItem from "./sudoku-item";
 import { SudokuStatusEnum } from "@/types/enums";
-
-const getStatusColor = (status?: string) => {
-    switch (status) {
-        case "completed": return "green";
-        case "running": return "blue";
-        case "pending": return "yellow";
-        case "failed": return "red";
-        case "invalid": return "red";
-        case "aborted": return "orange";
-        default: return "gray";
-    }
-};
 
 interface SudokuListProps {
     sudokus: Sudoku[];
@@ -78,6 +66,12 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 );
                 const responseData = await response.json()
                 if (response.ok) {
+                    const sudokuSolution = responseData as SudokuSolution;
+                    setSudokus((prevSudokus) =>
+                        prevSudokus.map((sudoku) =>
+                            sudoku.id === sudokuId ? { ...sudoku, solution: sudokuSolution } : sudoku
+                        )
+                    );
                     setSolutions(prev => ({ ...prev, [sudokuId]: responseData.grid }));
                 } else {
                     notifyError("Failed to abort task: " + responseData);
@@ -90,11 +84,11 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
 
     }, [session])
 
-    const handleAbortButton = async (sudoku: Sudoku) => {
+    const handleAbortButton = async (sudokuId: string) => {
         if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudoku.id}/solution/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudokuId}/solution/`,
                     {
                         method: "DELETE",
                         headers: {
@@ -116,11 +110,11 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         }
     }
 
-    const handleSolveButton = async (sudoku: Sudoku) => {
+    const handleSolveButton = async (sudokuId: string) => {
         if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudoku.id}/solution/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudokuId}/solution/`,
                     {
                         method: "POST",
                         headers: {
@@ -133,10 +127,10 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 if (response.ok) {
                     notifySuccess("Task run successfully!")
                     
-                    const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/sudokus/${sudoku.id}/status/`);
+                    const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/sudokus/${sudokuId}/status/`);
 
                     newSocket.onopen = () => {
-                        console.log(`WebSocket connected for Sudoku ${sudoku.id}`);
+                        console.log(`WebSocket connected for Sudoku ${sudokuId}`);
                     };
 
                     newSocket.onmessage = (event) => {
@@ -173,25 +167,14 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
     return (
         <VStack p={5} width="full">
             {sudokus.map((sudoku) => (
-                <Box key={sudoku.id} borderWidth={1} borderRadius="md" p={4}>
-                    <VStack align="center">
-                        <Text fontWeight="bold">
-                            Sudoku {sudoku.id} - {sudoku.difficulty}
-                        </Text>
-                        <Badge colorPalette={getStatusColor(statuses[sudoku.id])}>
-                            {statuses[sudoku.id] || "created"}
-                        </Badge>
-                        <SudokuGrid sudokuGrid={sudoku.grid} solution={solutions[sudoku.id]} />
-                        <HStack>
-                            <Button onClick={() => handleAbortButton(sudoku)} colorScheme="red" variant="outline">
-                                Abort solving
-                            </Button>
-                            <Button onClick={() => handleSolveButton(sudoku)} loadingText="Solving sudoku..." colorScheme="green">
-                                Solve sudoku
-                            </Button>
-                        </HStack>
-                    </VStack>
-                </Box>
+            <SudokuItem
+                key={sudoku.id}
+                sudoku={sudoku}
+                onSolve={handleSolveButton}
+                onAbort={handleAbortButton}
+                status={statuses[sudoku.id]}
+                solution={solutions[sudoku.id]}
+            />
             ))}
         </VStack>
     );
