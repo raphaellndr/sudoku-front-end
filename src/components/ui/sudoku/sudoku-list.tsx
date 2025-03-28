@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -15,7 +15,6 @@ interface SudokuListProps {
 
 const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
     const { data: session } = useSession();
-    const [solutions, setSolutions] = useState<{ [key: string]: string }>({});
     const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
@@ -35,9 +34,8 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                         );
                         if (response.ok) {
                             const responseData = await response.json();
-                            const sudokus: Sudoku[] = responseData["results"]
-                            const grids: string[] = sudokus.map((sudoku: Sudoku) => sudoku.grid);
-                            setSudokus(sudokus);
+                            const fetchedSudokus: Sudoku[] = responseData["results"]
+                            setSudokus(fetchedSudokus);
                         } else {
                             notifyError("Failed to fetch Sudoku grids");
                         }
@@ -51,7 +49,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         };
     }, [session]);
 
-    const fetchSolution = useCallback(async (sudokuId: string) => {
+    const fetchSolution = async (sudokuId: string) => {
         if (session) {
             try {
                 const response = await fetch(
@@ -72,7 +70,6 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                             sudoku.id === sudokuId ? { ...sudoku, solution: sudokuSolution } : sudoku
                         )
                     );
-                    setSolutions(prev => ({ ...prev, [sudokuId]: responseData.grid }));
                 } else {
                     notifyError("Failed to abort task: " + responseData);
                 }
@@ -82,7 +79,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
             }
         }
 
-    }, [session])
+    }
 
     const handleAbortButton = async (sudokuId: string) => {
         if (session) {
@@ -126,7 +123,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 const responseData = await response.json()
                 if (response.ok) {
                     notifySuccess("Task run successfully!")
-                    
+
                     const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/sudokus/${sudokuId}/status/`);
 
                     newSocket.onopen = () => {
@@ -167,14 +164,13 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
     return (
         <VStack p={5} width="full">
             {sudokus.map((sudoku) => (
-            <SudokuItem
-                key={sudoku.id}
-                sudoku={sudoku}
-                onSolve={handleSolveButton}
-                onAbort={handleAbortButton}
-                status={statuses[sudoku.id]}
-                solution={solutions[sudoku.id]}
-            />
+                <SudokuItem
+                    key={sudoku.id}
+                    sudoku={sudoku}
+                    onSolve={handleSolveButton}
+                    onAbort={handleAbortButton}
+                    status={statuses[sudoku.id]}
+                />
             ))}
         </VStack>
     );

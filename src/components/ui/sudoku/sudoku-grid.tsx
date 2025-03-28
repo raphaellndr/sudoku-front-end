@@ -1,11 +1,12 @@
 import { Box, Grid, Text } from "@chakra-ui/react";
 
+import { Sudoku } from "@/types/types";
+
 interface SudokuGridProps {
-    sudokuGrid: string;
-    solution?: string;
+    sudoku: Sudoku;
 };
 
-const SudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) => {
+const SudokuGrid: React.FC<SudokuGridProps> = ({ sudoku }) => {
     return (
         <Grid
             templateColumns="repeat(9, 1fr)"
@@ -15,8 +16,9 @@ const SudokuGrid: React.FC<SudokuGridProps> = ({ sudokuGrid, solution }) => {
             {Array.from({ length: 81 }).map((_, index) => {
                 const rowIndex = Math.floor(index / 9);
                 const colIndex = index % 9;
-                const originalValue = sudokuGrid[index];
-                const solutionValue = solution ? solution[index] : null;
+                const originalValue = sudoku.grid[index];
+                const solution = sudoku.solution;
+                const solutionValue = solution ? solution.grid[index] : null;
 
                 return (
                     <Box

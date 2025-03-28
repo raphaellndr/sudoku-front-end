@@ -22,10 +22,10 @@ interface SudokuItemProps {
     onSolve: (sudokuId: string) => Promise<void>;
     onAbort: (sudokuId: string) => Promise<void>;
     status: string;
-    solution: string;
 }
 
-const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, status, solution }) => {
+const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, status }) => {
+    console.log(sudoku.grid)
     return (
         <Box borderWidth={1} borderRadius="md" p={4}>
             <VStack align="center">
@@ -35,7 +35,7 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
                 <Badge colorPalette={getStatusColor(status)}>
                     {status || "created"}
                 </Badge>
-                <SudokuGrid sudokuGrid={sudoku.grid} solution={solution} />
+                <SudokuGrid sudoku={sudoku} />
                 <HStack>
                     <Button onClick={() => onAbort(sudoku.id)} colorScheme="red" variant="outline">
                         Abort solving
