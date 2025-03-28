@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { Separator, Spinner } from '@chakra-ui/react';
@@ -19,46 +19,15 @@ const HomePage = () => {
     const { data: session, status } = useSession()
     const [sudokus, setSudokus] = useState<Sudoku[]>([]);
 
-    const fetchSudokus = async () => {
-        if (session) {
-            try {
-                const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudoku/sudokus/",
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + session.accessToken,
-                        },
-                    }
-                );
-                if (response.ok) {
-                    const responseData = await response.json();
-                    const sudokus = responseData["results"]
-                    const grids: string[] = [];
-                    sudokus.forEach((sudoku: Sudoku) => {
-                        grids.push(sudoku.grid);
-                    });
-                    setSudokus(sudokus);
-                } else {
-                    notifyError('Failed to fetch Sudoku grids');
-                }
-            } catch (e: unknown) {
-                const error = e as Error;
-                notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
-            }
-        }
-    };
-
     return (
         <>
             {status === "loading" ? <Spinner /> :
                 <>
                     <ToastContainer />
                     <AppBar />
-                    <SudokuCreator onSudokuCreated={fetchSudokus} />
+                    <SudokuCreator onSudokuCreated={setSudokus} />
                     <Separator />
-                    <SudokuList sudokus={sudokus} onFetchSudokus={fetchSudokus} />
+                    <SudokuList sudokus={sudokus} setSudokus={setSudokus} />
                 </>
             }
         </>

@@ -22,10 +22,10 @@ const getStatusColor = (status?: string) => {
 
 interface SudokuListProps {
     sudokus: Sudoku[];
-    onFetchSudokus: () => Promise<void>;
+    setSudokus: React.Dispatch<React.SetStateAction<Sudoku[]>>;
 };
 
-const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
+const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
     const { data: session } = useSession();
     const [solutions, setSolutions] = useState<{ [key: string]: string }>({});
     const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
@@ -33,9 +33,36 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
 
     useEffect(() => {
         if (session) {
-            onFetchSudokus();
-        }
-    }, [])
+            const fetchSudokus = async () => {
+                if (session) {
+                    try {
+                        const response = await fetch(
+                            process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudoku/sudokus/",
+                            {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: "Bearer " + session.accessToken,
+                                },
+                            }
+                        );
+                        if (response.ok) {
+                            const responseData = await response.json();
+                            const sudokus: Sudoku[] = responseData["results"]
+                            const grids: string[] = sudokus.map((sudoku: Sudoku) => sudoku.grid);
+                            setSudokus(sudokus);
+                        } else {
+                            notifyError("Failed to fetch Sudoku grids");
+                        }
+                    } catch (e: unknown) {
+                        const error = e as Error;
+                        notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
+                    }
+                }
+            };
+            fetchSudokus();
+        };
+    }, [session]);
 
     useEffect(() => {
         if (session) {

@@ -7,9 +7,10 @@ import { SudokuDifficultyEnum } from "@/types/enums";
 import DifficultySelect from "./difficulty-select";
 import SudokuGridCreator from "./sudoku-grid-creator";
 import { notifyError, notifySuccess } from "@/toasts/toast";
+import { Sudoku } from "@/types/types";
 
 interface SudokuCreatorProps {
-    onSudokuCreated: () => Promise<void>;
+    onSudokuCreated: React.Dispatch<React.SetStateAction<Sudoku[]>>;
 }
 
 const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
@@ -48,13 +49,15 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
                             body: JSON.stringify(data),
                         }
                     )
+                    const responseData = await response.json();
                     if (response.ok) {
                         notifySuccess("Successfully created sudoku!");
                         resetSudokuGrid();
-                        onSudokuCreated(); // Trigger parent component to fetch new sudokus list
+                        const sudoku = responseData as Sudoku;
+                        console.log(sudoku)
+                        onSudokuCreated((prevSudokus) => [sudoku, ...prevSudokus]);
                     } else {
-                        const errorData = await response.json();
-                        notifyError("Failed to create sudoku: " + errorData);
+                        notifyError("Failed to create sudoku: " + responseData);
                     }
                 } catch (e: unknown) {
                     const error = e as Error;
