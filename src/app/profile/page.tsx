@@ -14,7 +14,7 @@ export default function Home() {
     const getUserDetails = async (useToken: boolean) => {
         try {
             const response = await fetch(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "auth/user/",
+                process.env.NEXT_PUBLIC_BACKEND_URL + "api/auth/user/",
                 {
                     headers: useToken ? { Authorization: "Bearer " + session?.accessToken } : {},
                 }

@@ -31,7 +31,7 @@ const SIGN_IN_HANDLERS: SignInHandlers = {
     google: async (user, account, profile, email, credentials) => {
         try {
             const response = await fetch(
-                process.env.NEXTAUTH_BACKEND_URL + "auth/google/",
+                process.env.NEXTAUTH_BACKEND_URL + "api/auth/google/",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -71,7 +71,7 @@ const providers: Provider[] = [
         async authorize(credentials, req) {
             try {
                 const response = await fetch(
-                    process.env.NEXTAUTH_BACKEND_URL + "auth/login/",
+                    process.env.NEXTAUTH_BACKEND_URL + "api/auth/login/",
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -137,7 +137,7 @@ const callbacks = {
         // Refresh bakend tokens if necessary
         if (getCurrentEpochTime() > token["ref"]) {
             const response = await fetch(
-                process.env.NEXTAUTH_BACKEND_URL + "auth/token/refresh/",
+                process.env.NEXTAUTH_BACKEND_URL + "api/auth/token/refresh/",
                 {
                     method: "POST",
                     body: JSON.stringify({ refresh: token["refreshToken"] }),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { Separator, Spinner } from '@chakra-ui/react';
@@ -23,7 +23,7 @@ const HomePage = () => {
         if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "sudoku/sudokus/",
+                    process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudoku/sudokus/",
                     {
                         method: "GET",
                         headers: {

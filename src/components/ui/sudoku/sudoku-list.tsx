@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 
 import SudokuGrid from "./sudoku-grid";
+import { SudokuStatusEnum } from "@/types/enums";
 
 const getStatusColor = (status?: string) => {
     switch (status) {
@@ -28,18 +29,57 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
     const { data: session } = useSession();
     const [solutions, setSolutions] = useState<{ [key: string]: string }>({});
     const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
-    const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
+    const [sockets, setSockets] = useState<Record<string, WebSocket>>({});
 
     useEffect(() => {
-        onFetchSudokus();
-    }, []);
-
-    const handleFetchStatus = useCallback(async (sudoku: Sudoku) => {
         if (session) {
-            setLoadingStates(prev => ({ ...prev, [`status-${sudoku.id}`]: true }));
+            onFetchSudokus();
+        }
+    }, [])
+
+    useEffect(() => {
+        if (session) {
+            const newSockets: Record<string, WebSocket> = {};
+
+            sudokus.forEach((sudoku) => {
+                const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/sudokus/${sudoku.id}/status/`);
+
+                newSocket.onopen = () => {
+                    console.log(`WebSocket connected for Sudoku ${sudoku.id}`);
+                };
+
+                newSocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === "status_update") {
+                        const { sudoku_id, status } = data;
+                        setStatuses((prev) => ({ ...prev, [sudoku_id]: status }));
+                        if (status === SudokuStatusEnum.Values.completed) {
+                            fetchSolution(sudoku_id);
+                        }
+                    }
+                };
+
+                newSocket.onerror = (error) => {
+                    console.error(`WebSocket error for Sudoku ${sudoku.id}:`, error);
+                    notifyError("WebSocket connection error");
+                };
+
+                newSockets[sudoku.id] = newSocket;
+            });
+
+            setSockets(newSockets);
+
+            return () => {
+                Object.values(newSockets).forEach((socket) => socket.close());
+            };
+        }
+    }, [sudokus]);
+
+    const fetchSolution = useCallback(async (sudokuId: string) => {
+        if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `sudoku/sudokus/${sudoku.id}/status/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudokuId}/solution/`,
                     {
                         method: "GET",
                         headers: {
@@ -48,46 +88,25 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
                         },
                     }
                 );
-                const responseData = await response.json();
-
+                const responseData = await response.json()
                 if (response.ok) {
-                    notifySuccess("Status fetched successfully!")
-                    setStatuses(prev => ({ ...prev, [sudoku.id]: responseData.status }));
-
-                    if (responseData.status === "completed") {
-                        const solutionResponse = await fetch(
-                            process.env.NEXT_PUBLIC_BACKEND_URL + `sudoku/sudokus/${sudoku.id}/solution/`,
-                            {
-                                method: "GET",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: "Bearer " + session.accessToken
-                                },
-                            }
-                        );
-
-                        if (solutionResponse.ok) {
-                            const solutionData = await solutionResponse.json();
-                            setSolutions(prev => ({ ...prev, [sudoku.id]: solutionData.grid }));
-                        }
-                    }
+                    setSolutions(prev => ({ ...prev, [sudokuId]: responseData.grid }));
                 } else {
-                    notifyError("Failed to fetch status: " + responseData);
+                    notifyError("Failed to abort task: " + responseData);
                 }
             } catch (e: unknown) {
                 const error = e as Error;
-                notifyError(`An error occurred while fetching status: ${error.message}`);
-            } finally {
-                setLoadingStates(prev => ({ ...prev, [`status-${sudoku.id}`]: false }));
+                notifyError(`Failed to fetch solution: ${error.message}`);
             }
         }
-    }, [session]);
+
+    }, [session])
 
     const handleAbortButton = async (sudoku: Sudoku) => {
         if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `sudoku/sudokus/${sudoku.id}/solution/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudoku.id}/solution/`,
                     {
                         method: "DELETE",
                         headers: {
@@ -111,10 +130,9 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
 
     const handleSolveButton = async (sudoku: Sudoku) => {
         if (session) {
-            setLoadingStates(prev => ({ ...prev, [`solve-${sudoku.id}`]: true }));
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `sudoku/sudokus/${sudoku.id}/solution/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudoku.id}/solution/`,
                     {
                         method: "POST",
                         headers: {
@@ -126,16 +144,12 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
                 const responseData = await response.json()
                 if (response.ok) {
                     notifySuccess("Task run successfully!")
-                    // Optionally refresh sudokus or update status
-                    onFetchSudokus();
                 } else {
                     notifyError("Failed to run task: " + responseData);
                 }
             } catch (e: unknown) {
                 const error = e as Error;
                 notifyError(`An error occurred while running task: ${error.message}`);
-            } finally {
-                setLoadingStates(prev => ({ ...prev, [`solve-${sudoku.id}`]: false }));
             }
         }
     };
@@ -148,40 +162,16 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, onFetchSudokus }) => {
                         <Text fontWeight="bold">
                             Sudoku {sudoku.id} - {sudoku.difficulty}
                         </Text>
-                        <Badge
-                            colorPalette={getStatusColor(statuses[sudoku.id])}
-                        >
+                        <Badge colorPalette={getStatusColor(statuses[sudoku.id])}>
                             {statuses[sudoku.id] || "created"}
                         </Badge>
-
-                        <SudokuGrid
-                            sudokuGrid={sudoku.grid}
-                            solution={solutions[sudoku.id]}
-                        />
-
+                        <SudokuGrid sudokuGrid={sudoku.grid} solution={solutions[sudoku.id]} />
                         <HStack>
-                            <Button
-                                onClick={() => handleAbortButton(sudoku)}
-                                colorScheme="red"
-                                variant="outline"
-                            >
+                            <Button onClick={() => handleAbortButton(sudoku)} colorScheme="red" variant="outline">
                                 Abort solving
                             </Button>
-                            <Button
-                                onClick={() => handleSolveButton(sudoku)}
-                                loading={loadingStates[`solve-${sudoku.id}`]}
-                                loadingText="Solving sudoku..."
-                                colorScheme="green"
-                            >
+                            <Button onClick={() => handleSolveButton(sudoku)} loadingText="Solving sudoku..." colorScheme="green">
                                 Solve sudoku
-                            </Button>
-                            <Button
-                                onClick={() => handleFetchStatus(sudoku)}
-                                loading={loadingStates[`status-${sudoku.id}`]}
-                                loadingText="Fetching status..."
-                                colorScheme="blue"
-                            >
-                                Fetch Status
                             </Button>
                         </HStack>
                     </VStack>
