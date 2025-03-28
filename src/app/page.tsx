@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { Separator, Spinner } from '@chakra-ui/react';
@@ -10,7 +10,6 @@ import { ToastContainer } from 'react-toastify';
 import SudokuCreator from '@/components/ui/sudoku/sudoku-creator';
 import SudokuList from '@/components/ui/sudoku/sudoku-list';
 import { Sudoku } from '@/types/types';
-import { notifyError } from '@/toasts/toast';
 
 // Dynamically import the AppBar component to avoid hydration errors
 const AppBar = dynamic(() => import("@/components/ui/home-page/app-bar"), { ssr: false });
