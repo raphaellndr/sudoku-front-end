@@ -15,7 +15,7 @@ import { Sudoku } from '@/types/types';
 const AppBar = dynamic(() => import("@/components/ui/home-page/app-bar"), { ssr: false });
 
 const HomePage = () => {
-    const { data: session, status } = useSession()
+    const { status } = useSession()
     const [sudokus, setSudokus] = useState<Sudoku[]>([]);
 
     return (
@@ -24,7 +24,7 @@ const HomePage = () => {
                 <>
                     <ToastContainer />
                     <AppBar />
-                    <SudokuCreator onSudokuCreated={setSudokus} />
+                    <SudokuCreator setSudokus={setSudokus} />
                     <Separator />
                     <SudokuList sudokus={sudokus} setSudokus={setSudokus} />
                 </>

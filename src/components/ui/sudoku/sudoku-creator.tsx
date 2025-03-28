@@ -10,11 +10,11 @@ import { notifyError, notifySuccess } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
 
 interface SudokuCreatorProps {
-    onSudokuCreated: React.Dispatch<React.SetStateAction<Sudoku[]>>;
+    setSudokus: React.Dispatch<React.SetStateAction<Sudoku[]>>;
 }
 
-const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
-    const { data: session, status } = useSession();
+const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
+    const { data: session } = useSession();
     const [sudokuGrid, setSudokuGrid] = useState<number[][]>(Array(9).fill(Array(9).fill(0)));
     const [difficulty, setDifficulty] = useState(SudokuDifficultyEnum.options[0]);
 
@@ -54,7 +54,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ onSudokuCreated }) => {
                         notifySuccess("Successfully created sudoku!");
                         resetSudokuGrid();
                         const sudoku = responseData as Sudoku;
-                        onSudokuCreated((prevSudokus) => [sudoku, ...prevSudokus]);
+                        setSudokus((prevSudokus) => [sudoku, ...prevSudokus]);
                     } else {
                         notifyError("Failed to create sudoku: " + responseData);
                     }
