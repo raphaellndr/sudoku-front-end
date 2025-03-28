@@ -57,10 +57,9 @@ export const SudokuSchema = z.object({
     task_id: z
        .string()
        .max(255)
-       .nullable()
-       .optional(),
+       .nullable(),
     solution: SudokuSolutionSchema
-        .optional(),
+        .nullable(),
     created_at: z
         .string(),
     updated_at: z
