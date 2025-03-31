@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Box, VStack, Button, HStack } from "@chakra-ui/react";
+import { Box, Input, VStack, Button, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
 import { SudokuDifficultyEnum } from "@/types/enums";
@@ -17,6 +17,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
     const { data: session } = useSession();
     const [sudokuGrid, setSudokuGrid] = useState<number[][]>(Array(9).fill(Array(9).fill(0)));
     const [difficulty, setDifficulty] = useState(SudokuDifficultyEnum.options[0]);
+    const [title, setTitle] = useState("");
 
     const gridToString = () => {
         return sudokuGrid.map(row => row.join("")).join("");
@@ -33,7 +34,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
                 notifyError("Cannot create a sudoku with an empty grid!");
             } else {
                 const data = {
-                    title: "New Sudoku", // Default title for now
+                    title: title,
                     difficulty: difficulty,
                     grid: stringGrid,
                 };
@@ -72,6 +73,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
             <Box p={5}>
                 <VStack>
                     <h1>Sudoku Creator</h1>
+                    <Input placeholder="Sudoku title" size="sm" width="250px" onChange={(e) => setTitle(e.currentTarget.value)}/>
                     <SudokuGridCreator grid={sudokuGrid} setGrid={setSudokuGrid} />
                     <HStack>
                         {/* Ignore setDifficulty type

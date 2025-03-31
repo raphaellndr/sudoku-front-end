@@ -33,7 +33,7 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
         <Box borderWidth={1} borderRadius="md" p={4}>
             <VStack align="center">
                 <Text fontWeight="bold">
-                    Sudoku {sudoku.id} - {sudoku.difficulty}
+                    {sudoku.title ? sudoku.title : "New Sudoku"} - {sudoku.difficulty}
                 </Text>
                 <Badge colorPalette={getStatusColor(status)}>
                     {status || SudokuStatusEnum.Values.created}
