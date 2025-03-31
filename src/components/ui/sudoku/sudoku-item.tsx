@@ -27,6 +27,7 @@ interface SudokuItemProps {
 }
 
 const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, onDeleteSolution, status }) => {
+    console.log(status)
     return (
         <Box borderWidth={1} borderRadius="md" p={4}>
             <VStack align="center">
@@ -47,7 +48,7 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
                         Delete solution
                     </Button>
                     <Button
-                        disabled={status === (SudokuStatusEnum.Values.running || SudokuStatusEnum.Values.pending) ? false : true}
+                        disabled={![SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(status as any)}
                         colorPalette="red"
                         variant="outline"
                         onClick={() => onAbort(sudoku.id)}
@@ -55,6 +56,7 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
                         Abort solving
                     </Button>
                     <Button
+                        disabled={![SudokuStatusEnum.Values.created, SudokuStatusEnum.Values.aborted, SudokuStatusEnum.Values.failed].includes(status as any)}
                         loadingText="Solving sudoku..."
                         colorPalette="green"
                         variant="subtle"
