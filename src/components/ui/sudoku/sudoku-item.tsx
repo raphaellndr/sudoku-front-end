@@ -29,10 +29,10 @@ interface SudokuItemProps {
 
 const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, onDeleteSolution, onDeleteSudoku, status }) => {
     return (
-        <Box borderWidth={1} borderRadius="md" p={4}>
+        <Box p={4}>
             <VStack align="center">
                 <Text fontWeight="bold">
-                    {sudoku.title ? sudoku.title : "New Sudoku"} - {sudoku.difficulty}
+                    {sudoku.title} - {sudoku.difficulty}
                 </Text>
                 <Badge colorPalette={getStatusColor(status)}>
                     {status || SudokuStatusEnum.Values.created}
