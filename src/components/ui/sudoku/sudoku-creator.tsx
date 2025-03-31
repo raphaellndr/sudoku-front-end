@@ -73,7 +73,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
             <Box p={5}>
                 <VStack>
                     <h1>Sudoku Creator</h1>
-                    <Input placeholder="Sudoku title" size="sm" width="250px" onChange={(e) => setTitle(e.currentTarget.value)}/>
+                    <Input placeholder="Sudoku title" size="sm" width="250px" onChange={(e) => setTitle(e.currentTarget.value)} />
                     <SudokuGridCreator grid={sudokuGrid} setGrid={setSudokuGrid} />
                     <HStack>
                         {/* Ignore setDifficulty type
