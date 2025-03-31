@@ -2,7 +2,7 @@ import { memo } from "react";
 
 import { Badge, Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 
-import SudokuGrid from "./sudoku-grid";
+import SudokuSolutionDisplay from "./sudoku-solution-display";
 import { Sudoku, SudokuStatus } from "@/types/types";
 import { SudokuStatusEnum } from "@/types/enums";
 
@@ -37,7 +37,7 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
                 <Badge colorPalette={getStatusColor(status)}>
                     {status || SudokuStatusEnum.Values.created}
                 </Badge>
-                <SudokuGrid sudoku={sudoku} />
+                <SudokuSolutionDisplay sudoku={sudoku} />
                 <HStack>
                     <Button
                         disabled={[SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(status as any)}
