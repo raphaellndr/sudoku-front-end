@@ -39,7 +39,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
                 };
                 try {
                     const response = await fetch(
-                        process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudoku/sudokus/",
+                        process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudokus/",
                         {
                             method: "POST",
                             headers: {

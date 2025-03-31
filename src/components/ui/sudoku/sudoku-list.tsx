@@ -23,7 +23,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 if (session) {
                     try {
                         const response = await fetch(
-                            process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudoku/sudokus/",
+                            process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudokus/",
                             {
                                 method: "GET",
                                 headers: {
@@ -53,7 +53,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudokuId}/solution/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus/${sudokuId}/solution/`,
                     {
                         method: "GET",
                         headers: {
@@ -85,7 +85,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudokuId}/solution/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus/${sudokuId}/solution/`,
                     {
                         method: "DELETE",
                         headers: {
@@ -111,7 +111,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         if (session) {
             try {
                 const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudoku/sudokus/${sudokuId}/solution/`,
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus/${sudokuId}/solution/`,
                     {
                         method: "POST",
                         headers: {
