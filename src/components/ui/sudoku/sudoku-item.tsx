@@ -37,13 +37,13 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
                 </Badge>
                 <SudokuGrid sudoku={sudoku} />
                 <HStack>
-                    <Button onClick={() => onDeleteSolution(sudoku.id)} colorScheme="red" variant="outline">
+                    <Button onClick={() => onDeleteSolution(sudoku.id)} colorPalette="red" variant="outline">
                         Delete solution
                     </Button>
-                    <Button onClick={() => onAbort(sudoku.id)} colorScheme="red" variant="outline">
+                    <Button onClick={() => onAbort(sudoku.id)} colorPalette="red" variant="outline">
                         Abort solving
                     </Button>
-                    <Button onClick={() => onSolve(sudoku.id)} loadingText="Solving sudoku..." colorScheme="green">
+                    <Button onClick={() => onSolve(sudoku.id)} loadingText="Solving sudoku..." colorPalette="green" variant="subtle">
                         Solve sudoku
                     </Button>
                 </HStack>
