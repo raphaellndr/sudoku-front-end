@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -15,7 +15,6 @@ interface SudokuListProps {
 
 const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
     const { data: session } = useSession();
-    const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
         if (session) {
@@ -134,7 +133,11 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                         const data = JSON.parse(event.data);
                         if (data.type === "status_update") {
                             const { sudoku_id, status } = data;
-                            setStatuses((prev) => ({ ...prev, [sudoku_id]: status }));
+                            setSudokus((prevSudokus) =>
+                                prevSudokus.map((sudoku) =>
+                                    sudoku.id === sudoku_id ? { ...sudoku, status: status } : sudoku
+                                )
+                            );
 
                             if (status === SudokuStatusEnum.Values.completed) {
                                 fetchSolution(sudoku_id);
@@ -176,12 +179,11 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 )
                 if (response.ok) {
                     notifySuccess("Solution deleted successfully!")
-                    setStatuses((prev) => ({ ...prev, [sudokuId]: SudokuStatusEnum.Values.created }));
                     setSudokus((prevSudokus) => prevSudokus.map((sudoku) =>
-                            sudoku.id === sudokuId
-                                ? { ...sudoku, solution: null }
-                                : sudoku
-                        ))
+                        sudoku.id === sudokuId
+                            ? { ...sudoku, solution: null, status: SudokuStatusEnum.Values.created }
+                            : sudoku
+                    ))
                 } else {
                     const errorData = await response.json()
                     notifyError("Failed to delete solution: " + errorData);
@@ -202,7 +204,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                     onSolve={handleSolveButton}
                     onAbort={handleAbortButton}
                     onDeleteSolution={handleDeleteSolution}
-                    status={statuses[sudoku.id]}
+                    status={sudoku.status}
                 />
             ))}
         </VStack>
