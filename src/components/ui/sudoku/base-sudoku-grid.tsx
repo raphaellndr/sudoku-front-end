@@ -15,14 +15,12 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
     onCellChange,
     solution
 }) => {
-    // Shared styling values
     const bgColor = useColorModeValue("gray.100", "gray.800");
     const borderColor = useColorModeValue("gray.300", "gray.600");
     const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
     const originalValueColor = useColorModeValue("black", "white");
     const filledValueColor = useColorModeValue("gray.600", "gray.400");
     const strongBorderColor = useColorModeValue("black", "white");
-
 
     // Normalize grid to a flat array for consistent handling
     const flatGrid = Array.isArray(grid) ? grid.flat().join("") : (grid);
@@ -88,6 +86,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                                     fontWeight="bold"
                                     border="none"
                                     bg="transparent"
+                                    zIndex="1"
                                 />
                             ) : (
                                 (solutionValue || cellValue !== "0") && (
