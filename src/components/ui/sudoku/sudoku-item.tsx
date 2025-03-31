@@ -3,7 +3,8 @@ import { memo } from "react";
 import { Badge, Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
 
 import SudokuGrid from "./sudoku-grid";
-import { Sudoku } from "@/types/types";
+import { Sudoku, SudokuStatus } from "@/types/types";
+import { SudokuStatusEnum } from "@/types/enums";
 
 const getStatusColor = (status?: string) => {
     switch (status) {
@@ -22,7 +23,7 @@ interface SudokuItemProps {
     onSolve: (sudokuId: string) => Promise<void>;
     onAbort: (sudokuId: string) => Promise<void>;
     onDeleteSolution: (sudokuId: string) => Promise<void>;
-    status: string;
+    status: SudokuStatus;
 }
 
 const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, onDeleteSolution, status }) => {
@@ -33,17 +34,32 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
                     Sudoku {sudoku.id} - {sudoku.difficulty}
                 </Text>
                 <Badge colorPalette={getStatusColor(status)}>
-                    {status || "created"}
+                    {status || SudokuStatusEnum.Values.created}
                 </Badge>
                 <SudokuGrid sudoku={sudoku} />
                 <HStack>
-                    <Button onClick={() => onDeleteSolution(sudoku.id)} colorPalette="red" variant="outline">
+                    <Button
+                        disabled={sudoku.solution ? false : true}
+                        colorPalette="red"
+                        variant="outline"
+                        onClick={() => onDeleteSolution(sudoku.id)}
+                    >
                         Delete solution
                     </Button>
-                    <Button onClick={() => onAbort(sudoku.id)} colorPalette="red" variant="outline">
+                    <Button
+                        disabled={status === (SudokuStatusEnum.Values.running || SudokuStatusEnum.Values.pending) ? false : true}
+                        colorPalette="red"
+                        variant="outline"
+                        onClick={() => onAbort(sudoku.id)}
+                    >
                         Abort solving
                     </Button>
-                    <Button onClick={() => onSolve(sudoku.id)} loadingText="Solving sudoku..." colorPalette="green" variant="subtle">
+                    <Button
+                        loadingText="Solving sudoku..."
+                        colorPalette="green"
+                        variant="subtle"
+                        onClick={() => onSolve(sudoku.id)}
+                    >
                         Solve sudoku
                     </Button>
                 </HStack>
