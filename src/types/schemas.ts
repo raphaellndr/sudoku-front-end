@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { SudokuDifficultyEnum } from "./enums";
+import { SudokuDifficultyEnum, SudokuStatusEnum } from "./enums";
 
 export const UserFormSchema = z.object({
     username: z
@@ -52,6 +52,8 @@ export const SudokuSchema = z.object({
     grid: z
         .string()
         .length(81, { message: "Sudoku must contain 81 characters" }),
+    status: z
+        .enum(SudokuStatusEnum.options),
     task_id: z
        .string()
        .max(255)
