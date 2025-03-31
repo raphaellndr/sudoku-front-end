@@ -34,7 +34,7 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
                 notifyError("Cannot create a sudoku with an empty grid!");
             } else {
                 const data = {
-                    title: title,
+                    title: title || "New Sudoku",
                     difficulty: difficulty,
                     grid: stringGrid,
                 };
