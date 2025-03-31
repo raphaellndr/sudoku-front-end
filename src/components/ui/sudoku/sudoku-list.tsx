@@ -195,6 +195,33 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         }
     }
 
+    const handleDeleteSudoku = async (sudokuId: string) => {
+        if (session) {
+            try {
+                const response = await fetch(
+                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus/${sudokuId}/`,
+                    {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + session.accessToken
+                        },
+                    }
+                )
+                if (response.ok) {
+                    notifySuccess("Sudoku deleted successfully!")
+                    setSudokus((prevSudokus) => prevSudokus.filter((sudoku) => sudoku.id !== sudokuId))
+                } else {
+                    const errorData = await response.json()
+                    notifyError("Failed to delete Sudoku: " + errorData);
+                }
+            } catch (e: unknown) {
+                const error = e as Error;
+                notifyError(`An error occurred while deleting Sudoku: ${error.message}`);
+            }
+        }
+    }
+
     return (
         <VStack p={5} width="full">
             {sudokus.map((sudoku) => (
@@ -204,6 +231,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                     onSolve={handleSolveButton}
                     onAbort={handleAbortButton}
                     onDeleteSolution={handleDeleteSolution}
+                    onDeleteSudoku={handleDeleteSudoku}
                     status={sudoku.status}
                 />
             ))}
