@@ -25,7 +25,6 @@ interface SudokuItemProps {
 }
 
 const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, status }) => {
-    console.log(sudoku.grid)
     return (
         <Box borderWidth={1} borderRadius="md" p={4}>
             <VStack align="center">
