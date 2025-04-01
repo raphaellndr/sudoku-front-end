@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 
-import { Flex, For, Tabs, VStack } from "@chakra-ui/react";
+import { Flex, Tabs } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { LuInfinity } from "react-icons/lu";
 
-import SudokuItem from "./sudoku-item";
-import { Sudoku, SudokuSolution } from "@/types/types";
+import { Sudoku, SudokuDifficulty, SudokuSolution } from "@/types/types";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
+import SudokuList from "./sudoku-list";
 
 interface SudokuTabsProps {
     sudokus: Sudoku[];
@@ -223,30 +222,9 @@ const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
         }
     };
 
-    const getSudokusByDifficulty = (difficulty: string | null) => {
+    const getSudokusByDifficulty = (difficulty: SudokuDifficulty | null) => {
         if (!difficulty) return sudokus;
         return sudokus.filter(sudoku => sudoku.difficulty === difficulty);
-    };
-
-    const renderSudokuItems = (filteredSudokus: Sudoku[], difficulty: string | null) => {
-        return (
-            <For
-                each={filteredSudokus}
-                fallback={
-                    <VStack textAlign="center">
-                        {`No ${difficulty || ""} sudoku created yet!`}
-                    </VStack>}
-            >
-                {(sudoku, _) => <SudokuItem
-                    key={sudoku.id}
-                    sudoku={sudoku}
-                    onSolve={handleSolveButton}
-                    onAbort={handleAbortButton}
-                    onDeleteSolution={handleDeleteSolution}
-                    onDeleteSudoku={handleDeleteSudoku}
-                    status={sudoku.status} />}
-            </For>
-        )
     };
 
     return (
@@ -254,8 +232,7 @@ const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
             {/* Define tabs names */}
             <Flex justify="center" align="center" p={4}>
                 <Tabs.List bg="gray.100" rounded="l3" p="1" justifyContent="center" borderRadius="md">
-                    <Tabs.Trigger value="all" key="trigger-all"><LuInfinity />All</Tabs.Trigger>
-                    {SudokuDifficultyEnum.options.map((option) =>
+                    {["all", ...SudokuDifficultyEnum.options].map((option) =>
                         <Tabs.Trigger value={option} key={`trigger-${option}`}>
                             {option.charAt(0).toUpperCase() + option.slice(1)}
                         </Tabs.Trigger>
@@ -264,12 +241,16 @@ const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
                 </Tabs.List>
             </Flex>
             {/* Define tabs */}
-            <Tabs.Content value="all">
-                {renderSudokuItems(getSudokusByDifficulty(null), null)}
-            </Tabs.Content>
-            {SudokuDifficultyEnum.options.map((option) =>
+            {["all", ...SudokuDifficultyEnum.options].map((option) =>
                 <Tabs.Content value={option} key={`content-${option}`}>
-                    {renderSudokuItems(getSudokusByDifficulty(option), option)}
+                    <SudokuList
+                        sudokus={getSudokusByDifficulty(option === "all" ? null : option as SudokuDifficulty)}
+                        difficulty={option === "all" ? null : option as SudokuDifficulty}
+                        onSolve={handleSolveButton}
+                        onAbort={handleAbortButton}
+                        onDeleteSolution={handleDeleteSolution}
+                        onDeleteSudoku={handleDeleteSudoku}
+                    />
                 </Tabs.Content>
             )}
         </Tabs.Root>
