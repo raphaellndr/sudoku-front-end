@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 
-import { VStack } from "@chakra-ui/react";
+import { For, VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
 import SudokuItem from "./sudoku-item";
 import { Sudoku, SudokuSolution } from "@/types/types";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 import { SudokuStatusEnum } from "@/types/enums";
+import { TfiFaceSad } from "react-icons/tfi";
 
 interface SudokuListProps {
     sudokus: Sudoku[];
@@ -224,17 +225,23 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
 
     return (
         <VStack p={5} width="full">
-            {sudokus.map((sudoku) => (
-                <SudokuItem
+            <For
+                each={sudokus}
+                fallback={
+                    <VStack textAlign="center" fontWeight="medium">
+                        <TfiFaceSad size="50px" />
+                        No Sudokus created yet!
+                    </VStack>}
+            >
+                {(sudoku, _) => <SudokuItem
                     key={sudoku.id}
                     sudoku={sudoku}
                     onSolve={handleSolveButton}
                     onAbort={handleAbortButton}
                     onDeleteSolution={handleDeleteSolution}
                     onDeleteSudoku={handleDeleteSudoku}
-                    status={sudoku.status}
-                />
-            ))}
+                    status={sudoku.status} />}
+            </For>
         </VStack>
     );
 };
