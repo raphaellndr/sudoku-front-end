@@ -9,12 +9,12 @@ import { Sudoku, SudokuSolution } from "@/types/types";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
 
-interface SudokuListProps {
+interface SudokuTabsProps {
     sudokus: Sudoku[];
     setSudokus: React.Dispatch<React.SetStateAction<Sudoku[]>>;
 };
 
-const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
+const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -276,4 +276,4 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
     );
 };
 
-export default SudokuList;
+export default SudokuTabs;
