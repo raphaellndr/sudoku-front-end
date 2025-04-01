@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 
-import { For, VStack } from "@chakra-ui/react";
+import { Flex, For, Tabs, VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+import { TfiFaceSad } from "react-icons/tfi";
+import { LuInfinity } from "react-icons/lu";
 
 import SudokuItem from "./sudoku-item";
 import { Sudoku, SudokuSolution } from "@/types/types";
 import { notifyError, notifySuccess } from "@/toasts/toast";
-import { SudokuStatusEnum } from "@/types/enums";
-import { TfiFaceSad } from "react-icons/tfi";
+import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
 
 interface SudokuListProps {
     sudokus: Sudoku[];
@@ -79,7 +80,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
             }
         }
 
-    }
+    };
 
     const handleAbortButton = async (sudokuId: string) => {
         if (session) {
@@ -105,7 +106,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 notifyError(`An error occurred while aborting the task: ${error.message}`);
             }
         }
-    }
+    };
 
     const handleSolveButton = async (sudokuId: string) => {
         if (session) {
@@ -194,7 +195,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 notifyError(`An error occurred while deleting solution: ${error.message}`);
             }
         }
-    }
+    };
 
     const handleDeleteSudoku = async (sudokuId: string) => {
         if (session) {
@@ -221,12 +222,17 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 notifyError(`An error occurred while deleting Sudoku: ${error.message}`);
             }
         }
-    }
+    };
 
-    return (
-        <VStack p={5} width="full">
+    const getSudokusByDifficulty = (difficulty: string | null) => {
+        if (!difficulty) return sudokus;
+        return sudokus.filter(sudoku => sudoku.difficulty === difficulty);
+    };
+
+    const renderSudokuItems = (filteredSudokus: Sudoku[]) => {
+        return (
             <For
-                each={sudokus}
+                each={filteredSudokus}
                 fallback={
                     <VStack textAlign="center" fontWeight="medium">
                         <TfiFaceSad size="50px" />
@@ -242,7 +248,33 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                     onDeleteSudoku={handleDeleteSudoku}
                     status={sudoku.status} />}
             </For>
-        </VStack>
+        )
+    };
+
+    return (
+        <Tabs.Root defaultValue="all" variant="plain">
+            {/* Define tabs names */}
+            <Flex justify="center" align="center" p={4}>
+                <Tabs.List bg="gray.100" rounded="l3" p="1" justifyContent="center" borderRadius="md">
+                    <Tabs.Trigger value="all"><LuInfinity />All</Tabs.Trigger>
+                    {SudokuDifficultyEnum.options.map((option) =>
+                        <Tabs.Trigger value={option}>
+                            {option.charAt(0).toUpperCase() + option.slice(1)}
+                        </Tabs.Trigger>
+                    )}
+                    <Tabs.Indicator rounded="l2" />
+                </Tabs.List>
+            </Flex>
+            {/* Define tabs */}
+            <Tabs.Content value="all">
+                {renderSudokuItems(getSudokusByDifficulty(null))}
+            </Tabs.Content>
+            {SudokuDifficultyEnum.options.map((option) =>
+                <Tabs.Content value={option}>
+                    {renderSudokuItems(getSudokusByDifficulty(option))}
+                </Tabs.Content>
+            )}
+        </Tabs.Root>
     );
 };
 

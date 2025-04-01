@@ -30,7 +30,7 @@ interface SudokuItemProps {
 const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, onDeleteSolution, onDeleteSudoku, status }) => {
     return (
         <Box p={4}>
-            <VStack align="center">
+            <VStack>
                 <Text fontWeight="bold">
                     {sudoku.title} - {sudoku.difficulty}
                 </Text>
