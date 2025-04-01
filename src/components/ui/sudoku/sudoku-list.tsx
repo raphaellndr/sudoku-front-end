@@ -228,7 +228,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         return sudokus.filter(sudoku => sudoku.difficulty === difficulty);
     };
 
-    const renderSudokuItems = (filteredSudokus: Sudoku[], difficulty: string) => {
+    const renderSudokuItems = (filteredSudokus: Sudoku[], difficulty: string | null) => {
         return (
             <For
                 each={filteredSudokus}
