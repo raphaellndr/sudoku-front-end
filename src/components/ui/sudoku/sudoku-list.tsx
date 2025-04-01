@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 import { Flex, For, Tabs, VStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { TfiFaceSad } from "react-icons/tfi";
 import { LuInfinity } from "react-icons/lu";
 
 import SudokuItem from "./sudoku-item";
@@ -229,14 +228,13 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
         return sudokus.filter(sudoku => sudoku.difficulty === difficulty);
     };
 
-    const renderSudokuItems = (filteredSudokus: Sudoku[]) => {
+    const renderSudokuItems = (filteredSudokus: Sudoku[], difficulty: string) => {
         return (
             <For
                 each={filteredSudokus}
                 fallback={
-                    <VStack textAlign="center" fontWeight="medium">
-                        <TfiFaceSad size="50px" />
-                        No Sudokus created yet!
+                    <VStack textAlign="center">
+                        {`No ${difficulty || ""} sudoku created yet!`}
                     </VStack>}
             >
                 {(sudoku, _) => <SudokuItem
@@ -267,11 +265,11 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
             </Flex>
             {/* Define tabs */}
             <Tabs.Content value="all">
-                {renderSudokuItems(getSudokusByDifficulty(null))}
+                {renderSudokuItems(getSudokusByDifficulty(null), null)}
             </Tabs.Content>
             {SudokuDifficultyEnum.options.map((option) =>
                 <Tabs.Content value={option} key={`content-${option}`}>
-                    {renderSudokuItems(getSudokusByDifficulty(option))}
+                    {renderSudokuItems(getSudokusByDifficulty(option), option)}
                 </Tabs.Content>
             )}
         </Tabs.Root>
