@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 
-import { Separator, Spinner } from '@chakra-ui/react';
+import { Separator, Show, Spinner } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
 
@@ -19,17 +19,16 @@ const HomePage = () => {
     const [sudokus, setSudokus] = useState<Sudoku[]>([]);
 
     return (
-        <>
-            {status === "loading" ? <Spinner /> :
-                <>
-                    <ToastContainer />
-                    <AppBar />
-                    <SudokuCreator setSudokus={setSudokus} />
-                    <Separator />
-                    <SudokuList sudokus={sudokus} setSudokus={setSudokus} />
-                </>
-            }
-        </>
+        <Show
+            when={status !== "loading"}
+            fallback={<Spinner />}
+        >
+            <ToastContainer />
+            <AppBar />
+            <SudokuCreator setSudokus={setSudokus} />
+            <Separator />
+            <SudokuList sudokus={sudokus} setSudokus={setSudokus} />
+        </Show>
     );
 };
 
