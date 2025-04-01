@@ -21,6 +21,9 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
     const originalValueColor = useColorModeValue("black", "white");
     const filledValueColor = useColorModeValue("gray.600", "gray.400");
     const strongBorderColor = useColorModeValue("black", "white");
+    const hoverBgColor = useColorModeValue("gray.200", "gray.900");
+    const evenBoxBgColor = useColorModeValue("gray.100", "gray.700");
+    const oddBoxBgColor = useColorModeValue("white", "gray.800");
 
     // Normalize grid to a flat array for consistent handling
     const flatGrid = Array.isArray(grid) ? grid.flat().join("") : (grid);
@@ -49,9 +52,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
 
                     // Determine box background color
                     const isEvenBox = (Math.floor(rowIndex / 3) + Math.floor(colIndex / 3)) % 2 === 0;
-                    const boxBgColor = isEvenBox
-                        ? useColorModeValue("gray.100", "gray.700")
-                        : useColorModeValue("white", "gray.800");
+                    const boxBgColor = isEvenBox ? evenBoxBgColor : oddBoxBgColor;
 
                     return (
                         <Box
@@ -68,7 +69,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                             borderBottomLeftRadius={colIndex === 0 && rowIndex == 8 ? "md" : ""}
                             borderBottomRightRadius={colIndex === 8 && rowIndex == 8 ? "md" : ""}
                             borderColor={borderColor}
-                            _hover={{ bg: useColorModeValue("gray.200", "gray.900") }}
+                            _hover={{ bg: hoverBgColor }}
                             position="relative"
                         >
                             {mode === "create" ? (
