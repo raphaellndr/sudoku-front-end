@@ -256,9 +256,9 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
             {/* Define tabs names */}
             <Flex justify="center" align="center" p={4}>
                 <Tabs.List bg="gray.100" rounded="l3" p="1" justifyContent="center" borderRadius="md">
-                    <Tabs.Trigger value="all" key="all"><LuInfinity />All</Tabs.Trigger>
+                    <Tabs.Trigger value="all" key="trigger-all"><LuInfinity />All</Tabs.Trigger>
                     {SudokuDifficultyEnum.options.map((option) =>
-                        <Tabs.Trigger value={option} key={option}>
+                        <Tabs.Trigger value={option} key={`trigger-${option}`}>
                             {option.charAt(0).toUpperCase() + option.slice(1)}
                         </Tabs.Trigger>
                     )}
@@ -270,7 +270,7 @@ const SudokuList: React.FC<SudokuListProps> = ({ sudokus, setSudokus }) => {
                 {renderSudokuItems(getSudokusByDifficulty(null))}
             </Tabs.Content>
             {SudokuDifficultyEnum.options.map((option) =>
-                <Tabs.Content value={option} key={option}>
+                <Tabs.Content value={option} key={`content-${option}`}>
                     {renderSudokuItems(getSudokusByDifficulty(option))}
                 </Tabs.Content>
             )}
