@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
 
 import SudokuCreator from '@/components/ui/sudoku/sudoku-creator';
-import SudokuTabs from '@/components/ui/sudoku/sudoku-tabs';
+import SudokuSolutionsDisplay from '@/components/ui/sudoku/sudoku-solutions-display';
 import { Sudoku } from '@/types/types';
 
 // Dynamically import the AppBar component to avoid hydration errors
@@ -27,7 +27,7 @@ const HomePage = () => {
             <AppBar />
             <SudokuCreator setSudokus={setSudokus} />
             <Separator />
-            <SudokuTabs sudokus={sudokus} setSudokus={setSudokus} />
+            <SudokuSolutionsDisplay sudokus={sudokus} setSudokus={setSudokus} />
         </Show>
     );
 };

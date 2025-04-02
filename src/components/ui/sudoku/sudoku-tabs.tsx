@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Flex, Tabs } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 
-import { Sudoku, SudokuDifficulty } from "@/types/types";
-import { notifyError } from "@/toasts/toast";
-import { SudokuDifficultyEnum } from "@/types/enums";
 import SudokuList from "./sudoku-list";
+import { Sudoku, SudokuDifficulty } from "@/types/types";
+import { SudokuDifficultyEnum } from "@/types/enums";
 
 interface SudokuTabsProps {
     sudokus: Sudoku[];
@@ -14,45 +12,6 @@ interface SudokuTabsProps {
 };
 
 const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
-    const { data: session } = useSession();
-
-    useEffect(() => {
-        if (session) {
-            const fetchSudokus = async () => {
-                if (session) {
-                    try {
-                        const response = await fetch(
-                            process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudokus/",
-                            {
-                                method: "GET",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: "Bearer " + session.accessToken,
-                                },
-                            }
-                        );
-                        if (response.ok) {
-                            const responseData = await response.json();
-                            const fetchedSudokus: Sudoku[] = responseData["results"]
-                            setSudokus(fetchedSudokus);
-                        } else {
-                            notifyError("Failed to fetch Sudoku grids");
-                        }
-                    } catch (e: unknown) {
-                        const error = e as Error;
-                        notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
-                    }
-                }
-            };
-            fetchSudokus();
-        };
-    }, [session]);
-
-    const getSudokusByDifficulty = (difficulty: SudokuDifficulty | null) => {
-        if (!difficulty) return sudokus;
-        return sudokus.filter(sudoku => sudoku.difficulty === difficulty);
-    };
-
     return (
         <Tabs.Root defaultValue="all" variant="plain">
             {/* Define tabs names */}
@@ -70,7 +29,7 @@ const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
             {["all", ...SudokuDifficultyEnum.options].map((option) =>
                 <Tabs.Content value={option} key={`content-${option}`}>
                     <SudokuList
-                        sudokus={getSudokusByDifficulty(option === "all" ? null : option as SudokuDifficulty)}
+                        sudokus={sudokus}
                         difficulty={option === "all" ? null : option as SudokuDifficulty}
                         setSudokus={setSudokus}
                     />
