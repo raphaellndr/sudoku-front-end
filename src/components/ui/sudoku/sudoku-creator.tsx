@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { Box, Input, VStack, Button, HStack } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
-import { SudokuDifficultyEnum } from "@/types/enums";
 import DifficultySelect from "./difficulty-select";
-import SudokuGridCreator from "./sudoku-grid-creator";
+import { BaseSudokuGrid } from "./base-sudoku-grid";
+import { SudokuDifficultyEnum } from "@/types/enums";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
 
@@ -15,6 +15,7 @@ interface SudokuCreatorProps {
 
 const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
     const { data: session } = useSession();
+
     const [sudokuGrid, setSudokuGrid] = useState<number[][]>(Array(9).fill(Array(9).fill(0)));
     const [difficulty, setDifficulty] = useState(SudokuDifficultyEnum.options[0]);
     const [title, setTitle] = useState("");
@@ -26,6 +27,13 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
     const resetSudokuGrid = () => {
         setSudokuGrid(Array(9).fill(Array(9).fill(0)))
     }
+
+    const handleCellChange = (rowIndex: number, colIndex: number, value: string) => {
+        const newSudokuGrid = sudokuGrid.map((row, rIndex) =>
+            row.map((cell, cIndex) => (rIndex === rowIndex && cIndex === colIndex ? parseInt(value) || 0 : cell))
+        );
+        setSudokuGrid(newSudokuGrid);
+    };
 
     const handleCreateSudoku = async () => {
         if (session) {
@@ -80,7 +88,11 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
                         value={title}
                         onChange={(e) => setTitle(e.currentTarget.value)}
                     />
-                    <SudokuGridCreator grid={sudokuGrid} setGrid={setSudokuGrid} />
+                    <BaseSudokuGrid
+                        mode="create"
+                        grid={sudokuGrid}
+                        onCellChange={handleCellChange}
+                    />
                     <HStack>
                         {/* Ignore setDifficulty type
                         // @ts-ignore */}
