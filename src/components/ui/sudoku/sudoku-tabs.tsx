@@ -14,7 +14,7 @@ interface SudokuTabsProps {
 const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
     const getSudokusByDifficulty = (difficulty: SudokuDifficulty | null) => {
         if (!difficulty) return sudokus;
-        const filteredSudokus =  sudokus.filter(sudoku => sudoku.difficulty === difficulty);
+        const filteredSudokus = sudokus.filter(sudoku => sudoku.difficulty === difficulty);
         return filteredSudokus;
     };
 
