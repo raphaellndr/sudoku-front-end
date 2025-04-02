@@ -12,6 +12,12 @@ interface SudokuTabsProps {
 };
 
 const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
+    const getSudokusByDifficulty = (difficulty: SudokuDifficulty | null) => {
+        if (!difficulty) return sudokus;
+        const filteredSudokus =  sudokus.filter(sudoku => sudoku.difficulty === difficulty);
+        return filteredSudokus;
+    };
+
     return (
         <Tabs.Root defaultValue="all" variant="plain">
             {/* Define tabs names */}
@@ -29,7 +35,7 @@ const SudokuTabs: React.FC<SudokuTabsProps> = ({ sudokus, setSudokus }) => {
             {["all", ...SudokuDifficultyEnum.options].map((option) =>
                 <Tabs.Content value={option} key={`content-${option}`}>
                     <SudokuList
-                        sudokus={sudokus}
+                        sudokus={getSudokusByDifficulty(option === "all" ? null : option as SudokuDifficulty)}
                         difficulty={option === "all" ? null : option as SudokuDifficulty}
                         setSudokus={setSudokus}
                     />
