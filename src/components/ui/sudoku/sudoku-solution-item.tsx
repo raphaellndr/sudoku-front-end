@@ -18,7 +18,7 @@ const getStatusColor = (status?: string) => {
     }
 };
 
-interface SudokuItemProps {
+interface SudokuSolutionItemProps {
     sudoku: Sudoku;
     onSolve: (sudokuId: string) => Promise<void>;
     onAbort: (sudokuId: string) => Promise<void>;
@@ -27,7 +27,7 @@ interface SudokuItemProps {
     status: SudokuStatus;
 }
 
-const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, onDeleteSolution, onDeleteSudoku, status }) => {
+const SudokuSolutionItem: React.FC<SudokuSolutionItemProps> = memo(({ sudoku, onSolve, onAbort, onDeleteSolution, onDeleteSudoku, status }) => {
     return (
         <Box p={4}>
             <VStack>
@@ -82,4 +82,4 @@ const SudokuItem: React.FC<SudokuItemProps> = memo(({ sudoku, onSolve, onAbort, 
     )
 });
 
-export default SudokuItem;
+export default SudokuSolutionItem;
