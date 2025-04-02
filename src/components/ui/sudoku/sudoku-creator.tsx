@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import DifficultySelect from "./difficulty-select";
 import { BaseSudokuGrid } from "./base-sudoku-grid";
 import { SudokuDifficultyEnum } from "@/types/enums";
-import { notifyError, notifySuccess } from "@/toasts/toast";
+import { notifyError } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
 
 interface SudokuCreatorProps {
@@ -60,7 +60,6 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
                     )
                     const responseData = await response.json();
                     if (response.ok) {
-                        notifySuccess("Successfully created sudoku!");
                         resetSudokuGrid();
                         setTitle("")
                         const sudoku = responseData as Sudoku;
@@ -73,7 +72,6 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
                     notifyError(`An error occurred while creating sudoku: ${error.message}`);
                 }
             }
-
         }
     }
 
