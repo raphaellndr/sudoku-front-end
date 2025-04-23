@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "./enums";
 
-export const UserFormSchema = z.object({
+export const RegisterFormSchema = z.object({
     username: z
         .string()
         .optional(),
@@ -20,6 +20,18 @@ export const UserFormSchema = z.object({
     message: "Passwords do not match",
     path: ["confirmPassword"],
 });
+
+export const SignInFormSchema = z.object({
+    username: z
+        .string()
+        .optional(),
+    email: z
+        .string()
+        .min(1, { message: "Email is required" })
+        .email(),
+    password: z
+        .string()
+})
 
 export const SudokuSolutionSchema = z.object({
     id: z
