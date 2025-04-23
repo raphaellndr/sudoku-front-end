@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-
-import { Separator, Show, Spinner } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
+
+import { Box, Separator, Show, Spinner, Flex } from '@chakra-ui/react';
 import { ToastContainer } from 'react-toastify';
 
 import SudokuCreator from '@/components/ui/sudoku/sudoku-creator';
 import { Sudoku } from '@/types/types';
+import Footer from '@/components/ui/home-page/footer/footer';
 
 // Dynamically import the AppBar component to avoid hydration errors
 const Header = dynamic(() => import("@/components/ui/home-page/header/header"), { ssr: false });
@@ -22,10 +23,15 @@ const HomePage = () => {
             when={status !== "loading"}
             fallback={<Spinner />}
         >
-            <ToastContainer />
-            <Header />
-            <SudokuCreator setSudokus={setSudokus} />
-            <Separator />
+            <Flex direction="column" minHeight="100vh">
+                <ToastContainer />
+                <Header />
+                <Box flex="1">
+                    <SudokuCreator setSudokus={setSudokus} />
+                </Box>
+                <Separator marginLeft="5" marginRight="5" />
+                <Footer />
+            </Flex>
         </Show>
     );
 };
