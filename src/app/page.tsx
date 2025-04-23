@@ -11,7 +11,7 @@ import SudokuCreator from '@/components/ui/sudoku/sudoku-creator';
 import { Sudoku } from '@/types/types';
 import Footer from '@/components/ui/home-page/footer/footer';
 
-// Dynamically import the AppBar component to avoid hydration errors
+// Dynamically import the Header component to avoid hydration errors
 const Header = dynamic(() => import("@/components/ui/home-page/header/header"), { ssr: false });
 
 const HomePage = () => {
