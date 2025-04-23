@@ -27,6 +27,7 @@ const CustomDrawer = () => {
                         <Drawer.Body>
                             <VStack>
                                 <DrawerButton buttonText="Play" />
+                                <DrawerButton buttonText="Solve" />
                                 <DrawerButton buttonText="About" />
                                 <DrawerButton buttonText="Profile" />
                                 {session ? (

@@ -52,6 +52,9 @@ const Header: React.FC = () => {
                                     Play
                                 </Button>
                                 <Button variant="ghost" fontSize="md">
+                                    Solve
+                                </Button>
+                                <Button variant="ghost" fontSize="md">
                                     About
                                 </Button>
                                 {session && (
