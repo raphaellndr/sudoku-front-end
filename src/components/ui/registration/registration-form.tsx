@@ -1,6 +1,7 @@
+import { signIn } from "next-auth/react";
+
 import { Button, Input, Separator, Stack } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
 import { toast, ToastContainer } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 
