@@ -8,11 +8,10 @@ import { useSession } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
 
 import SudokuCreator from '@/components/ui/sudoku/sudoku-creator';
-import SudokuSolutionsDisplay from '@/components/ui/sudoku/sudoku-solutions-display';
 import { Sudoku } from '@/types/types';
 
 // Dynamically import the AppBar component to avoid hydration errors
-const AppBar = dynamic(() => import("@/components/ui/home-page/app-bar"), { ssr: false });
+const Header = dynamic(() => import("@/components/ui/home-page/header/header"), { ssr: false });
 
 const HomePage = () => {
     const { status } = useSession()
@@ -24,10 +23,9 @@ const HomePage = () => {
             fallback={<Spinner />}
         >
             <ToastContainer />
-            <AppBar />
+            <Header />
             <SudokuCreator setSudokus={setSudokus} />
             <Separator />
-            <SudokuSolutionsDisplay sudokus={sudokus} setSudokus={setSudokus} />
         </Show>
     );
 };
