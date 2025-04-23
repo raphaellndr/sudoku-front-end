@@ -169,6 +169,9 @@ const authOptions: NextAuthOptions = {
     },
     providers: providers,
     callbacks: callbacks,
+    pages: {
+        signIn: "/auth/signin"
+    }
 };
 
 const handler = NextAuth(authOptions);
