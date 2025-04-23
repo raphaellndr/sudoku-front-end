@@ -20,38 +20,39 @@ const SudokuSolutionsDisplay: React.FC<SudokuSolutionsDisplayProps> = ({ sudokus
     const [count, setCount] = useState(0);
     const [page, setPage] = useState(1);
 
+    const headers: HeadersInit = {
+        "Content-Type": "application/json",
+    };
+
+    if (session) {
+        headers.Authorization = "Bearer " + session.accessToken;
+    }
+
     useEffect(() => {
-        if (session) {
-            fetchSudokus();
-        };
+        fetchSudokus();
     }, [session, page]);
 
     const fetchSudokus = async () => {
-        if (session) {
-            const offset = (page - 1) * pageSize;
-            try {
-                const response = await fetch(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus?offset=${offset}&limit=${pageSize}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + session.accessToken,
-                        },
-                    }
-                );
-                if (response.ok) {
-                    const responseData = await response.json();
-                    const fetchedSudokus: Sudoku[] = responseData["results"]
-                    setSudokus(fetchedSudokus);
-                    setCount(responseData.count);
-                } else {
-                    notifyError("Failed to fetch Sudoku grids");
+        const offset = (page - 1) * pageSize;
+        try {
+            const response = await fetch(
+                process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus?offset=${offset}&limit=${pageSize}`,
+                {
+                    method: "GET",
+                    headers: headers,
                 }
-            } catch (e: unknown) {
-                const error = e as Error;
-                notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
+            );
+            if (response.ok) {
+                const responseData = await response.json();
+                const fetchedSudokus: Sudoku[] = responseData["results"]
+                setSudokus(fetchedSudokus);
+                setCount(responseData.count);
+            } else {
+                notifyError("Failed to fetch Sudoku grids");
             }
+        } catch (e: unknown) {
+            const error = e as Error;
+            notifyError(`An error occurred while fetching Sudoku grids: ${error.message}`);
         }
     };
 

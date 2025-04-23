@@ -36,44 +36,50 @@ const SudokuCreator: React.FC<SudokuCreatorProps> = ({ setSudokus }) => {
     };
 
     const handleCreateSudoku = async () => {
-        if (session) {
-            const stringGrid = gridToString();
-            if (/^0+$/.test(stringGrid)) {
-                notifyError("Cannot create a sudoku with an empty grid!");
-            } else {
-                const data = {
-                    title: title || "New Sudoku",
-                    difficulty: difficulty,
-                    grid: stringGrid,
-                };
-                try {
-                    const response = await fetch(
-                        process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudokus/",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + session.accessToken
-                            },
-                            body: JSON.stringify(data),
-                        }
-                    )
-                    const responseData = await response.json();
-                    if (response.ok) {
-                        resetSudokuGrid();
-                        setTitle("")
-                        const sudoku = responseData as Sudoku;
-                        setSudokus((prevSudokus) => [sudoku, ...prevSudokus]);
-                    } else {
-                        notifyError("Failed to create sudoku: " + responseData);
-                    }
-                } catch (e: unknown) {
-                    const error = e as Error;
-                    notifyError(`An error occurred while creating sudoku: ${error.message}`);
-                }
-            }
+        const stringGrid = gridToString();
+        if (/^0+$/.test(stringGrid)) {
+            notifyError("Cannot create a sudoku with an empty grid!");
+            return;
         }
-    }
+    
+        const data = {
+            title: title || "New Sudoku",
+            difficulty: difficulty,
+            grid: stringGrid,
+        };
+    
+        try {
+            const headers: HeadersInit = {
+                "Content-Type": "application/json",
+            };
+    
+            if (session) {
+                headers.Authorization = "Bearer " + session.accessToken;
+            }
+    
+            const response = await fetch(
+                process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudokus/",
+                {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify(data),
+                }
+            );
+    
+            const responseData = await response.json();
+            if (response.ok) {
+                resetSudokuGrid();
+                setTitle("");
+                const sudoku = responseData as Sudoku;
+                setSudokus((prevSudokus) => [sudoku, ...prevSudokus]);
+            } else {
+                notifyError("Failed to create sudoku: " + responseData);
+            }
+        } catch (e: unknown) {
+            const error = e as Error;
+            notifyError(`An error occurred while creating sudoku: ${error.message}`);
+        }
+    };
 
     return (
         <>
