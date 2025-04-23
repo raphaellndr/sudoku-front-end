@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import {
@@ -14,19 +13,6 @@ import CustomDrawer from "../header/custom-drawer";
 
 const Header: React.FC = () => {
     const { data: session } = useSession();
-    const [isMobile, setIsMobile] = useState<boolean>(false);
-
-    useEffect(() => {
-        const handleResize = (): void => {
-            setIsMobile(window.innerWidth < 768);
-        };
-
-        handleResize();
-
-        window.addEventListener("resize", handleResize);
-
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     return (
         <Flex align="center">
