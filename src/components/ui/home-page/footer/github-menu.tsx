@@ -1,5 +1,5 @@
 import { IconButton, Menu, Portal, Text } from "@chakra-ui/react";
-import { FaGithub } from "react-icons/fa";
+import { FaExternalLinkAlt, FaGithub } from "react-icons/fa";
 
 const GithubMenu = () => {
     return (
@@ -24,6 +24,7 @@ const GithubMenu = () => {
                             <Menu.Item key={link.value} asChild value={link.value}>
                                 <a href={link.href} target="_blank" rel="noreferrer">
                                     {link.label}
+                                    <Menu.ItemCommand><FaExternalLinkAlt /></Menu.ItemCommand>
                                 </a>
                             </Menu.Item>
                         ))}
