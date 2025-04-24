@@ -28,7 +28,10 @@ Best regards,
                 backgroundColor: "transparent",
             }}
         >
-            <MdEmail size="xl" /> <Text display={{ base: "none", md: "flex" }}>Send email</Text>
+            <MdEmail size="24" />
+            <Text display={{ base: "none", md: "flex" }}>
+                Send email
+            </Text>
         </IconButton>
     );
 };
