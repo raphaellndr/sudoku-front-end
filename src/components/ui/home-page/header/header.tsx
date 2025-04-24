@@ -10,6 +10,7 @@ import {
 
 import { ColorModeButton } from "../../color-mode";
 import CustomDrawer from "../header/custom-drawer";
+import HeaderButton from "./header-button";
 
 const Header: React.FC = () => {
     const { data: session } = useSession();
@@ -37,9 +38,7 @@ const Header: React.FC = () => {
                                 <Button variant="ghost" fontSize="md">
                                     Play
                                 </Button>
-                                <Button variant="ghost" fontSize="md">
-                                    Solve
-                                </Button>
+                                <HeaderButton buttonText="Solve" routerHref="/solve" />
                                 <Button variant="ghost" fontSize="md">
                                     About
                                 </Button>
