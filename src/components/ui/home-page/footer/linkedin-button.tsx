@@ -8,7 +8,7 @@ const LinkedInButton = () => {
                 backgroundColor: "transparent",
             }}>
             <a href="https://www.linkedin.com/in/rapha%C3%ABl-landur%C3%A9-16028a183/">
-                <FaLinkedin />
+                <FaLinkedin size="24" />
                 <Text display={{ base: "none", md: "flex" }}>LinkedIn profile</Text>
             </a>
         </IconButton>
