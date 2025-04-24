@@ -12,7 +12,7 @@ const GithubMenu = () => {
                     _expanded={{ backgroundColor: "transparent" }}
                 >
                     <div>
-                        <FaGithub />
+                        <FaGithub size="24" />
                         <Text display={{ base: "none", md: "flex" }}>Source code</Text>
                     </div>
                 </IconButton>
