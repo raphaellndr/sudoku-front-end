@@ -16,7 +16,6 @@ const Header = dynamic(() => import("@/components/ui/home-page/header/header"), 
 
 const HomePage = () => {
     const { status } = useSession()
-    const [sudokus, setSudokus] = useState<Sudoku[]>([]);
 
     return (
         <Show
@@ -26,9 +25,7 @@ const HomePage = () => {
             <Flex direction="column" minHeight="100vh">
                 <ToastContainer />
                 <Header />
-                <Box flex="1">
-                    <SudokuCreator setSudokus={setSudokus} />
-                </Box>
+                <Box flex="1"></Box>
                 <Separator marginLeft="5" marginRight="5" />
                 <Footer />
             </Flex>
