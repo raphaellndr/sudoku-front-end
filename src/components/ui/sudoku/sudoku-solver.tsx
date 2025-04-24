@@ -7,7 +7,6 @@ import { BaseSudokuGrid } from "./base-sudoku-grid";
 import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
 import { notifyError } from "@/toasts/toast";
-import { set } from "zod";
 
 const defaultSudoku: Sudoku = {
     id: "",
