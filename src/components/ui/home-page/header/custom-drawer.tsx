@@ -29,11 +29,13 @@ const CustomDrawer = () => {
                                 <DrawerButton buttonText="Play" />
                                 <DrawerButton buttonText="Solve" />
                                 <DrawerButton buttonText="About" />
-                                <DrawerButton buttonText="Profile" />
+                                {session && (
+                                    <DrawerButton buttonText="Profile" />
+                                )}
                                 {session ? (
-                                    <DrawerButton buttonText="Sign Out" onClick={() => signOut()} />
+                                    <DrawerButton buttonText="Sign out" onClick={() => signOut()} />
                                 ) : (
-                                    <DrawerButton buttonText="Sign In" onClick={() => router.push("/auth/signin")} />
+                                    <DrawerButton buttonText="Sign in" onClick={() => router.push("/auth/signin")} />
                                 )}
                             </VStack>
                         </Drawer.Body>

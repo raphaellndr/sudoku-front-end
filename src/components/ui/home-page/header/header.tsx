@@ -62,7 +62,7 @@ const Header: React.FC = () => {
                                 display={{ base: "none", md: "inline-flex" }}
                                 onClick={() => signOut()}
                             >
-                                Sign Out
+                                Sign out
                             </Button>
                         ) : (
                             <Button
@@ -71,7 +71,7 @@ const Header: React.FC = () => {
                                 display={{ base: "none", md: "inline-flex" }}
                                 onClick={() => signIn(undefined, { callbackUrl: "/" })}
                             >
-                                Sign In
+                                Sign in
                             </Button>
                         )}
 
