@@ -1,14 +1,11 @@
 "use client";
 
-import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 
 import { Box, Separator, Show, Spinner, Flex } from '@chakra-ui/react';
 import { ToastContainer } from 'react-toastify';
 
-import SudokuCreator from '@/components/ui/sudoku/sudoku-creator';
-import { Sudoku } from '@/types/types';
 import Footer from '@/components/ui/home-page/footer/footer';
 
 // Dynamically import the Header component to avoid hydration errors
