@@ -1,19 +1,19 @@
 import { Box, Grid, Text, Input } from "@chakra-ui/react";
+
 import { useColorModeValue } from "../color-mode";
-import { SudokuSolution } from "@/types/types";
+import { Sudoku } from "@/types/types";
+import SudokuStatus from "./sudoku-status";
 
 interface BaseSudokuGridProps {
     mode: "create" | "display";
-    grid: string | number[][];
+    sudoku: Sudoku;
     onCellChange?: (rowIndex: number, colIndex: number, value: string) => void;
-    solution?: SudokuSolution | null
 }
 
 export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
     mode,
-    grid,
+    sudoku,
     onCellChange,
-    solution
 }) => {
     const bgColor = useColorModeValue("gray.100", "gray.800");
     const borderColor = useColorModeValue("gray.300", "gray.600");
@@ -25,15 +25,13 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
     const evenBoxBgColor = useColorModeValue("gray.100", "gray.700");
     const oddBoxBgColor = useColorModeValue("white", "gray.800");
 
-    // Normalize grid to a flat array for consistent handling
-    const flatGrid = Array.isArray(grid) ? grid.flat().join("") : (grid);
-
     return (
         <Box
             borderRadius="xl"
             boxShadow={boxShadow}
             bg={bgColor}
             p={4}
+            pos="relative"
         >
             <Grid
                 templateColumns="repeat(9, 1fr)"
@@ -45,10 +43,9 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                     const rowIndex = Math.floor(index / 9);
                     const colIndex = index % 9;
 
-                    // Get the cell value based on grid format
-                    const cellValue = flatGrid[index]?.toString() || "0";
+                    const cellValue = sudoku.grid[index]?.toString() || "0";
                     const isOriginal = mode === "display" && cellValue !== "0";
-                    const solutionValue = solution ? solution.grid[index] : null;
+                    const solutionValue = sudoku.solution ? sudoku.solution.grid[index] : null;
 
                     // Determine box background color
                     const isEvenBox = (Math.floor(rowIndex / 3) + Math.floor(colIndex / 3)) % 2 === 0;
@@ -104,6 +101,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                     );
                 })}
             </Grid>
+            <SudokuStatus status={sudoku.status} />
         </Box>
     );
 };
