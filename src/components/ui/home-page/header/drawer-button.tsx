@@ -5,7 +5,7 @@ import { Box, Button, ButtonProps } from "@chakra-ui/react";
 
 interface DrawerButtonProps extends ButtonProps {
     buttonText: string;
-    routerHref: string;
+    routerHref?: string;
 }
 
 const DrawerButton: React.FC<DrawerButtonProps> = ({ buttonText, routerHref, ...props }) => {
@@ -21,7 +21,7 @@ const DrawerButton: React.FC<DrawerButtonProps> = ({ buttonText, routerHref, ...
                 fontWeight="bold"
                 variant="ghost"
                 size="sm"
-                onClick={() => router.push(routerHref)}
+                onClick={() => { if (routerHref) router.push(routerHref) }}
                 _hover={{
                     backgroundColor: "transparent",
                     color: "blue.600"
