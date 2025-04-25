@@ -1,27 +1,36 @@
+import { useRouter } from "next/navigation";
+
 import React from "react";
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Box, Button, ButtonProps } from "@chakra-ui/react";
 
 interface DrawerButtonProps extends ButtonProps {
     buttonText: string;
+    routerHref: string;
 }
 
-const DrawerButton: React.FC<DrawerButtonProps> = ({ buttonText, ...props }) => {
+const DrawerButton: React.FC<DrawerButtonProps> = ({ buttonText, routerHref, ...props }) => {
+    const router = useRouter();
+
     return (
-        <Button
-            mt={4}
-            fontWeight="bold"
-            variant="ghost"
-            size="sm"
+        <Box
             width="full"
             justifyContent="flex-start"
-            _hover={{
-                backgroundColor: "transparent",
-                color: "blue.600"
-            }}
-            {...props}
         >
-            {buttonText}
-        </Button>
+            <Button
+                mt={4}
+                fontWeight="bold"
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push(routerHref)}
+                _hover={{
+                    backgroundColor: "transparent",
+                    color: "blue.600"
+                }}
+                {...props}
+            >
+                {buttonText}
+            </Button>
+        </Box>
     );
 };
 
