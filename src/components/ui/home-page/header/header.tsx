@@ -38,7 +38,7 @@ const Header: React.FC = () => {
                                 <Button variant="ghost" fontSize="md">
                                     Play
                                 </Button>
-                                <HeaderButton buttonText="Solve" routerHref="/solve" />
+                                <HeaderButton buttonText="Solver" routerHref="/solver" />
                                 <Button variant="ghost" fontSize="md">
                                     About
                                 </Button>
