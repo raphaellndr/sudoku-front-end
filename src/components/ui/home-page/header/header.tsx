@@ -35,13 +35,9 @@ const Header: React.FC = () => {
 
                         <Flex display={{ base: "none", md: "flex" }} ml={4}>
                             <HStack>
-                                <Button variant="ghost" fontSize="md">
-                                    Play
-                                </Button>
+                                <HeaderButton buttonText="Play" routerHref="/play" />
                                 <HeaderButton buttonText="Solver" routerHref="/solver" />
-                                <Button variant="ghost" fontSize="md">
-                                    About
-                                </Button>
+                                <HeaderButton buttonText="About" routerHref="/about" />
                                 {session && (
                                     <Button variant="ghost" fontSize="md">
                                         Profile
