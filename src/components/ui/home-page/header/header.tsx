@@ -39,9 +39,7 @@ const Header: React.FC = () => {
                                 <HeaderButton buttonText="Solver" routerHref="/solver" />
                                 <HeaderButton buttonText="About" routerHref="/about" />
                                 {session && (
-                                    <Button variant="ghost" fontSize="md">
-                                        Profile
-                                    </Button>
+                                    <HeaderButton buttonText="Profile" routerHref="/about" />
                                 )}
                             </HStack>
                         </Flex>
