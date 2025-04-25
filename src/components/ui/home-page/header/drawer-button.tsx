@@ -16,6 +16,7 @@ const DrawerButton: React.FC<DrawerButtonProps> = ({ buttonText, ...props }) => 
             justifyContent="flex-start"
             _hover={{
                 backgroundColor: "transparent",
+                color: "blue.600"
             }}
             {...props}
         >
