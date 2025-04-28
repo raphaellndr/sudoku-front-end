@@ -18,7 +18,6 @@ export default function RootLayout({
 }: {
     children: React.ReactNode
 }) {
-    // Create QueryClient with useState to ensure consistent instance
     const [queryClient] = useState(() => new QueryClient())
 
     return (
