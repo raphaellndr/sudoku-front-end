@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import NextAuth from "next-auth";
-import { NextAuthOptions, User, Account, Profile } from 'next-auth';
+import { NextAuthOptions, User, Account, Profile } from "next-auth";
 import { JWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials";
 import { Provider } from "next-auth/providers/index";
@@ -80,11 +80,11 @@ const providers: Provider[] = [
                 );
                 const responseData = await response.json();
                 if (response.ok) {
-                    console.log('Connexion successful: ', responseData);
+                    console.log("Connexion successful: ", responseData);
                     return responseData;
                 } else {
-                    console.error('Error while signing in: ', response.statusText);
-                    console.error('Error details: ', responseData);
+                    console.error("Error while signing in: ", response.statusText);
+                    console.error("Error details: ", responseData);
                 }
             } catch (error) {
                 console.error(error);
@@ -120,38 +120,48 @@ const callbacks = {
         }
         return SIGN_IN_HANDLERS[account.provider](user, account, profile, email, credentials);
     },
-    async jwt({ user, token, account }: {
-        user: User;
-        token: JWT;
-        account: Account;
-    }) {
-        // If both user and account exist, generate JWT token (login event)
-        if (user && account) {
-            let backendResponse = account.provider === "credentials" ? user : account.meta;
-            token["user"] = backendResponse.user;
-            token["accessToken"] = backendResponse.access;
-            token["refreshToken"] = backendResponse.refresh;
-            token["ref"] = getCurrentEpochTime() + BACKEND_ACCESS_TOKEN_LIFETIME;
+    async jwt({ user, token, trigger, session, account }) {
+        if (trigger === "signIn") {
+            // When user is signing in, account and user should be present
+            if (user && account) {
+                let backendResponse = account.provider === "credentials" ? user : account.meta;
+                token["user"] = backendResponse.user;
+                token["accessToken"] = backendResponse.access;
+                token["refreshToken"] = backendResponse.refresh;
+                token["ref"] = getCurrentEpochTime() + BACKEND_ACCESS_TOKEN_LIFETIME;
+                return token;
+            }
+        }
+
+        if (trigger === "update" && session) {
+            if (session.user) {
+                token.user = { ...token.user, ...session.user };
+            }
             return token;
         }
-        // Refresh bakend tokens if necessary
+
+        // Refresh backend tokens if necessary
         if (getCurrentEpochTime() > token["ref"]) {
-            const response = await fetch(
-                process.env.NEXTAUTH_BACKEND_URL + "api/auth/token/refresh/",
-                {
-                    method: "POST",
-                    body: JSON.stringify({ refresh: token["refreshToken"] }),
-                    headers: { "Content-Type": "application/json" },
+            try {
+                const response = await fetch(
+                    process.env.NEXTAUTH_BACKEND_URL + "api/auth/token/refresh/",
+                    {
+                        method: "POST",
+                        body: JSON.stringify({ refresh: token["refreshToken"] }),
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+                const responseData = await response.json();
+                if (response.ok) {
+                    token["accessToken"] = responseData.access;
+                    token["refreshToken"] = responseData.refresh;
+                    token["ref"] = getCurrentEpochTime() + BACKEND_ACCESS_TOKEN_LIFETIME;
+                } else {
+                    console.error("An error occurred while refreshing tokens: ", response.statusText);
+                    console.error("Error detail: ", responseData);
                 }
-            );
-            const responseData = await response.json();
-            if (response.ok) {
-                token["accessToken"] = responseData.access;
-                token["refreshToken"] = responseData.refresh;
-                token["ref"] = getCurrentEpochTime() + BACKEND_ACCESS_TOKEN_LIFETIME;
-            } else {
-                console.error('An error occured while refreshing tokens: ', response.statusText);
-                console.error('Error detail: ', responseData);
+            } catch (error) {
+                console.error("Exception during token refresh:", error);
             }
         }
         return token;
