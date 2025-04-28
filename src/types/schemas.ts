@@ -33,6 +33,21 @@ export const SignInFormSchema = z.object({
         .string()
 })
 
+export const SettingsFormSchema = z.object({
+    username: z
+        .string()
+        .optional(),
+    email: z
+        .union([
+            z.string().email(),
+            z.literal("")
+        ])
+        .optional(),
+}).refine((data) => data.username || data.email, {
+    message: "Both fields cannot be empty",
+    path: ["username"],
+});
+
 export const SudokuSolutionSchema = z.object({
     id: z
         .string()
@@ -54,8 +69,8 @@ export const SudokuSchema = z.object({
         .string()
         .uuid({ message: "Must be a valid UUID" }),
     user_id: z
-       .string()
-       .uuid({ message: "Must be a valid UUID" }),
+        .string()
+        .uuid({ message: "Must be a valid UUID" }),
     title: z
         .string()
         .max(255),
@@ -67,9 +82,9 @@ export const SudokuSchema = z.object({
     status: z
         .enum(SudokuStatusEnum.options),
     task_id: z
-       .string()
-       .max(255)
-       .nullable(),
+        .string()
+        .max(255)
+        .nullable(),
     solution: SudokuSolutionSchema
         .nullable(),
     created_at: z
