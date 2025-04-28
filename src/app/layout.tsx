@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { Inter } from "next/font/google"
 import { SessionProvider } from "next-auth/react"
 
@@ -11,13 +13,14 @@ const inter = Inter({
     display: "swap",
 })
 
-const queryClient = new QueryClient()
-
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    // Create QueryClient with useState to ensure consistent instance
+    const [queryClient] = useState(() => new QueryClient())
+
     return (
         <html className={inter.className} suppressHydrationWarning>
             <head />
