@@ -1,15 +1,12 @@
 "use client";
 
-import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 
 import { Box, Separator, Show, Spinner, Flex } from '@chakra-ui/react';
 import { ToastContainer } from 'react-toastify';
 
 import Footer from '@/components/ui/home-page/footer/footer';
-
-// Dynamically import the Header component to avoid hydration errors
-const Header = dynamic(() => import("@/components/ui/home-page/header/header"), { ssr: false });
+import Header from '@/components/ui/home-page/header/header';
 
 const HomePage = () => {
     const { status } = useSession()
