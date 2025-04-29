@@ -5,7 +5,7 @@ import { Sudoku } from "@/types/types";
 import SudokuStatus from "./sudoku-status";
 
 interface BaseSudokuGridProps {
-    mode: "create" | "display";
+    mode: "create" | "play" | "display";
     sudoku: Sudoku;
     onCellChange?: (rowIndex: number, colIndex: number, value: string) => void;
 }
@@ -20,6 +20,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
     const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
     const originalValueColor = useColorModeValue("black", "white");
     const filledValueColor = useColorModeValue("gray.600", "gray.400");
+    const errorValueColor = useColorModeValue("red.600", "red.400");
     const strongBorderColor = useColorModeValue("black", "white");
     const hoverBgColor = useColorModeValue("gray.200", "gray.900");
     const evenBoxBgColor = useColorModeValue("gray.100", "gray.700");
@@ -52,8 +53,16 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                     const colIndex = index % 9;
 
                     const cellValue = sudoku.grid[index]?.toString() || "0";
-                    const isOriginal = mode === "display" && cellValue !== "0";
+                    const isOriginal = (mode === "display" || mode === "play") &&
+                        sudoku.grid &&
+                        sudoku.grid[index] !== "0";
                     const solutionValue = sudoku.solution ? sudoku.solution.grid[index] : null;
+
+                    // Check if the value is incorrect (for play mode)
+                    const isIncorrect = mode === "play" &&
+                        cellValue !== "0" &&
+                        solutionValue &&
+                        cellValue !== solutionValue;
 
                     // Determine box background color
                     const isEvenBox = (Math.floor(rowIndex / 3) + Math.floor(colIndex / 3)) % 2 === 0;
@@ -77,7 +86,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                             _hover={{ bg: hoverBgColor }}
                             position="relative"
                         >
-                            {mode === "create" ? (
+                            {mode === "create" || (mode === "play" && !isOriginal) ? (
                                 <Input
                                     width="40px"
                                     height="40px"
@@ -89,10 +98,15 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                                     onChange={(e) => handleInputChange(rowIndex, colIndex, e.target.value)}
                                     textAlign="center"
                                     fontSize="xl"
-                                    fontWeight="bold"
+                                    fontWeight={isOriginal ? "bold" : "normal"}
                                     border="none"
                                     bg="transparent"
                                     zIndex="1"
+                                    color={isIncorrect ? errorValueColor : (isOriginal ? originalValueColor : filledValueColor)}
+                                    readOnly={mode === "play" && isOriginal ? true : false}
+                                    _readOnly={{
+                                        cursor: "not-allowed"
+                                    }}
                                     onKeyDown={(e) => {
                                         // Prevent non-numeric keys except for backspace, delete, tab, etc.
                                         if (
@@ -107,10 +121,10 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                                 (solutionValue || cellValue !== "0") && (
                                     <Text
                                         fontWeight={isOriginal ? "bold" : "normal"}
-                                        color={isOriginal ? originalValueColor : filledValueColor}
+                                        color={isIncorrect ? errorValueColor : (isOriginal ? originalValueColor : filledValueColor)}
                                         fontSize="lg"
                                     >
-                                        {solutionValue || (cellValue !== "0" ? cellValue : "")}
+                                        {mode === "display" && solutionValue ? solutionValue : (cellValue !== "0" ? cellValue : "")}
                                     </Text>
                                 )
                             )}
@@ -118,7 +132,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                     );
                 })}
             </Grid>
-            <SudokuStatus status={sudoku.status} />
+            {mode !== "play" && <SudokuStatus status={sudoku.status} />}
         </Box>
     );
 };
