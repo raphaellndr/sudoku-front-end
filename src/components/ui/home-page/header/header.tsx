@@ -51,7 +51,7 @@ const Header: React.FC = () => {
                         {session ? (
                             <Button
                                 variant="outline"
-                                colorScheme="teal"
+                                colorPalette="teal"
                                 display={{ base: "none", md: "inline-flex" }}
                                 onClick={() => signOut()}
                             >
@@ -60,7 +60,7 @@ const Header: React.FC = () => {
                         ) : (
                             <Button
                                 variant="outline"
-                                colorScheme="teal"
+                                colorPalette="teal"
                                 display={{ base: "none", md: "inline-flex" }}
                                 onClick={() => signIn(undefined, { callbackUrl: "/" })}
                             >

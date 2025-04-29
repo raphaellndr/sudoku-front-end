@@ -370,7 +370,7 @@ const SudokuPlayer = () => {
                 {mode !== "create" && (
                     <HStack width="100%" justifyContent="space-between" px={4}>
                         <Badge
-                            colorScheme={isTimerRunning ? "green" : "gray"}
+                            colorPalette={isTimerRunning ? "green" : "gray"}
                             fontSize="md"
                             p={2}
                             borderRadius="md"
@@ -379,13 +379,13 @@ const SudokuPlayer = () => {
                         </Badge>
 
                         {hintsUsed > 0 && (
-                            <Badge colorScheme="purple" fontSize="md" p={2} borderRadius="md">
+                            <Badge colorPalette="purple" fontSize="md" p={2} borderRadius="md">
                                 Hints used: {hintsUsed}
                             </Badge>
                         )}
 
                         <Badge
-                            colorScheme={mode === "solved" ? "blue" : "yellow"}
+                            colorPalette={mode === "solved" ? "blue" : "yellow"}
                             fontSize="md"
                             p={2}
                             borderRadius="md"
@@ -437,7 +437,7 @@ const SudokuPlayer = () => {
                         <>
                             <Button
                                 disabled={!/[1-9]/.test(sudoku.grid) || disableButtons}
-                                colorScheme="red"
+                                colorPalette="red"
                                 variant="outline"
                                 onClick={clearSudokuGrid}
                             >
@@ -445,7 +445,7 @@ const SudokuPlayer = () => {
                             </Button>
                             <Button
                                 disabled={disableButtons}
-                                colorScheme="blue"
+                                colorPalette="blue"
                                 loading={disableButtons}
                                 loadingText="Preparing puzzle..."
                                 onClick={handleStartPlaying}
@@ -507,7 +507,7 @@ const SudokuPlayer = () => {
                     {mode === "solved" && (
                         <>
                             <Button
-                                colorScheme="green"
+                                colorPalette="green"
                                 variant="outline"
                                 onClick={clearSudokuGrid}
                             >
@@ -546,7 +546,7 @@ const SudokuPlayer = () => {
                                         Close
                                     </Button>
                                 </Dialog.ActionTrigger>
-                                <Button colorScheme="blue" onClick={() => {
+                                <Button colorPalette="blue" onClick={() => {
                                     clearSudokuGrid();
                                     setIsDialogOpen(false);
                                 }}>
