@@ -25,6 +25,14 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
     const evenBoxBgColor = useColorModeValue("gray.100", "gray.700");
     const oddBoxBgColor = useColorModeValue("white", "gray.800");
 
+    // Handle input validation to only allow numbers 1-9
+    const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
+        // Only allow numbers 1-9 or empty string
+        if (value === "" || /^[1-9]$/.test(value)) {
+            onCellChange?.(rowIndex, colIndex, value);
+        }
+    };
+
     return (
         <Box
             borderRadius="xl"
@@ -78,13 +86,22 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                                     pattern="[1-9]"
                                     maxLength={1}
                                     value={cellValue !== "0" ? cellValue : ""}
-                                    onChange={(e) => onCellChange?.(rowIndex, colIndex, e.target.value)}
+                                    onChange={(e) => handleInputChange(rowIndex, colIndex, e.target.value)}
                                     textAlign="center"
                                     fontSize="xl"
                                     fontWeight="bold"
                                     border="none"
                                     bg="transparent"
                                     zIndex="1"
+                                    onKeyDown={(e) => {
+                                        // Prevent non-numeric keys except for backspace, delete, tab, etc.
+                                        if (
+                                            !/^[1-9]$/.test(e.key) &&
+                                            !["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)
+                                        ) {
+                                            e.preventDefault();
+                                        }
+                                    }}
                                 />
                             ) : (
                                 (solutionValue || cellValue !== "0") && (
