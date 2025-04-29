@@ -396,40 +396,97 @@ const SudokuPlayer = () => {
                 )}
 
                 {/* Sudoku Grid */}
-                {(() => {
-                    switch (mode) {
-                        case "create":
-                            return (
-                                <BaseSudokuGrid
-                                    mode="create"
-                                    sudoku={sudoku}
-                                    onCellChange={handleCellChange}
-                                />
-                            );
-                        case "play":
-                            return (
-                                <BaseSudokuGrid
-                                    mode="play"
-                                    sudoku={{
-                                        ...sudoku,
-                                        grid: playerGrid, // Use player's current progress
-                                    }}
-                                    onCellChange={handleCellChange}
-                                />
-                            );
-                        case "solved":
-                            return (
-                                <BaseSudokuGrid
-                                    mode="display"
-                                    sudoku={{
-                                        ...sudoku,
-                                        grid: playerGrid, // Show completed grid
-                                    }}
-                                    onCellChange={handleCellChange}
-                                />
-                            );
-                    }
-                })()}
+                <VStack gap="4">
+                    <HStack gap="4">
+                        {(() => {
+                            switch (mode) {
+                                case "create":
+                                    return (
+                                        <BaseSudokuGrid
+                                            mode="create"
+                                            sudoku={sudoku}
+                                            onCellChange={handleCellChange}
+                                        />
+                                    );
+                                case "play":
+                                    return (
+                                        <BaseSudokuGrid
+                                            mode="play"
+                                            sudoku={{
+                                                ...sudoku,
+                                                grid: playerGrid, // Use player's current progress
+                                            }}
+                                            onCellChange={handleCellChange}
+                                        />
+                                    );
+                                case "solved":
+                                    return (
+                                        <BaseSudokuGrid
+                                            mode="display"
+                                            sudoku={{
+                                                ...sudoku,
+                                                grid: playerGrid, // Show completed grid
+                                            }}
+                                            onCellChange={handleCellChange}
+                                        />
+                                    );
+                            }
+                        })()}
+                        {mode === "play" && (
+                            <VStack gap="4" align="stretch">
+                                <Button
+                                    colorPalette="orange"
+                                    variant="outline"
+                                    onClick={handleRestartPuzzle}
+                                >
+                                    Restart
+                                </Button>
+                                <Button
+                                    colorPalette="teal"
+                                    variant="outline"
+                                    onClick={handleUndo}
+                                    disabled={moveHistory.length === 0 || !moveHistory.some(move => !move.isHint)}
+                                    title={moveHistory.length > 0 && !moveHistory.some(move => !move.isHint) ? "Cannot undo hints" : ""}
+                                >
+                                    Undo
+                                </Button>
+                                <Button
+                                    colorPalette="purple"
+                                    variant="outline"
+                                    onClick={handleHint}
+                                >
+                                    Hint
+                                </Button>
+                            </VStack>
+                        )}
+
+                    </HStack>
+                    {mode === "play" && (
+                        <HStack gap="4">
+                            <Button
+                                colorPalette="red"
+                                variant="outline"
+                                onClick={clearSudokuGrid}
+                            >
+                                New puzzle
+                            </Button>
+                            <Button
+                                colorPalette="blue"
+                                variant="outline"
+                                onClick={handleCheckProgress}
+                            >
+                                Check progress
+                            </Button>
+                            <Button
+                                colorPalette="red"
+                                variant="solid"
+                                onClick={handleGiveUp}
+                            >
+                                Give up
+                            </Button>
+                        </HStack>
+                    )}
+                </VStack>
 
                 {/* Controls */}
                 <HStack gap={4} flexWrap="wrap" justifyContent="center">
@@ -451,55 +508,6 @@ const SudokuPlayer = () => {
                                 onClick={handleStartPlaying}
                             >
                                 Start playing
-                            </Button>
-                        </>
-                    )}
-
-                    {mode === "play" && (
-                        <>
-                            <Button
-                                colorPalette="red"
-                                variant="outline"
-                                onClick={clearSudokuGrid}
-                            >
-                                New puzzle
-                            </Button>
-                            <Button
-                                colorPalette="orange"
-                                variant="outline"
-                                onClick={handleRestartPuzzle}
-                            >
-                                Restart
-                            </Button>
-                            <Button
-                                colorPalette="teal"
-                                variant="outline"
-                                onClick={handleUndo}
-                                disabled={moveHistory.length === 0 || !moveHistory.some(move => !move.isHint)}
-                                title={moveHistory.length > 0 && !moveHistory.some(move => !move.isHint) ? "Cannot undo hints" : ""}
-                            >
-                                Undo
-                            </Button>
-                            <Button
-                                colorPalette="purple"
-                                variant="outline"
-                                onClick={handleHint}
-                            >
-                                Hint
-                            </Button>
-                            <Button
-                                colorPalette="blue"
-                                variant="outline"
-                                onClick={handleCheckProgress}
-                            >
-                                Check progress
-                            </Button>
-                            <Button
-                                colorPalette="red"
-                                variant="solid"
-                                onClick={handleGiveUp}
-                            >
-                                Give up
                             </Button>
                         </>
                     )}
