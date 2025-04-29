@@ -7,7 +7,7 @@ import { ToastContainer } from "react-toastify";
 
 import Header from "@/components/ui/home-page/header/header";
 import Footer from "@/components/ui/home-page/footer/footer";
-import SudokuSolver from "@/components/ui/sudoku/sudoku-solver";
+import SudokuSolver from "@/components/ui/sudoku/solver-mode/sudoku-solver";
 
 export default function Home() {
     const { status } = useSession();
