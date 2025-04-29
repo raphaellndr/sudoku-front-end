@@ -97,7 +97,7 @@ const SudokuPlayer = () => {
 
             setSudoku({ ...sudoku, grid: newSudokuGrid });
         } else if (mode === "play") {
-            // In play mode, don't allow changing original cells
+            // Cannot modify an original cell in play mode
             if (sudoku.grid[position] !== '0') {
                 return;
             }
@@ -350,7 +350,7 @@ const SudokuPlayer = () => {
             }
         }
 
-        notifySuccess(`Progress: ${correct} correct, ${incorrect} incorrect numbers`);
+        notifySuccess(`Progress: ${correct} correct, ${incorrect} incorrect numbers, ${hintsUsed} hints used.`);
     };
 
     const handleRestartPuzzle = () => {
