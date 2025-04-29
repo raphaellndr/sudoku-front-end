@@ -458,21 +458,21 @@ const SudokuPlayer = () => {
                     {mode === "play" && (
                         <>
                             <Button
-                                colorScheme="red"
+                                colorPalette="red"
                                 variant="outline"
                                 onClick={clearSudokuGrid}
                             >
                                 New puzzle
                             </Button>
                             <Button
-                                colorScheme="orange"
+                                colorPalette="orange"
                                 variant="outline"
                                 onClick={handleRestartPuzzle}
                             >
                                 Restart
                             </Button>
                             <Button
-                                colorScheme="teal"
+                                colorPalette="teal"
                                 variant="outline"
                                 onClick={handleUndo}
                                 disabled={moveHistory.length === 0 || !moveHistory.some(move => !move.isHint)}
@@ -481,21 +481,21 @@ const SudokuPlayer = () => {
                                 Undo
                             </Button>
                             <Button
-                                colorScheme="purple"
+                                colorPalette="purple"
                                 variant="outline"
                                 onClick={handleHint}
                             >
                                 Hint
                             </Button>
                             <Button
-                                colorScheme="blue"
+                                colorPalette="blue"
                                 variant="outline"
                                 onClick={handleCheckProgress}
                             >
                                 Check progress
                             </Button>
                             <Button
-                                colorScheme="red"
+                                colorPalette="red"
                                 variant="solid"
                                 onClick={handleGiveUp}
                             >
