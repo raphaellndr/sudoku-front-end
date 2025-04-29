@@ -60,7 +60,6 @@ const Header: React.FC = () => {
                         ) : (
                             <Button
                                 variant="outline"
-                                colorPalette="teal"
                                 display={{ base: "none", md: "inline-flex" }}
                                 onClick={() => signIn(undefined, { callbackUrl: "/" })}
                             >
