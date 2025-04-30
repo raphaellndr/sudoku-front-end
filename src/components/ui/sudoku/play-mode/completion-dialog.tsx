@@ -2,18 +2,19 @@ import React from "react";
 
 import { Button, CloseButton, Dialog, Portal, Text, VStack } from "@chakra-ui/react";
 
-import { formatTime } from "./timer";
+import { formatTime } from "./timer/timer";
+import { MAX_HINTS } from "./hint-button";
 
 interface CompletionDialogProps {
     isDialogOpen: boolean;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     timer: number;
-    hintsUsed: number;
+    remainingHints: number;
     clearSudokuGrid: () => void;
 };
 
 const CompletionDialog: React.FC<CompletionDialogProps> = (
-    { isDialogOpen, setIsDialogOpen, timer, hintsUsed, clearSudokuGrid }
+    { isDialogOpen, setIsDialogOpen, timer, remainingHints, clearSudokuGrid }
 ) => {
     return (
         <Dialog.Root open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e.open)}>
@@ -30,9 +31,9 @@ const CompletionDialog: React.FC<CompletionDialogProps> = (
                                 <Text>
                                     <strong>Time:</strong> {formatTime(timer)}
                                 </Text>
-                                {hintsUsed > 0 && (
+                                {remainingHints !== MAX_HINTS && (
                                     <Text>
-                                        <strong>Hints used:</strong> {hintsUsed}
+                                        <strong>Hints used:</strong> {MAX_HINTS - remainingHints}
                                     </Text>
                                 )}
                             </VStack>
