@@ -1,14 +1,18 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
-import { Box, Button, HStack, VStack, Badge } from "@chakra-ui/react";
+import { Box, Button, HStack, IconButton, VStack } from "@chakra-ui/react";
+import { CiUndo } from "react-icons/ci";
 
 import { usePlayerGrid } from "./use-player-grid";
 import CompletionDialog from "./completion-dialog";
-import Timer from "./timer";
+import { useTimer } from "./timer/use-timer";
+import Timer from "./timer/timer";
+import { HintButton } from "./hint-button";
 import { BaseSudokuGrid } from "../base-sudoku-grid";
 import { useSudoku } from "../use-sudoku";
 import { createSudoku, solveSudoku } from "../sudoku-api";
 import { useSudokuWebSocket } from "../use-sudoku-websocket";
+import { useColorModeValue } from "../../color-mode";
 
 const SudokuPlayer = () => {
     // Game mode state
@@ -17,13 +21,21 @@ const SudokuPlayer = () => {
     // Loading state
     const [disableButtons, setDisableButtons] = useState(false);
 
-    // Timer state
-    const [timer, setTimer] = useState(0);
-    const [isTimerRunning, setIsTimerRunning] = useState(false);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    // Timer state from custom hook
+    const {
+        timer,
+        setTimer,
+        isActive: isTimerRunning,
+        setIsActive: setIsTimerRunning,
+        timerRef
+    } = useTimer();
 
     // Dialog state
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    // Color mode values
+    const bgColor = useColorModeValue("gray.100", "gray.800");
+    const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
 
     // Sudoku state from custom hook
     const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, headers } = useSudoku();
@@ -31,7 +43,7 @@ const SudokuPlayer = () => {
     // Player grid state from custom hook
     const {
         playerGrid,
-        hintsUsed,
+        remainingHints,
         handleCellChange: handlePlayerCellChange,
         giveHint,
         undoMove,
@@ -95,88 +107,76 @@ const SudokuPlayer = () => {
     return (
         <Box p={5}>
             <VStack gap={4}>
-                {/* Game status information */}
-                {mode !== "create" && (
-                    <HStack width="100%" justifyContent="space-between" px={4}>
-                        <Timer
-                            timerRef={timerRef}
-                            timer={timer}
-                            setTimer={setTimer}
-                            isTimerRunning={isTimerRunning}
-                        />
-                        {hintsUsed > 0 && (
-                            <Badge colorPalette="purple" fontSize="md" p={2} borderRadius="md">
-                                Hints used: {hintsUsed}
-                            </Badge>
-                        )}
-                    </HStack>
-                )}
-
-                {/* Sudoku Grid */}
                 <VStack gap="4">
-                    <HStack gap="4">
-                        {(() => {
-                            switch (mode) {
-                                case "create":
-                                    return (
-                                        <BaseSudokuGrid
-                                            mode="create"
-                                            sudoku={sudoku}
-                                            onCellChange={handleCellChange}
-                                        />
-                                    );
-                                case "play":
-                                    return (
-                                        <BaseSudokuGrid
-                                            mode="play"
-                                            sudoku={{
-                                                ...sudoku,
-                                                grid: playerGrid,
-                                            }}
-                                            onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v, sudoku)}
-                                        />
-                                    );
-                                case "solved":
-                                    return (
-                                        <BaseSudokuGrid
-                                            mode="display"
-                                            sudoku={{
-                                                ...sudoku,
-                                                grid: playerGrid,
-                                            }}
-                                            onCellChange={() => { }}
-                                        />
-                                    );
-                            }
-                        })()}
-                        {mode === "play" && (
-                            <VStack gap="4" align="stretch">
-                                <Button
-                                    colorPalette="orange"
-                                    variant="outline"
-                                    onClick={handleRestartPuzzle}
-                                >
-                                    Restart
-                                </Button>
-                                <Button
-                                    colorPalette="teal"
-                                    variant="outline"
-                                    onClick={undoMove}
-                                    disabled={!canUndo}
-                                    title={!canUndo ? "Cannot undo hints" : ""}
-                                >
-                                    Undo
-                                </Button>
-                                <Button
-                                    colorPalette="purple"
-                                    variant="outline"
-                                    onClick={() => giveHint(sudoku)}
-                                >
-                                    Hint
-                                </Button>
-                            </VStack>
-                        )}
-                    </HStack>
+                    <Box
+                        borderRadius="xl"
+                        boxShadow={boxShadow}
+                        bg={bgColor}
+                        p={4}
+                        pos="relative"
+                    >
+                        <HStack gap="4">
+                            {(() => {
+                                switch (mode) {
+                                    case "create":
+                                        return (
+                                            <BaseSudokuGrid
+                                                mode="create"
+                                                sudoku={sudoku}
+                                                onCellChange={handleCellChange}
+                                            />
+                                        );
+                                    case "play":
+                                        return (
+                                            <BaseSudokuGrid
+                                                mode="play"
+                                                sudoku={{
+                                                    ...sudoku,
+                                                    grid: playerGrid,
+                                                }}
+                                                onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v, sudoku)}
+                                            />
+                                        );
+                                    case "solved":
+                                        return (
+                                            <BaseSudokuGrid
+                                                mode="display"
+                                                sudoku={{
+                                                    ...sudoku,
+                                                    grid: playerGrid,
+                                                }}
+                                                onCellChange={() => { }}
+                                            />
+                                        );
+                                }
+                            })()}
+                            {mode === "play" && (
+                                <VStack gap="4" align="stretch">
+                                    <Timer
+                                        timer={timer}
+                                        isActive={isTimerRunning}
+                                        setIsActive={setIsTimerRunning}
+                                    />
+                                    <IconButton
+                                        variant="outline"
+                                        onClick={undoMove}
+                                        disabled={!canUndo}
+                                        title={!canUndo ? "Cannot undo hints" : ""}
+                                    >
+                                        <CiUndo />
+                                        Undo
+                                    </IconButton>
+                                    <HintButton sudoku={sudoku} remainingHints={remainingHints} handleHint={giveHint} />
+                                    <Button
+                                        variant="solid"
+                                        onClick={handleRestartPuzzle}
+                                    >
+                                        Restart
+                                    </Button>
+                                </VStack>
+                            )}
+                        </HStack>
+                    </Box>
                     {mode === "play" && (
                         <HStack gap="4">
                             <Button
@@ -214,7 +214,6 @@ const SudokuPlayer = () => {
                         <>
                             <Button
                                 disabled={!/[1-9]/.test(sudoku.grid) || disableButtons}
-                                colorPalette="red"
                                 variant="outline"
                                 onClick={clearSudokuGrid}
                             >
@@ -222,7 +221,6 @@ const SudokuPlayer = () => {
                             </Button>
                             <Button
                                 disabled={disableButtons}
-                                colorPalette="blue"
                                 loading={disableButtons}
                                 loadingText="Preparing puzzle..."
                                 onClick={handleStartPlaying}
@@ -235,8 +233,7 @@ const SudokuPlayer = () => {
                     {mode === "solved" && (
                         <>
                             <Button
-                                colorPalette="green"
-                                variant="outline"
+                                variant="solid"
                                 onClick={startNewPuzzle}
                             >
                                 New puzzle
@@ -250,7 +247,7 @@ const SudokuPlayer = () => {
                 isDialogOpen={isDialogOpen}
                 setIsDialogOpen={setIsDialogOpen}
                 timer={timer}
-                hintsUsed={hintsUsed}
+                remainingHints={remainingHints}
                 clearSudokuGrid={startNewPuzzle}
             />
         </Box>
