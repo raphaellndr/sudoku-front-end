@@ -2,6 +2,7 @@ import { Box, Circle, Float, IconButton } from "@chakra-ui/react";
 import { FaRegLightbulb } from "react-icons/fa";
 
 import { Sudoku } from "@/types/types";
+import { useColorModeValue } from "../../color-mode";
 
 export const MAX_HINTS = 3;
 
@@ -14,6 +15,9 @@ interface HintButtonprops {
 export const HintButton: React.FC<HintButtonprops> = (
     { sudoku, handleHint, remainingHints }
 ) => {
+    const circleBg = useColorModeValue("purple", "purple");
+    const circleBgDisabled = useColorModeValue("purple.400", "mediumpurple");
+
     return (
         <Box position="relative">
             <IconButton
@@ -22,15 +26,15 @@ export const HintButton: React.FC<HintButtonprops> = (
                 variant="outline"
                 width="100%"
                 onClick={() => handleHint(sudoku)}
-                _hover={{
-                    backgroundColor: "purple.800",
-                }}
             >
                 <FaRegLightbulb />
                 Hint
             </IconButton>
             <Float>
-                <Circle size="5" bg="purple.600" color="white">
+                <Circle
+                    size="4"
+                    bg={remainingHints === 0 ? circleBgDisabled : circleBg}
+                    color="white">
                     {remainingHints}
                 </Circle>
             </Float>
