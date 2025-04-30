@@ -380,15 +380,6 @@ const SudokuPlayer = () => {
                                 Hints used: {hintsUsed}
                             </Badge>
                         )}
-
-                        <Badge
-                            colorPalette={mode === "solved" ? "blue" : "yellow"}
-                            fontSize="md"
-                            p={2}
-                            borderRadius="md"
-                        >
-                            Status: {mode === "solved" ? "Completed" : "In Progress"}
-                        </Badge>
                     </HStack>
                 )}
 
