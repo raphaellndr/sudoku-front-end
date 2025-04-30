@@ -36,7 +36,7 @@ const SudokuSolver = () => {
     );
 
     // Handler for solve button
-    const handleSolveSudokuFlow = async () => {
+    const handleSolveSudoku = async () => {
         const sudokuId = await createSudoku(sudoku.grid, headers, setSudoku);
         if (sudokuId) {
             setDisableSolveButton(true);
@@ -97,7 +97,7 @@ const SudokuSolver = () => {
                         variant="subtle"
                         loadingText="Solving sudoku..."
                         loading={isLoading || sudoku.status === SudokuStatusEnum.Values.running}
-                        onClick={handleSolveSudokuFlow}
+                        onClick={handleSolveSudoku}
                     >
                         Solve sudoku
                     </Button>
