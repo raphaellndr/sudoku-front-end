@@ -5,18 +5,15 @@ import {
     Badge,
     Box,
     Button,
-    CloseButton,
-    Dialog,
     HStack,
     VStack,
-    Text,
-    Portal,
 } from "@chakra-ui/react";
 
 import { BaseSudokuGrid } from "../base-sudoku-grid";
 import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
 import { notifyError, notifySuccess } from "@/toasts/toast";
+import CompletionDialog from "./completion-dialog";
 
 const defaultSudoku: Sudoku = {
     id: "",
@@ -526,48 +523,14 @@ const SudokuPlayer = () => {
                 </HStack>
             </VStack>
 
-            {/* Completion Dialog */}
-            <Dialog.Root open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e.open)}>
-                <Portal>
-                    <Dialog.Backdrop />
-                    <Dialog.Positioner>
-                        <Dialog.Content>
-                            <Dialog.Header>
-                                <Dialog.Title>Puzzle Completed!</Dialog.Title>
-                            </Dialog.Header>
-                            <Dialog.Body>
-                                <VStack gap={4} align="stretch">
-                                    <Text>Congratulations on completing the sudoku puzzle!</Text>
-                                    <Text>
-                                        <strong>Time:</strong> {formatTime(timer)}
-                                    </Text>
-                                    {hintsUsed > 0 && (
-                                        <Text>
-                                            <strong>Hints used:</strong> {hintsUsed}
-                                        </Text>
-                                    )}
-                                </VStack>
-                            </Dialog.Body>
-                            <Dialog.Footer>
-                                <Dialog.ActionTrigger asChild>
-                                    <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                                        Close
-                                    </Button>
-                                </Dialog.ActionTrigger>
-                                <Button colorPalette="blue" onClick={() => {
-                                    clearSudokuGrid();
-                                    setIsDialogOpen(false);
-                                }}>
-                                    New Puzzle
-                                </Button>
-                            </Dialog.Footer>
-                            <Dialog.CloseTrigger asChild>
-                                <CloseButton size="sm" />
-                            </Dialog.CloseTrigger>
-                        </Dialog.Content>
-                    </Dialog.Positioner>
-                </Portal>
-            </Dialog.Root>
+            <CompletionDialog
+                isDialogOpen={isDialogOpen}
+                setIsDialogOpen={setIsDialogOpen}
+                timer={timer}
+                formatTime={formatTime}
+                hintsUsed={hintsUsed}
+                clearSudokuGrid={clearSudokuGrid}
+            />
         </Box>
     );
 };
