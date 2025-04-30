@@ -1,5 +1,6 @@
-import { Center, Text, VStack } from "@chakra-ui/react"
 import { useRouter } from "next/navigation";
+
+import { Center, Text, VStack } from "@chakra-ui/react"
 
 const SignUpPrompt = () => {
     const router = useRouter();

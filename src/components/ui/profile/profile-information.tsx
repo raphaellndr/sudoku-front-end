@@ -1,7 +1,5 @@
 import { useSession } from "next-auth/react";
-
 import { Avatar, HStack, Text, VStack } from "@chakra-ui/react";
-
 
 const ProfileInformation = () => {
     const { data: session } = useSession();

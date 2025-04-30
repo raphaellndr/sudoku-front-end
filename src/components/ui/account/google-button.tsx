@@ -1,5 +1,4 @@
 import { signIn } from "next-auth/react";
-
 import { Button } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 

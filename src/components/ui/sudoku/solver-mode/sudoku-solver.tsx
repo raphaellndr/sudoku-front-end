@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 
+import { useSession } from "next-auth/react";
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { BaseSudokuGrid } from "../base-sudoku-grid";

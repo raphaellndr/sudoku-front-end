@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
@@ -8,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SettingsFormValues } from "@/types/types";
 import { SettingsFormSchema } from "@/types/schemas";
 import { notifyError, notifySuccess } from "@/toasts/toast";
-import { useEffect } from "react";
 
 const filterNonEmptyFields = (data: SettingsFormValues) => {
     const filteredData = Object.keys(data).reduce<Partial<SettingsFormValues>>((acc, key) => {

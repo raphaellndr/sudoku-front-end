@@ -1,5 +1,4 @@
 import { signIn } from "next-auth/react";
-
 import { Button, Input, Stack } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
