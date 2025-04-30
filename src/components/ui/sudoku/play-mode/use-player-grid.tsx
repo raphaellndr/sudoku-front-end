@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Sudoku } from "@/types/types";
 import { notifySuccess } from "@/toasts/toast";
+import { MAX_HINTS } from "./hint-button";
 
 type MoveHistoryItem = {
     position: number;
@@ -18,7 +19,7 @@ export const usePlayerGrid = (
 ) => {
     const [playerGrid, setPlayerGrid] = useState<string>(initialGrid);
     const [moveHistory, setMoveHistory] = useState<MoveHistoryItem[]>([]);
-    const [hintsUsed, setHintsUsed] = useState(0);
+    const [remainingHints, setRemainingHints] = useState(MAX_HINTS);
 
     /**
      * Updates a cell value in the player grid
@@ -93,7 +94,7 @@ export const usePlayerGrid = (
 
         // Fill it with the correct value from solution
         updateCell(cellIndex, sudoku.solution.grid[cellIndex], sudoku, true);
-        setHintsUsed(prev => prev + 1);
+        setRemainingHints(prev => { return Math.max(0, prev - 1) });
     };
 
     /**
@@ -139,7 +140,7 @@ export const usePlayerGrid = (
     const resetPlayerGrid = (originalGrid: string) => {
         setPlayerGrid(originalGrid);
         setMoveHistory([]);
-        setHintsUsed(0);
+        setRemainingHints(MAX_HINTS);
     };
 
     /**
@@ -161,7 +162,7 @@ export const usePlayerGrid = (
             }
         }
 
-        notifySuccess(`Progress: ${correct} correct, ${incorrect} incorrect numbers, ${hintsUsed} hints used.`);
+        notifySuccess(`Progress: ${correct} correct, ${incorrect} incorrect numbers, ${MAX_HINTS - remainingHints} hints used.`);
     };
 
     /**
@@ -176,7 +177,7 @@ export const usePlayerGrid = (
     return {
         playerGrid,
         setPlayerGrid,
-        hintsUsed,
+        remainingHints,
         moveHistory,
         handleCellChange,
         giveHint,
