@@ -2,16 +2,21 @@ import { useEffect } from "react";
 
 import { Badge } from "@chakra-ui/react";
 
+export const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+
 interface TimerProps {
     timerRef: React.RefObject<NodeJS.Timeout | null>
     timer: number;
     setTimer: React.Dispatch<React.SetStateAction<number>>;
     isTimerRunning: boolean;
-    formatTime: (seconds: number) => string;
 };
 
 const Timer: React.FC<TimerProps> = (
-    { timerRef, timer, setTimer, isTimerRunning, formatTime }
+    { timerRef, timer, setTimer, isTimerRunning }
 ) => {
     useEffect(() => {
         if (isTimerRunning) {

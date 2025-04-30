@@ -2,17 +2,18 @@ import React from "react";
 
 import { Button, CloseButton, Dialog, Portal, Text, VStack } from "@chakra-ui/react";
 
+import { formatTime } from "./timer";
+
 interface CompletionDialogProps {
     isDialogOpen: boolean;
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     timer: number;
-    formatTime: (seconds: number) => string;
     hintsUsed: number;
     clearSudokuGrid: () => void;
 };
 
 const CompletionDialog: React.FC<CompletionDialogProps> = (
-    { isDialogOpen, setIsDialogOpen, timer, formatTime, hintsUsed, clearSudokuGrid }
+    { isDialogOpen, setIsDialogOpen, timer, hintsUsed, clearSudokuGrid }
 ) => {
     return (
         <Dialog.Root open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e.open)}>

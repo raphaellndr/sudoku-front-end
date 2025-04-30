@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 
 import {
@@ -47,11 +47,6 @@ const SudokuPlayer = () => {
     }
 
     // Format timer as mm:ss
-    const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    };
 
     const clearSudokuGrid = () => {
         setSudoku(defaultSudoku);
@@ -354,7 +349,6 @@ const SudokuPlayer = () => {
                             timer={timer}
                             setTimer={setTimer}
                             isTimerRunning={isTimerRunning}
-                            formatTime={formatTime}
                         />
                         {hintsUsed > 0 && (
                             <Badge colorPalette="purple" fontSize="md" p={2} borderRadius="md">
@@ -383,7 +377,7 @@ const SudokuPlayer = () => {
                                             mode="play"
                                             sudoku={{
                                                 ...sudoku,
-                                                grid: playerGrid, // Use player's current progress
+                                                grid: playerGrid,
                                             }}
                                             onCellChange={handleCellChange}
                                         />
@@ -394,7 +388,7 @@ const SudokuPlayer = () => {
                                             mode="display"
                                             sudoku={{
                                                 ...sudoku,
-                                                grid: playerGrid, // Show completed grid
+                                                grid: playerGrid,
                                             }}
                                             onCellChange={handleCellChange}
                                         />
@@ -428,7 +422,6 @@ const SudokuPlayer = () => {
                                 </Button>
                             </VStack>
                         )}
-
                     </HStack>
                     {mode === "play" && (
                         <HStack gap="4">
@@ -499,7 +492,6 @@ const SudokuPlayer = () => {
                 isDialogOpen={isDialogOpen}
                 setIsDialogOpen={setIsDialogOpen}
                 timer={timer}
-                formatTime={formatTime}
                 hintsUsed={hintsUsed}
                 clearSudokuGrid={clearSudokuGrid}
             />
