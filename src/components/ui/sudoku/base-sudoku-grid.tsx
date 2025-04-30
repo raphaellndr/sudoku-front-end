@@ -2,7 +2,6 @@ import { Box, Grid, Text, Input } from "@chakra-ui/react";
 
 import { useColorModeValue } from "../color-mode";
 import { Sudoku } from "@/types/types";
-import SudokuStatus from "./sudoku-status";
 
 interface BaseSudokuGridProps {
     mode: "create" | "play" | "display";
