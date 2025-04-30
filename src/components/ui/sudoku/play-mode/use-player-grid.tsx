@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Sudoku } from "@/types/types";
 import { notifySuccess } from "@/toasts/toast";
 import { MAX_HINTS } from "./hint-button";
+import { MAX_UNDOS } from "./undo-button";
 
 type MoveHistoryItem = {
     position: number;
@@ -20,6 +21,7 @@ export const usePlayerGrid = (
     const [playerGrid, setPlayerGrid] = useState<string>(initialGrid);
     const [moveHistory, setMoveHistory] = useState<MoveHistoryItem[]>([]);
     const [remainingHints, setRemainingHints] = useState(MAX_HINTS);
+    const [remainingUndos, setRemainingUndos] = useState(MAX_UNDOS);
 
     /**
      * Updates a cell value in the player grid
@@ -130,6 +132,9 @@ export const usePlayerGrid = (
 
         setPlayerGrid(newPlayerGrid);
 
+        // Decrease the remaning undos
+        setRemainingUndos(prev => Math.max(0, prev - 1));
+
         // Remove all moves up to and including the undone move
         setMoveHistory(prev => prev.slice(0, lastMoveIndex));
     };
@@ -141,6 +146,7 @@ export const usePlayerGrid = (
         setPlayerGrid(originalGrid);
         setMoveHistory([]);
         setRemainingHints(MAX_HINTS);
+        setRemainingUndos(MAX_UNDOS);
     };
 
     /**
@@ -162,7 +168,7 @@ export const usePlayerGrid = (
             }
         }
 
-        notifySuccess(`Progress: ${correct} correct, ${incorrect} incorrect numbers, ${MAX_HINTS - remainingHints} hints used.`);
+        notifySuccess(`Progress: ${correct} correct, ${incorrect} incorrect numbers`);
     };
 
     /**
@@ -178,6 +184,7 @@ export const usePlayerGrid = (
         playerGrid,
         setPlayerGrid,
         remainingHints,
+        remainingUndos,
         moveHistory,
         handleCellChange,
         giveHint,
