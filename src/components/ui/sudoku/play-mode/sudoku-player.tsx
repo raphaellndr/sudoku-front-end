@@ -8,6 +8,7 @@ import CompletionDialog from "./completion-dialog";
 import { useTimer } from "./timer/use-timer";
 import Timer from "./timer/timer";
 import { HintButton } from "./hint-button";
+import { UndoButton } from "./undo-button";
 import { BaseSudokuGrid } from "../base-sudoku-grid";
 import { useSudoku } from "../use-sudoku";
 import { createSudoku, solveSudoku } from "../sudoku-api";
@@ -44,6 +45,7 @@ const SudokuPlayer = () => {
     const {
         playerGrid,
         remainingHints,
+        remainingUndos,
         handleCellChange: handlePlayerCellChange,
         giveHint,
         undoMove,
@@ -157,15 +159,7 @@ const SudokuPlayer = () => {
                                         isActive={isTimerRunning}
                                         setIsActive={setIsTimerRunning}
                                     />
-                                    <IconButton
-                                        variant="outline"
-                                        onClick={undoMove}
-                                        disabled={!canUndo}
-                                        title={!canUndo ? "Cannot undo hints" : ""}
-                                    >
-                                        <CiUndo />
-                                        Undo
-                                    </IconButton>
+                                    <UndoButton canUndo={canUndo} remainingUndos={remainingUndos} undoMove={undoMove} />
                                     <HintButton sudoku={sudoku} remainingHints={remainingHints} handleHint={giveHint} />
                                     <Button
                                         variant="solid"
@@ -208,7 +202,6 @@ const SudokuPlayer = () => {
                     )}
                 </VStack>
 
-                {/* Controls */}
                 <HStack gap={4} flexWrap="wrap" justifyContent="center">
                     {mode === "create" && (
                         <>
