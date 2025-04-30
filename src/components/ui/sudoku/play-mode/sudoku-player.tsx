@@ -351,13 +351,12 @@ const SudokuPlayer = () => {
     };
 
     const handleRestartPuzzle = () => {
-        // Reset to original puzzle without clearing
         setPlayerGrid(sudoku.grid);
         setTimer(0);
         setIsTimerRunning(true);
         setHintsUsed(0);
         setMode("play");
-        setMoveHistory([]); // Clear move history when restarting
+        setMoveHistory([]);
     };
 
     return (
