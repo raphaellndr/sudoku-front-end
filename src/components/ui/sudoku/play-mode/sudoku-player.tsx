@@ -14,6 +14,7 @@ import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
 import { notifyError, notifySuccess } from "@/toasts/toast";
 import CompletionDialog from "./completion-dialog";
+import Timer from "./timer";
 
 const defaultSudoku: Sudoku = {
     id: "",
@@ -44,23 +45,6 @@ const SudokuPlayer = () => {
     if (session) {
         headers.Authorization = "Bearer " + session.accessToken;
     }
-
-    // Timer effect
-    useEffect(() => {
-        if (isTimerRunning) {
-            timerRef.current = setInterval(() => {
-                setTimer(prev => prev + 1);
-            }, 1000);
-        } else if (timerRef.current) {
-            clearInterval(timerRef.current);
-        }
-
-        return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-            }
-        };
-    }, [isTimerRunning]);
 
     // Format timer as mm:ss
     const formatTime = (seconds: number) => {
@@ -116,7 +100,7 @@ const SudokuPlayer = () => {
                     setIsTimerRunning(false);
                     setMode("solved");
                     notifySuccess("Congratulations! You solved the puzzle!");
-                    setIsDialogOpen(true); // Open the completion dialog
+                    setIsDialogOpen(true);
                 }
             }
         }
@@ -365,15 +349,13 @@ const SudokuPlayer = () => {
                 {/* Game status information */}
                 {mode !== "create" && (
                     <HStack width="100%" justifyContent="space-between" px={4}>
-                        <Badge
-                            colorPalette={isTimerRunning ? "green" : "gray"}
-                            fontSize="md"
-                            p={2}
-                            borderRadius="md"
-                        >
-                            Time: {formatTime(timer)}
-                        </Badge>
-
+                        <Timer
+                            timerRef={timerRef}
+                            timer={timer}
+                            setTimer={setTimer}
+                            isTimerRunning={isTimerRunning}
+                            formatTime={formatTime}
+                        />
                         {hintsUsed > 0 && (
                             <Badge colorPalette="purple" fontSize="md" p={2} borderRadius="md">
                                 Hints used: {hintsUsed}
