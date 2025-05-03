@@ -93,10 +93,6 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                                 bg="transparent"
                                 zIndex="1"
                                 color={isIncorrect ? errorValueColor : (isOriginal ? originalValueColor : filledValueColor)}
-                                readOnly={mode === "play" && isOriginal ? true : false}
-                                _readOnly={{
-                                    cursor: "not-allowed"
-                                }}
                                 onKeyDown={(e) => {
                                     // Prevent non-numeric keys except for backspace, delete, tab, etc.
                                     if (
