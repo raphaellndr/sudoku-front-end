@@ -5,11 +5,15 @@ import {
     Text,
     Button,
     HStack,
+    IconButton,
 } from "@chakra-ui/react";
+import { IoMdExit } from "react-icons/io";
 
 import { ColorModeButton } from "../../color-mode";
 import CustomDrawer from "../header/custom-drawer";
 import HeaderButton from "./header-button";
+import { Tooltip } from "../../tooltip";
+import { TooltipIconButton } from "../../tooltip-icon-button";
 
 const Header: React.FC = () => {
     const { data: session } = useSession();
@@ -48,14 +52,13 @@ const Header: React.FC = () => {
                         <ColorModeButton />
 
                         {session ? (
-                            <Button
-                                variant="outline"
-                                colorPalette="red"
+                            <TooltipIconButton
+                                icon={<IoMdExit />}
+                                tooltipText="Sign out"
+                                variant="ghost"
                                 display={{ base: "none", md: "inline-flex" }}
                                 onClick={() => signOut()}
-                            >
-                                Sign out
-                            </Button>
+                            />
                         ) : (
                             <Button
                                 variant="outline"
