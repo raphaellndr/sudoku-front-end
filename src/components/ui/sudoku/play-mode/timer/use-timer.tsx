@@ -13,7 +13,7 @@ export const useTimer = () => {
     useEffect(() => {
         if (isActive && !isPaused) {
             timerRef.current = setInterval(() => {
-                setTimer(prev => prev + 1);
+                setTimer((prev) => prev + 1);
             }, 1000);
         } else if (timerRef.current) {
             clearInterval(timerRef.current);
@@ -25,6 +25,22 @@ export const useTimer = () => {
             }
         };
     }, [isActive, isPaused]);
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                setIsPaused(true);
+            } else {
+                setIsPaused(false);
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, []);
 
     return {
         timer,
