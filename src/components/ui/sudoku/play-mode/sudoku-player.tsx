@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Box, Button, HStack, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, Skeleton, VStack } from "@chakra-ui/react";
 
 import { usePlayerGrid } from "./use-player-grid";
 import CompletionDialog from "./completion-dialog";
@@ -27,6 +27,8 @@ const SudokuPlayer = () => {
         setTimer,
         isActive: isTimerRunning,
         setIsActive: setIsTimerRunning,
+        isPaused,
+        setIsPaused: setIsTimerPaused,
         timerRef
     } = useTimer();
 
@@ -117,49 +119,52 @@ const SudokuPlayer = () => {
                         pos="relative"
                     >
                         <HStack gap="4">
-                            {(() => {
-                                switch (mode) {
-                                    case "create":
-                                        return (
-                                            <BaseSudokuGrid
-                                                mode="create"
-                                                sudoku={sudoku}
-                                                onCellChange={handleCellChange}
-                                            />
-                                        );
-                                    case "play":
-                                        return (
-                                            <BaseSudokuGrid
-                                                mode="play"
-                                                sudoku={{
-                                                    ...sudoku,
-                                                    grid: playerGrid,
-                                                }}
-                                                onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v, sudoku)}
-                                            />
-                                        );
-                                    case "solved":
-                                        return (
-                                            <BaseSudokuGrid
-                                                mode="display"
-                                                sudoku={{
-                                                    ...sudoku,
-                                                    grid: playerGrid,
-                                                }}
-                                                onCellChange={() => { }}
-                                            />
-                                        );
-                                }
-                            })()}
+                            <Skeleton loading={isPaused}>
+                                {(() => {
+                                    switch (mode) {
+                                        case "create":
+                                            return (
+                                                <BaseSudokuGrid
+                                                    mode="create"
+                                                    sudoku={sudoku}
+                                                    onCellChange={handleCellChange}
+                                                />
+                                            );
+                                        case "play":
+                                            return (
+                                                <BaseSudokuGrid
+                                                    mode="play"
+                                                    sudoku={{
+                                                        ...sudoku,
+                                                        grid: playerGrid,
+                                                    }}
+                                                    onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v, sudoku)}
+                                                />
+                                            );
+                                        case "solved":
+                                            return (
+                                                <BaseSudokuGrid
+                                                    mode="display"
+                                                    sudoku={{
+                                                        ...sudoku,
+                                                        grid: playerGrid,
+                                                    }}
+                                                    onCellChange={() => { }}
+                                                />
+                                            );
+                                    }
+                                })()}
+
+                            </Skeleton>
                             {mode === "play" && (
                                 <VStack gap="4" align="stretch">
                                     <Timer
                                         timer={timer}
-                                        isActive={isTimerRunning}
-                                        setIsActive={setIsTimerRunning}
+                                        isPaused={isPaused}
+                                        setIsPaused={setIsTimerPaused}
                                     />
-                                    <UndoButton canUndo={canUndo} remainingUndos={remainingUndos} undoMove={undoMove} />
-                                    <HintButton sudoku={sudoku} remainingHints={remainingHints} handleHint={giveHint} />
+                                    <UndoButton canUndo={canUndo} remainingUndos={remainingUndos} undoMove={undoMove} isPaused={isPaused} />
+                                    <HintButton sudoku={sudoku} remainingHints={remainingHints} handleHint={giveHint} isPaused={isPaused} />
                                     <Button
                                         variant="solid"
                                         onClick={handleRestartPuzzle}
