@@ -9,12 +9,12 @@ export const formatTime = (seconds: number) => {
 
 interface TimerProps {
     timer: number;
-    isActive: boolean;
-    setIsActive: React.Dispatch<React.SetStateAction<boolean>>
+    isPaused: boolean;
+    setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Timer: React.FC<TimerProps> = (
-    { timer, isActive, setIsActive }
+    { timer, isPaused, setIsPaused }
 ) => {
     return (
         <Badge
@@ -24,8 +24,8 @@ const Timer: React.FC<TimerProps> = (
             borderRadius="md"
         >
             {formatTime(timer)}
-            <IconButton variant="ghost" onClick={() => setIsActive(!isActive)}>
-                {!isActive ? (
+            <IconButton variant="ghost" onClick={() => { setIsPaused(!isPaused) }}>
+                {isPaused ? (
                     <IoIosPlay />
                 ) : (
                     <IoIosPause />
