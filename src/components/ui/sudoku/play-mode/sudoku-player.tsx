@@ -119,19 +119,19 @@ const SudokuPlayer = () => {
                         pos="relative"
                     >
                         <HStack gap="4">
-                            <Skeleton loading={isPaused}>
-                                {(() => {
-                                    switch (mode) {
-                                        case "create":
-                                            return (
-                                                <BaseSudokuGrid
-                                                    mode="create"
-                                                    sudoku={sudoku}
-                                                    onCellChange={handleCellChange}
-                                                />
-                                            );
-                                        case "play":
-                                            return (
+                            {(() => {
+                                switch (mode) {
+                                    case "create":
+                                        return (
+                                            <BaseSudokuGrid
+                                                mode="create"
+                                                sudoku={sudoku}
+                                                onCellChange={handleCellChange}
+                                            />
+                                        );
+                                    case "play":
+                                        return (
+                                            <Skeleton loading={isPaused}>
                                                 <BaseSudokuGrid
                                                     mode="play"
                                                     sudoku={{
@@ -140,22 +140,21 @@ const SudokuPlayer = () => {
                                                     }}
                                                     onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v, sudoku)}
                                                 />
-                                            );
-                                        case "solved":
-                                            return (
-                                                <BaseSudokuGrid
-                                                    mode="display"
-                                                    sudoku={{
-                                                        ...sudoku,
-                                                        grid: playerGrid,
-                                                    }}
-                                                    onCellChange={() => { }}
-                                                />
-                                            );
-                                    }
-                                })()}
-
-                            </Skeleton>
+                                            </Skeleton>
+                                        );
+                                    case "solved":
+                                        return (
+                                            <BaseSudokuGrid
+                                                mode="display"
+                                                sudoku={{
+                                                    ...sudoku,
+                                                    grid: playerGrid,
+                                                }}
+                                                onCellChange={() => { }}
+                                            />
+                                        );
+                                }
+                            })()}
                             {mode === "play" && (
                                 <VStack gap="4" align="stretch">
                                     <Timer
