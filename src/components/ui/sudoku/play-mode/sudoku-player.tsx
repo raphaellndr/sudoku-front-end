@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import { Box, Button, HStack, IconButton, VStack } from "@chakra-ui/react";
-import { CiUndo } from "react-icons/ci";
+import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { usePlayerGrid } from "./use-player-grid";
 import CompletionDialog from "./completion-dialog";
