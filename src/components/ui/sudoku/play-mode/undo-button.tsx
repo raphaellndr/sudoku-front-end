@@ -9,16 +9,17 @@ interface UndoButtonprops {
     canUndo: boolean;
     undoMove: () => void;
     remainingUndos: number;
+    isPaused: boolean;
 }
 
 export const UndoButton: React.FC<UndoButtonprops> = (
-    { canUndo, undoMove, remainingUndos }
+    { canUndo, undoMove, remainingUndos, isPaused }
 ) => {
     const circleBg = useColorModeValue("black", "white");
     const circleBgDisabled = useColorModeValue("gray", "gray");
     const circleColor = useColorModeValue("white", "black");
 
-    const isDisabled = !canUndo || remainingUndos === 0
+    const isDisabled = !canUndo || remainingUndos === 0 || isPaused;
 
     return (
         <Box position="relative">
@@ -34,7 +35,7 @@ export const UndoButton: React.FC<UndoButtonprops> = (
             <Float>
                 <Circle
                     size="4"
-                    bg={isDisabled? circleBgDisabled : circleBg}
+                    bg={isDisabled ? circleBgDisabled : circleBg}
                     color={circleColor}>
                     {remainingUndos}
                 </Circle>

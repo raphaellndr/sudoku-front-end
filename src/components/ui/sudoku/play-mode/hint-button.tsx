@@ -10,18 +10,21 @@ interface HintButtonprops {
     sudoku: Sudoku;
     handleHint: (sudoku: Sudoku) => void;
     remainingHints: number;
+    isPaused: boolean;
 }
 
 export const HintButton: React.FC<HintButtonprops> = (
-    { sudoku, handleHint, remainingHints }
+    { sudoku, handleHint, remainingHints, isPaused }
 ) => {
     const circleBg = useColorModeValue("purple", "purple");
     const circleBgDisabled = useColorModeValue("purple.400", "mediumpurple");
 
+    const disabled = remainingHints === 0 || isPaused;
+
     return (
         <Box position="relative">
             <IconButton
-                disabled={remainingHints === 0}
+                disabled={disabled}
                 colorPalette="purple"
                 variant="outline"
                 width="100%"
@@ -33,7 +36,7 @@ export const HintButton: React.FC<HintButtonprops> = (
             <Float>
                 <Circle
                     size="4"
-                    bg={remainingHints === 0 ? circleBgDisabled : circleBg}
+                    bg={disabled ? circleBgDisabled : circleBg}
                     color="white">
                     {remainingHints}
                 </Circle>
