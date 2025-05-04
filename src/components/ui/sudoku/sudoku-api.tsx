@@ -1,7 +1,8 @@
+import React from "react";
+
 import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuDifficultyEnum } from "@/types/enums";
 import { notifyError } from "@/toasts/toast";
-import React from "react";
 
 /**
  * Creates API headers with optional authentication
@@ -72,7 +73,6 @@ export const fetchSolution = async (
     headers: HeadersInit,
     setSudoku: (updater: (prevSudoku: Sudoku) => Sudoku) => void
 ): Promise<void> => {
-    console.log("coucuuuuu")
     try {
         const response = await fetch(
             process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus/${sudokuId}/solution/`,
