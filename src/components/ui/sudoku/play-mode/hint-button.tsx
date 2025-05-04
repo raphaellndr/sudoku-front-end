@@ -1,4 +1,4 @@
-import { Box, Circle, Float, IconButton } from "@chakra-ui/react";
+import { Box, Circle, Float } from "@chakra-ui/react";
 import { FaRegLightbulb } from "react-icons/fa";
 
 import { Sudoku } from "@/types/types";
@@ -7,14 +7,14 @@ import { TooltipIconButton } from "../../tooltip-icon-button";
 
 export const MAX_HINTS = 3;
 
-interface HintButtonprops {
+interface HintButtonProps {
     sudoku: Sudoku;
     handleHint: (sudoku: Sudoku) => void;
     remainingHints: number;
     isPaused: boolean;
 }
 
-export const HintButton: React.FC<HintButtonprops> = (
+export const HintButton: React.FC<HintButtonProps> = (
     { sudoku, handleHint, remainingHints, isPaused }
 ) => {
     const circleBg = useColorModeValue("purple", "purple");
