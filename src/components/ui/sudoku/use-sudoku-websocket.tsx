@@ -7,7 +7,6 @@ import { fetchSolution } from './sudoku-api';
 
 type WebSocketCallbacks = {
     onComplete?: (sudokuId: string) => void;
-    onStatusChange?: (status: string) => void;
 };
 
 /**
@@ -20,7 +19,6 @@ export const useSudokuWebSocket = (
     callbacks?: WebSocketCallbacks
 ) => {
     const [isConnected, setIsConnected] = useState(false);
-    const [status, setStatus] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const socketRef = useRef<WebSocket | null>(null);
 
@@ -46,19 +44,20 @@ export const useSudokuWebSocket = (
             const data = JSON.parse(event.data);
             if (data.type === "status_update") {
                 const { sudoku_id, status } = data;
-                setStatus(status);
-                callbacks?.onStatusChange?.(status);
-
                 setSudoku((prevSudoku) => {
                     if (!prevSudoku) return prevSudoku;
                     return { ...prevSudoku, status: status };
                 });
 
-                if (status === SudokuStatusEnum.Values.completed) {
-                    fetchSolution(sudoku_id, headers, setSudoku);
-                    socket.close();
-                    setIsLoading(false);
-                    callbacks?.onComplete?.(sudoku_id);
+                switch (status) {
+                    case SudokuStatusEnum.Values.completed:
+                        fetchSolution(sudoku_id, headers, setSudoku);
+                        socket.close();
+                        setIsLoading(false);
+                        callbacks?.onComplete?.(sudoku_id);
+                    case SudokuStatusEnum.Values.aborted:
+                        socket.close();
+                        setIsLoading(false);
                 }
             }
         };
@@ -82,5 +81,5 @@ export const useSudokuWebSocket = (
         };
     }, [sudokuId]);
 
-    return { isConnected, status, isLoading };
+    return { isConnected, isLoading };
 };
