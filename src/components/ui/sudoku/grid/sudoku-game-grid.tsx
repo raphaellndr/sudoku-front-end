@@ -31,8 +31,6 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
         const isOriginal = originalGrid[index] !== "0";
         const solutionValue = sudoku.solution?.grid[index];
 
-        console.log(sudoku.grid)
-
         // Check if the value is incorrect
         const isIncorrect = cellValue !== "0" && solutionValue && cellValue !== solutionValue;
 
