@@ -65,7 +65,7 @@ const SudokuSolver = () => {
         if (sudoku.id) {
             const response = await abortSolving(sudoku.id, headers);
             if (response?.ok) {
-                
+
             }
         };
 
@@ -87,17 +87,18 @@ const SudokuSolver = () => {
                     >
                         Clear grid
                     </Button>
-                    <Button
-                        disabled={disableAbortButton}
-                        variant="outline"
-                        onClick={handleAbortButton}
-                    >
-                        Abort solving
-                    </Button>
+                    {isLoading && (
+                        <Button
+                            disabled={disableAbortButton}
+                            variant="outline"
+                            onClick={handleAbortButton}
+                        >
+                            Abort solving
+                        </Button>
+                    )}
                     <Button
                         disabled={disableSolveButton}
-                        variant="subtle"
-                        loadingText="Solving sudoku..."
+                        loadingText="Solving..."
                         loading={isLoading}
                         onClick={handleSolveSudoku}
                     >
