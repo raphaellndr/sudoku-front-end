@@ -6,14 +6,14 @@ import { TooltipIconButton } from "../../tooltip-icon-button";
 
 export const MAX_UNDOS = 3;
 
-interface UndoButtonprops {
+interface UndoButtonProps {
     canUndo: boolean;
     undoMove: () => void;
     remainingUndos: number;
     isPaused: boolean;
 }
 
-export const UndoButton: React.FC<UndoButtonprops> = (
+export const UndoButton: React.FC<UndoButtonProps> = (
     { canUndo, undoMove, remainingUndos, isPaused }
 ) => {
     const circleBg = useColorModeValue("black", "white");
