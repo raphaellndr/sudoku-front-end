@@ -1,22 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
-import { BaseSudokuGrid } from "../base-sudoku-grid";
 import { useSudoku } from "../use-sudoku";
 import { createSudoku, solveSudoku, abortSolving } from "../sudoku-api";
 import { useSudokuWebSocket } from "../use-sudoku-websocket";
 import { SudokuStatusEnum } from "@/types/enums";
+import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
+import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
 
 const SudokuSolver = () => {
+    // Sudoku state from custom hook
+    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, headers } = useSudoku();
+
     // Mode state
     const [mode, setMode] = useState<"create" | "display">("create");
 
-    // Button state
-    const [disableSolveButton, setDisableSolveButton] = useState(false);
+    // Buttons state
+    const [disableSolveButton, setDisableSolveButton] = useState(!/[1-9]/.test(sudoku.grid));
+    const disableClearButton =
+        !/[1-9]/.test(sudoku.grid) ||
+        [SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)
+    const disableAbortButton =
+        ![SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)
 
-    // Sudoku state from custom hook
-    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, headers } = useSudoku();
+    useEffect(() => {
+        setDisableSolveButton(!/[1-9]/.test(sudoku.grid));
+    }, [sudoku.grid])
 
     // WebSocket connection for status updates
     const { isLoading } = useSudokuWebSocket(
@@ -24,16 +34,18 @@ const SudokuSolver = () => {
         headers,
         setSudoku,
         {
-            onStatusChange: (status) => {
-                if (status === SudokuStatusEnum.Values.completed) {
-                    setDisableSolveButton(false);
-                }
-            },
             onComplete: () => {
                 setMode("display");
+                setDisableSolveButton(true);
             }
         }
     );
+
+    const handleClearButton = () => {
+        clearSudokuGrid();
+        setMode("create");
+        setDisableSolveButton(false);
+    }
 
     // Handler for solve button
     const handleSolveSudoku = async () => {
@@ -42,7 +54,7 @@ const SudokuSolver = () => {
             setDisableSolveButton(true);
             setMode("display");
             const success = await solveSudoku(sudokuId, headers);
-            if (!success) {
+            if (success?.ok) {
                 setDisableSolveButton(false);
             }
         }
@@ -51,40 +63,33 @@ const SudokuSolver = () => {
     // Handler for abort button
     const handleAbortButton = async () => {
         if (sudoku.id) {
-            await abortSolving(sudoku.id, headers);
-        }
+            const response = await abortSolving(sudoku.id, headers);
+            if (response?.ok) {
+                
+            }
+        };
+
     };
 
     return (
         <Box p={5}>
             <VStack>
                 {mode === "create" ? (
-                    <BaseSudokuGrid
-                        mode="create"
-                        sudoku={sudoku}
-                        onCellChange={handleCellChange}
-                    />
+                    <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
                 ) : (
-                    <BaseSudokuGrid
-                        mode="display"
-                        sudoku={sudoku}
-                        onCellChange={handleCellChange}
-                    />
+                    <ReadOnlySudokuGrid sudoku={sudoku} showSolution={true} />
                 )}
                 <HStack>
                     <Button
-                        disabled={!/[1-9]/.test(sudoku.grid) || [SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)}
+                        disabled={disableClearButton}
                         colorPalette="red"
                         variant="outline"
-                        onClick={() => {
-                            clearSudokuGrid();
-                            setMode("create");
-                            setDisableSolveButton(false);
-                        }}>
+                        onClick={handleClearButton}
+                    >
                         Clear grid
                     </Button>
                     <Button
-                        disabled={![SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)}
+                        disabled={disableAbortButton}
                         colorPalette="red"
                         variant="outline"
                         onClick={handleAbortButton}
@@ -96,7 +101,7 @@ const SudokuSolver = () => {
                         colorPalette="blue"
                         variant="subtle"
                         loadingText="Solving sudoku..."
-                        loading={isLoading || sudoku.status === SudokuStatusEnum.Values.running}
+                        loading={isLoading}
                         onClick={handleSolveSudoku}
                     >
                         Solve sudoku
