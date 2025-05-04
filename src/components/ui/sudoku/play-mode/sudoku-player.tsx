@@ -51,6 +51,7 @@ const SudokuPlayer = () => {
         playerGrid,
         remainingHints,
         remainingUndos,
+        hintPositions,
         handleCellChange: handlePlayerCellChange,
         giveHint,
         undoMove,
@@ -140,6 +141,7 @@ const SudokuPlayer = () => {
                                                 }}
                                                 originalGrid={originalGrid}
                                                 onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v, sudoku)}
+                                                hintPositions={hintPositions}
                                             />
                                         );
                                     case "solved":

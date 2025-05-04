@@ -8,15 +8,18 @@ interface SudokuGameGridProps {
     sudoku: Sudoku;
     originalGrid: string;
     onCellChange: (rowIndex: number, colIndex: number, value: string) => void;
+    hintPositions?: number[];
 }
 
 export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     sudoku,
     originalGrid,
     onCellChange,
+    hintPositions = [],
 }) => {
     const originalValueColor = useColorModeValue("black", "white");
     const errorValueColor = useColorModeValue("red.600", "red.400");
+    const hintValueColor = useColorModeValue("green.600", "green.400");
 
     // Handle input validation to only allow numbers 1-9
     const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
@@ -30,6 +33,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
         const cellValue = sudoku.grid[index].toString() || "0";
         const isOriginal = originalGrid[index] !== "0";
         const solutionValue = sudoku.solution?.grid[index];
+        const isHint = hintPositions.includes(index);
 
         // Check if the value is incorrect
         const isIncorrect = cellValue !== "0" && solutionValue && cellValue !== solutionValue;
@@ -47,6 +51,14 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
             );
         }
 
+        // Determine the cell color
+        let cellColor = originalValueColor;
+        if (isIncorrect) {
+            cellColor = errorValueColor;
+        } else if (isHint) {
+            cellColor = hintValueColor;
+        }
+
         // Otherwise render an input for user to fill
         return (
             <Input
@@ -60,10 +72,10 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                 onChange={(e) => handleInputChange(rowIndex, colIndex, e.target.value)}
                 textAlign="center"
                 fontSize="xl"
-                fontWeight={isOriginal ? "bold" : "normal"}
+                fontWeight={isHint ? "bold" : "normal"}
                 border="none"
                 bg="transparent"
-                color={isIncorrect ? errorValueColor : originalValueColor}
+                color={cellColor}
                 zIndex="1"
                 onKeyDown={(e) => {
                     // Prevent non-numeric keys except for backspace, delete, tab, etc.

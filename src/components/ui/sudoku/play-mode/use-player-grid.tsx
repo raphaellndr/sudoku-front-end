@@ -100,6 +100,15 @@ export const usePlayerGrid = (
     };
 
     /**
+     * Get hint positions from move history
+     */
+    const getHintPositions = () => {
+        return moveHistory
+            .filter(move => move.isHint)
+            .map(move => move.position);
+    };
+
+    /**
      * Undo the last non-hint move
      */
     const undoMove = () => {
@@ -185,7 +194,7 @@ export const usePlayerGrid = (
         setPlayerGrid,
         remainingHints,
         remainingUndos,
-        moveHistory,
+        hintPositions: getHintPositions(),
         handleCellChange,
         giveHint,
         undoMove,
