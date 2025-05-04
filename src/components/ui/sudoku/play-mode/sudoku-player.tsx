@@ -109,6 +109,7 @@ const SudokuPlayer = () => {
         resetPlayerGrid(sudoku.grid);
         setTimer(0);
         setIsTimerRunning(true);
+        setIsTimerPaused(false);
         setMode("play");
     };
 
