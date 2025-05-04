@@ -82,7 +82,6 @@ const SudokuSolver = () => {
                 <HStack>
                     <Button
                         disabled={disableClearButton}
-                        colorPalette="red"
                         variant="outline"
                         onClick={handleClearButton}
                     >
@@ -90,7 +89,6 @@ const SudokuSolver = () => {
                     </Button>
                     <Button
                         disabled={disableAbortButton}
-                        colorPalette="red"
                         variant="outline"
                         onClick={handleAbortButton}
                     >
@@ -98,7 +96,6 @@ const SudokuSolver = () => {
                     </Button>
                     <Button
                         disabled={disableSolveButton}
-                        colorPalette="blue"
                         variant="subtle"
                         loadingText="Solving sudoku..."
                         loading={isLoading}
