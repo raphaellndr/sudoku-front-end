@@ -126,7 +126,7 @@ export const solveSudoku = async (
 export const abortSolving = async (
     sudokuId: string,
     headers: HeadersInit
-): Promise<boolean> => {
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(
             process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus/${sudokuId}/solver/`,
@@ -135,15 +135,10 @@ export const abortSolving = async (
                 headers,
             }
         );
-        if (!response.ok) {
-            const errorData = await response.json();
-            notifyError("Failed to abort task: " + errorData);
-            return false;
-        }
-        return true;
+        return response;
     } catch (e: unknown) {
         const error = e as Error;
         notifyError(`An error occurred while aborting the task: ${error.message}`);
-        return false;
+        return;
     }
 };
