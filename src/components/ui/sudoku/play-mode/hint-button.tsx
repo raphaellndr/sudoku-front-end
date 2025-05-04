@@ -3,6 +3,7 @@ import { FaRegLightbulb } from "react-icons/fa";
 
 import { Sudoku } from "@/types/types";
 import { useColorModeValue } from "../../color-mode";
+import { TooltipIconButton } from "../../tooltip-icon-button";
 
 export const MAX_HINTS = 3;
 
@@ -23,16 +24,16 @@ export const HintButton: React.FC<HintButtonprops> = (
 
     return (
         <Box position="relative">
-            <IconButton
+            <TooltipIconButton
+                icon={<FaRegLightbulb />}
+                buttonText="Hint"
+                tooltipText="Reveal a correct number"
                 disabled={disabled}
                 colorPalette="purple"
                 variant="outline"
                 width="100%"
                 onClick={() => handleHint(sudoku)}
-            >
-                <FaRegLightbulb />
-                Hint
-            </IconButton>
+            />
             <Float>
                 <Circle
                     size="4"

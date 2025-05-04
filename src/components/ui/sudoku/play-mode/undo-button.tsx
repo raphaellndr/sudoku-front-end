@@ -1,7 +1,8 @@
-import { Box, Circle, Float, IconButton } from "@chakra-ui/react";
+import { Box, Circle, Float } from "@chakra-ui/react";
 import { CiUndo } from "react-icons/ci";
 
 import { useColorModeValue } from "../../color-mode";
+import { TooltipIconButton } from "../../tooltip-icon-button";
 
 export const MAX_UNDOS = 3;
 
@@ -23,15 +24,15 @@ export const UndoButton: React.FC<UndoButtonprops> = (
 
     return (
         <Box position="relative">
-            <IconButton
+            <TooltipIconButton
+                icon={<CiUndo />}
+                buttonText="Undo"
+                tooltipText="Remove last value entered"
                 disabled={isDisabled}
                 variant="outline"
                 width="100%"
                 onClick={undoMove}
-            >
-                <CiUndo />
-                Undo
-            </IconButton>
+            />
             <Float>
                 <Circle
                     size="4"
