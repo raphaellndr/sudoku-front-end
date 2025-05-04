@@ -38,25 +38,17 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
         // Check if the value is incorrect
         const isIncorrect = cellValue !== "0" && solutionValue && cellValue !== solutionValue;
 
-        // If it's an original cell, show a fixed value
-        if (isOriginal) {
+        // If it's an original cell or a hint, show a fixed value
+        if (isOriginal || isHint) {
             return (
                 <Text
                     fontWeight="bold"
-                    color={originalValueColor}
+                    color={isHint ? hintValueColor : originalValueColor}
                     fontSize="lg"
                 >
                     {cellValue}
                 </Text>
             );
-        }
-
-        // Determine the cell color
-        let cellColor = originalValueColor;
-        if (isIncorrect) {
-            cellColor = errorValueColor;
-        } else if (isHint) {
-            cellColor = hintValueColor;
         }
 
         // Otherwise render an input for user to fill
@@ -75,7 +67,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                 fontWeight={isHint ? "bold" : "normal"}
                 border="none"
                 bg="transparent"
-                color={cellColor}
+                color={isIncorrect ? errorValueColor : originalValueColor}
                 zIndex="1"
                 onKeyDown={(e) => {
                     // Prevent non-numeric keys except for backspace, delete, tab, etc.
