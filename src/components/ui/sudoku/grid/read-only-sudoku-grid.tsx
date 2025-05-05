@@ -6,34 +6,26 @@ import { useColorModeValue } from "../../color-mode";
 
 interface ReadOnlySudokuGridProps {
     sudoku: Sudoku;
-    showSolution?: boolean;
-}
+};
 
 export const ReadOnlySudokuGrid: React.FC<ReadOnlySudokuGridProps> = ({
     sudoku,
-    showSolution = false,
 }) => {
-    const originalValueColor = useColorModeValue("black", "white");
+    const textColor = useColorModeValue("black", "white");
 
     const renderCell = (rowIndex: number, colIndex: number, index: number) => {
-        const cellValue = sudoku.grid[index]?.toString() || "0";
-        const solutionValue = sudoku.solution ? sudoku.solution.grid[index] : null;
-        const displayValue = showSolution && solutionValue ? solutionValue : cellValue;
+        const originalValue = sudoku.grid[index];
+        const solutionValue = sudoku.solution?.grid[index];
 
-        // Only render if there's a value to display
-        if (displayValue !== "0") {
-            return (
-                <Text
-                    fontWeight="bold"
-                    color={originalValueColor}
-                    fontSize="lg"
-                >
-                    {displayValue}
-                </Text>
-            );
-        }
-
-        return null;
+        return (
+            <Text
+                fontWeight={originalValue !== "0" ? "bold" : "normal"}
+                color={textColor}
+                fontSize="lg"
+            >
+                {originalValue !== "0" ? originalValue : solutionValue}
+            </Text>
+        );
     };
 
     return (
