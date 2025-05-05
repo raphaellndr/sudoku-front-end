@@ -10,6 +10,23 @@ export const useTimer = () => {
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+    const restartTimer = () => {
+        setTimer(0);
+        setIsActive(true);
+        setIsPaused(false);
+    };
+
+    const resetTimer = () => {
+        setTimer(0);
+        setIsActive(false);
+        setIsPaused(false);
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+    };
+
+    // Timer logic
     useEffect(() => {
         if (isActive && !isPaused) {
             timerRef.current = setInterval(() => {
@@ -26,6 +43,7 @@ export const useTimer = () => {
         };
     }, [isActive, isPaused]);
 
+    // Pause the timer when visibility changes to hidden
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -45,6 +63,8 @@ export const useTimer = () => {
     return {
         timer,
         setTimer,
+        restartTimer,
+        resetTimer,
         isActive,
         setIsActive,
         isPaused,
