@@ -1,4 +1,3 @@
-import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuDifficultyEnum } from "@/types/enums";
 import { notifyError } from "@/toasts/toast";
 
