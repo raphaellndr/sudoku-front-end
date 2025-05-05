@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
@@ -53,6 +53,15 @@ const SudokuPlayer = () => {
 
     // Sudoku state from custom hook
     const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, headers } = useSudoku();
+
+    // Boolean whether a player has entered a value or not
+    const hasPlayerEnteredValues = useMemo(() => {
+        return grid.some(cell => {
+            const index = cell.position[0] * 9 + cell.position[1];
+            const isOriginalValue = sudoku.grid[index] !== "0";
+            return cell.value !== "0" && cell.value !== "" && !cell.isHint && !isOriginalValue;
+        });
+    }, [grid, sudoku.grid]);
 
     // Player grid state from custom hook
     const {
@@ -166,7 +175,7 @@ const SudokuPlayer = () => {
                                     />
                                     <CheckButton
                                         remainingChecks={remainingChecks}
-                                        canCheck={false}
+                                        canCheck={hasPlayerEnteredValues}
                                         isPaused={isPaused}
                                         onActivateCheckMode={toggleCheckMode}
                                         isCheckModeActive={isCheckModeActive}
