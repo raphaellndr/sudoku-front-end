@@ -8,6 +8,8 @@ import { useSudokuWebSocket } from "../use-sudoku-websocket";
 import { SudokuStatusEnum } from "@/types/enums";
 import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
 import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
+import { notifyError } from "@/toasts/toast";
+import { Sudoku } from "@/types/types";
 
 const SudokuSolver = () => {
     // Sudoku state from custom hook
@@ -49,12 +51,21 @@ const SudokuSolver = () => {
 
     // Handler for solve button
     const handleSolveSudoku = async () => {
-        const sudokuId = await createSudoku(sudoku.grid, headers, setSudoku);
-        if (sudokuId) {
+        if (/^0+$/.test(sudoku.grid)) {
+            notifyError("Cannot solve a sudoku with an empty grid!");
+            return;
+        }
+
+        const createSudokuResponse = await createSudoku(sudoku.grid, headers);
+        if (createSudokuResponse?.ok) {
             setDisableSolveButton(true);
             setMode("display");
-            const success = await solveSudoku(sudokuId, headers);
-            if (success?.ok) {
+
+            const sudokuData = await createSudokuResponse.json() as Sudoku;
+            setSudoku(sudokuData);
+
+            const solveSudokuResponse = await solveSudoku(sudokuData.id, headers);
+            if (solveSudokuResponse?.ok) {
                 setDisableSolveButton(false);
             }
         }
@@ -63,12 +74,11 @@ const SudokuSolver = () => {
     // Handler for abort button
     const handleAbortButton = async () => {
         if (sudoku.id) {
-            const response = await abortSolving(sudoku.id, headers);
-            if (response?.ok) {
-
+            const abortSolvingResponse = await abortSolving(sudoku.id, headers);
+            if (!abortSolvingResponse?.ok) {
+                notifyError("Failed to abort solving")
             }
         };
-
     };
 
     return (
