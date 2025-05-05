@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
-import { Sudoku } from "@/types/types";
+import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuStatusEnum } from "@/types/enums";
 import { notifyError } from "@/toasts/toast";
-import { fetchSolution } from './sudoku-api';
+import { fetchSolution } from "./sudoku-api";
 
 type WebSocketCallbacks = {
     onComplete?: (sudokuId: string) => void;
@@ -40,21 +40,22 @@ export const useSudokuWebSocket = (
             setIsConnected(true);
         };
 
-        socket.onmessage = (event) => {
+        socket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
             if (data.type === "status_update") {
                 const { sudoku_id, status } = data;
-                setSudoku((prevSudoku) => {
-                    if (!prevSudoku) return prevSudoku;
-                    return { ...prevSudoku, status: status };
-                });
+                setSudoku((prevSudoku) => ({ ...prevSudoku, status: status }));
 
                 switch (status) {
                     case SudokuStatusEnum.Values.completed:
-                        fetchSolution(sudoku_id, headers, setSudoku);
-                        socket.close();
-                        setIsLoading(false);
-                        callbacks?.onComplete?.(sudoku_id);
+                        const fetchSolutionResponse = await fetchSolution(sudoku_id, headers);
+                        if (fetchSolutionResponse?.ok) {
+                            const sudokuSolution = await fetchSolutionResponse.json() as SudokuSolution;
+                            setSudoku((prevSudoku) => ({ ...prevSudoku, solution: sudokuSolution }));
+                            socket.close();
+                            setIsLoading(false);
+                            callbacks?.onComplete?.(sudoku_id);
+                        }
                     case SudokuStatusEnum.Values.aborted:
                         socket.close();
                         setIsLoading(false);
