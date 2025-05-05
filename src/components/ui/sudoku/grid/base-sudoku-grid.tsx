@@ -7,7 +7,7 @@ import { useColorModeValue } from "../../color-mode";
 
 export interface BaseSudokuGridProps {
     sudoku: Sudoku;
-    renderCell: (rowIndex: number, colIndex: number, index: number) => ReactNode;
+    renderCell: (position: [number, number], index: number) => ReactNode;
 }
 
 export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
@@ -52,7 +52,7 @@ export const BaseSudokuGrid: React.FC<BaseSudokuGridProps> = ({
                         _hover={{ bg: hoverBgColor }}
                         position="relative"
                     >
-                        {renderCell(rowIndex, colIndex, index)}
+                        {renderCell([rowIndex, colIndex], index)}
                     </Box>
                 );
             })}

@@ -148,7 +148,7 @@ const SudokuPlayer = () => {
                                             <SudokuGameGrid
                                                 sudoku={sudoku}
                                                 grid={grid}
-                                                onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v)}
+                                                onCellChange={(p, v) => handlePlayerCellChange(p, v)}
                                             />
                                         );
                                     case "solved":

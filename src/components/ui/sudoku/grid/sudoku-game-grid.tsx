@@ -8,7 +8,7 @@ import { useColorModeValue } from "../../color-mode";
 interface SudokuGameGridProps {
     sudoku: Sudoku;
     grid: Cell[];
-    onCellChange: (rowIndex: number, colIndex: number, value: string) => void;
+    onCellChange: (position: [number, number], value: string) => void;
 }
 
 export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
@@ -21,16 +21,16 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     const hintValueColor = useColorModeValue("green.600", "green.400");
 
     // Handle input validation to only allow numbers 1-9
-    const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
+    const handleInputChange = (position: [number, number], value: string) => {
         // Only allow numbers 1-9 or empty string
         if (value === "" || /^[1-9]$/.test(value)) {
-            onCellChange(rowIndex, colIndex, value);
+            onCellChange(position, value);
         }
     };
 
-    const renderCell = (rowIndex: number, colIndex: number, index: number) => {
+    const renderCell = (position: [number, number], index: number) => {
         const cell = grid.find(cell =>
-            cell.position[0] === rowIndex && cell.position[1] === colIndex
+            cell.position[0] === position[0] && cell.position[1] === position[1]
         )
         const cellValue = cell?.value || "0";
         const isHint = cell?.isHint || false;
@@ -63,7 +63,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                 pattern="[1-9]"
                 maxLength={1}
                 value={cellValue !== "0" ? cellValue : ""}
-                onChange={(e) => handleInputChange(rowIndex, colIndex, e.target.value)}
+                onChange={(e) => handleInputChange(position, e.target.value)}
                 textAlign="center"
                 fontSize="xl"
                 fontWeight={isHint ? "bold" : "normal"}
