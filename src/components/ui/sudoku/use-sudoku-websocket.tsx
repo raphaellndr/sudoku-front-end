@@ -53,12 +53,10 @@ export const useSudokuWebSocket = (
                             const sudokuSolution = await fetchSolutionResponse.json() as SudokuSolution;
                             setSudoku((prevSudoku) => ({ ...prevSudoku, solution: sudokuSolution }));
                             socket.close();
-                            setIsLoading(false);
                             callbacks?.onComplete?.(sudoku_id);
                         }
                     case SudokuStatusEnum.Values.aborted:
                         socket.close();
-                        setIsLoading(false);
                 }
             }
         };
@@ -72,6 +70,7 @@ export const useSudokuWebSocket = (
         socket.onclose = () => {
             console.log(`WebSocket closed for Sudoku ${sudokuId}`);
             setIsConnected(false);
+            setIsLoading(false);
         };
 
         // Cleanup function
