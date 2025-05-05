@@ -2,20 +2,19 @@ import { Input, Text } from "@chakra-ui/react";
 
 import { Sudoku } from "@/types/types";
 import { BaseSudokuGrid } from "./base-sudoku-grid";
+import { Cell } from "../play-mode/sudoku-player";
 import { useColorModeValue } from "../../color-mode";
 
 interface SudokuGameGridProps {
     sudoku: Sudoku;
-    originalGrid: string;
+    grid: Cell[];
     onCellChange: (rowIndex: number, colIndex: number, value: string) => void;
-    hintPositions?: number[];
 }
 
 export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     sudoku,
-    originalGrid,
+    grid,
     onCellChange,
-    hintPositions = [],
 }) => {
     const originalValueColor = useColorModeValue("black", "white");
     const errorValueColor = useColorModeValue("red.600", "red.400");
@@ -30,10 +29,13 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     };
 
     const renderCell = (rowIndex: number, colIndex: number, index: number) => {
-        const cellValue = sudoku.grid[index].toString() || "0";
-        const isOriginal = originalGrid[index] !== "0";
+        const cell = grid.find(cell =>
+            cell.position[0] === rowIndex && cell.position[1] === colIndex
+        )
+        const cellValue = cell?.value || "0";
+        const isHint = cell?.isHint || false;
+        const isOriginal = sudoku.grid[index] !== "0";
         const solutionValue = sudoku.solution?.grid[index];
-        const isHint = hintPositions.includes(index);
 
         // Check if the value is incorrect
         const isIncorrect = cellValue !== "0" && solutionValue && cellValue !== solutionValue;
@@ -67,7 +69,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                 fontWeight={isHint ? "bold" : "normal"}
                 border="none"
                 bg="transparent"
-                color={isIncorrect ? errorValueColor : originalValueColor}
+                color={originalValueColor}
                 zIndex="1"
                 onKeyDown={(e) => {
                     // Prevent non-numeric keys except for backspace, delete, tab, etc.
