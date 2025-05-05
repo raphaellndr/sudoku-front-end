@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuDifficultyEnum } from "@/types/enums";
 import { notifyError } from "@/toasts/toast";
@@ -25,21 +23,14 @@ export const createHeaders = (session: any): HeadersInit => {
 export const createSudoku = async (
     grid: string,
     headers: HeadersInit,
-    setSudoku: React.Dispatch<React.SetStateAction<Sudoku>>,
     title = "New sudoku",
     difficulty = SudokuDifficultyEnum.Values.unknown
-): Promise<string | null> => {
-    if (/^0+$/.test(grid)) {
-        notifyError("Cannot create a sudoku with an empty grid!");
-        return null;
-    }
-
+): Promise<Response | undefined> => {
     const data = {
         title,
         difficulty,
         grid,
     };
-
     try {
         const response = await fetch(
             process.env.NEXT_PUBLIC_BACKEND_URL + "api/sudokus/",
@@ -49,20 +40,12 @@ export const createSudoku = async (
                 body: JSON.stringify(data),
             }
         );
-
-        const responseData = await response.json();
-        if (response.ok) {
-            const createdSudoku = responseData as Sudoku;
-            setSudoku(createdSudoku);
-            return responseData.id;
-        } else {
-            notifyError("Failed to create sudoku: " + JSON.stringify(responseData));
-        }
+        return response;
     } catch (e: unknown) {
         const error = e as Error;
         notifyError(`Error: ${error.message}`);
+        return;
     }
-    return null;
 };
 
 /**
