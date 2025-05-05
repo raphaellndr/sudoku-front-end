@@ -87,7 +87,7 @@ const SudokuSolver = () => {
                 {mode === "create" ? (
                     <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
                 ) : (
-                    <ReadOnlySudokuGrid sudoku={sudoku} showSolution={true} />
+                    <ReadOnlySudokuGrid sudoku={sudoku} />
                 )}
                 <HStack>
                     <Button
