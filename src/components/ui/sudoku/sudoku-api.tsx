@@ -67,6 +67,7 @@ export const fetchSolution = async (
     } catch (e: unknown) {
         const error = e as Error;
         notifyError(`Failed to fetch solution: ${error.message}`);
+        return;
     }
 };
 
