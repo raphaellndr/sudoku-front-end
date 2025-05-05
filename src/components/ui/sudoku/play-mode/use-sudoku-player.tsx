@@ -4,6 +4,7 @@ import { Sudoku } from "@/types/types";
 import { notifySuccess } from "@/toasts/toast";
 import { MAX_HINTS } from "./hint-button";
 import { MAX_UNDOS } from "./undo-button";
+import { MAX_CHECKS } from "./check-button";
 
 type MoveHistoryItem = {
     position: number;
@@ -14,14 +15,16 @@ type MoveHistoryItem = {
 /**
  * Custom hook to manage the player's grid state during play mode
  */
-export const usePlayerGrid = (
-    initialGrid: string = "0".repeat(81),
+export const useSudokuPlayer = (
+    sudoku: Sudoku,
+    setSudoku: React.Dispatch<React.SetStateAction<Sudoku>>,
     onPuzzleSolved?: () => void
 ) => {
-    const [playerGrid, setPlayerGrid] = useState<string>(initialGrid);
     const [moveHistory, setMoveHistory] = useState<MoveHistoryItem[]>([]);
     const [remainingHints, setRemainingHints] = useState(MAX_HINTS);
     const [remainingUndos, setRemainingUndos] = useState(MAX_UNDOS);
+    const [remainingChecks, setRemainingChecks] = useState(MAX_CHECKS);
+    const [isCheckModeActive, setIsCheckModeActive] = useState(false);
 
     /**
      * Updates a cell value in the player grid
@@ -29,34 +32,27 @@ export const usePlayerGrid = (
     const updateCell = (
         position: number,
         value: string,
-        sudoku: Sudoku,
         isHint: boolean = false
     ) => {
-        // Cannot modify an original cell
-        if (sudoku.grid[position] !== '0') {
-            return;
-        }
-
         // Save the current value for undo history
         setMoveHistory(prev => [...prev, {
             position,
-            oldValue: playerGrid[position],
+            oldValue: sudoku.grid[position],
             isHint
         }]);
 
         const newPlayerGrid =
-            playerGrid.substring(0, position) +
-            (value || '0') +
-            playerGrid.substring(position + 1);
+            sudoku.grid.substring(0, position) +
+            (value || "0") +
+            sudoku.grid.substring(position + 1);
 
-        setPlayerGrid(newPlayerGrid);
+        setSudoku((prev) => ({ ...prev, grid: newPlayerGrid }))
 
         // Check if the puzzle is solved
-        if (!newPlayerGrid.includes('0') && sudoku.solution) {
+        if (!newPlayerGrid.includes("0") && sudoku.solution) {
             const isCorrect = newPlayerGrid === sudoku.solution.grid;
             if (isCorrect) {
                 onPuzzleSolved?.();
-                notifySuccess(isHint ? "Puzzle completed with hints!" : "Congratulations! You solved the puzzle!");
             }
         }
     };
@@ -68,22 +64,21 @@ export const usePlayerGrid = (
         rowIndex: number,
         colIndex: number,
         value: string,
-        sudoku: Sudoku
     ) => {
         const position = rowIndex * 9 + colIndex;
-        updateCell(position, value, sudoku);
+        updateCell(position, value);
     };
 
     /**
      * Provides a hint by filling a random empty cell with the correct value
      */
-    const giveHint = (sudoku: Sudoku) => {
+    const giveHint = () => {
         if (!sudoku.solution) return;
 
         // Find all empty cells
         const emptyCells = [];
-        for (let i = 0; i < playerGrid.length; i++) {
-            if (playerGrid[i] === '0') {
+        for (let i = 0; i < sudoku.grid.length; i++) {
+            if (sudoku.grid[i] === "0") {
                 emptyCells.push(i);
             }
         }
@@ -95,8 +90,8 @@ export const usePlayerGrid = (
         const cellIndex = emptyCells[randomIndex];
 
         // Fill it with the correct value from solution
-        updateCell(cellIndex, sudoku.solution.grid[cellIndex], sudoku, true);
-        setRemainingHints(prev => { return Math.max(0, prev - 1) });
+        updateCell(cellIndex, sudoku.solution.grid[cellIndex], true);
+        setRemainingHints(prev => Math.max(0, prev - 1));
     };
 
     /**
@@ -135,13 +130,13 @@ export const usePlayerGrid = (
 
         // Update the grid with the previous value
         const newPlayerGrid =
-            playerGrid.substring(0, lastMove.position) +
+            sudoku.grid.substring(0, lastMove.position) +
             lastMove.oldValue +
-            playerGrid.substring(lastMove.position + 1);
+            sudoku.grid.substring(lastMove.position + 1);
 
-        setPlayerGrid(newPlayerGrid);
+        setSudoku((prev) => ({ ...prev, grid: newPlayerGrid }))
 
-        // Decrease the remaning undos
+        // Decrease the remaining undos
         setRemainingUndos(prev => Math.max(0, prev - 1));
 
         // Remove all moves up to and including the undone move
@@ -152,54 +147,46 @@ export const usePlayerGrid = (
      * Reset the player grid to the initial state (original puzzle)
      */
     const resetPlayerGrid = (originalGrid: string) => {
-        setPlayerGrid(originalGrid);
+        setSudoku((prev) => ({ ...prev, grid: originalGrid }))
         setMoveHistory([]);
         setRemainingHints(MAX_HINTS);
         setRemainingUndos(MAX_UNDOS);
+        setRemainingChecks(MAX_CHECKS);
+        setIsCheckModeActive(false);
     };
 
     /**
-     * Check current progress against the solution
+     * Toggle check mode to verify cell values
      */
-    const checkProgress = (sudoku: Sudoku) => {
-        if (!sudoku.solution) return;
-
-        let correct = 0;
-        let incorrect = 0;
-
-        for (let i = 0; i < playerGrid.length; i++) {
-            if (playerGrid[i] !== '0') {
-                if (playerGrid[i] === sudoku.solution.grid[i]) {
-                    correct++;
-                } else {
-                    incorrect++;
-                }
-            }
+    const toggleCheckMode = () => {
+        if (!isCheckModeActive && remainingChecks > 0) {
+            setIsCheckModeActive(true);
+            setRemainingChecks(prev => Math.max(0, prev - 1));
+        } else {
+            setIsCheckModeActive(false);
         }
-
-        notifySuccess(`Progress: ${correct} correct, ${incorrect} incorrect numbers`);
     };
 
     /**
      * Reveal the complete solution
      */
-    const revealSolution = (sudoku: Sudoku) => {
+    const revealSolution = () => {
         if (!sudoku.solution) return;
-        setPlayerGrid(sudoku.solution.grid);
+        setSudoku((prev) => ({ ...prev, grid: sudoku.solution!.grid }))
         notifySuccess("Solution revealed!");
     };
 
     return {
-        playerGrid,
-        setPlayerGrid,
         remainingHints,
         remainingUndos,
+        remainingChecks,
+        isCheckModeActive,
         hintPositions: getHintPositions(),
         handleCellChange,
         giveHint,
         undoMove,
+        toggleCheckMode,
         resetPlayerGrid,
-        checkProgress,
         revealSolution,
         canUndo: moveHistory.length > 0 && moveHistory.some(move => !move.isHint)
     };
