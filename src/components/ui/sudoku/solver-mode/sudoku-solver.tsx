@@ -61,10 +61,10 @@ const SudokuSolver = () => {
             setDisableSolveButton(true);
             setMode("display");
 
-            const sudokuData = await createSudokuResponse.json() as Sudoku;
-            setSudoku(sudokuData);
+            const sudoku = await createSudokuResponse.json() as Sudoku;
+            setSudoku(sudoku);
 
-            const solveSudokuResponse = await solveSudoku(sudokuData.id, headers);
+            const solveSudokuResponse = await solveSudoku(sudoku.id, headers);
             if (solveSudokuResponse?.ok) {
                 setDisableSolveButton(false);
             }
