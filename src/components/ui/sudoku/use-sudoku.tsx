@@ -26,13 +26,13 @@ export const useSudoku = () => {
     /**
      * Handles cell change in the grid
      */
-    const handleCellChange = (rowIndex: number, colIndex: number, value: string) => {
-        const position = rowIndex * 9 + colIndex;
+    const handleCellChange = (position: [number, number], value: string) => {
+        const pos = position[0] * 9 + position[1];
 
         const newSudokuGrid =
-            sudoku.grid.substring(0, position) +
+            sudoku.grid.substring(0, pos) +
             (value || '0') +
-            sudoku.grid.substring(position + 1);
+            sudoku.grid.substring(pos + 1);
 
         setSudoku({ ...sudoku, grid: newSudokuGrid });
     };

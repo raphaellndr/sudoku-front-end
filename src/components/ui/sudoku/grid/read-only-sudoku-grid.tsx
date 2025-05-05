@@ -13,7 +13,7 @@ export const ReadOnlySudokuGrid: React.FC<ReadOnlySudokuGridProps> = ({
 }) => {
     const textColor = useColorModeValue("black", "white");
 
-    const renderCell = (rowIndex: number, colIndex: number, index: number) => {
+    const renderCell = (position: [number, number], index: number) => {
         const originalValue = sudoku.grid[index];
         const solutionValue = sudoku.solution?.grid[index];
 

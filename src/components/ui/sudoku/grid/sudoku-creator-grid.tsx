@@ -6,7 +6,7 @@ import { useColorModeValue } from "../../color-mode";
 
 interface SudokuCreatorGridProps {
     sudoku: Sudoku;
-    onCellChange: (rowIndex: number, colIndex: number, value: string) => void;
+    onCellChange: (position:[number, number], value: string) => void;
 }
 
 export const SudokuCreatorGrid: React.FC<SudokuCreatorGridProps> = ({
@@ -15,14 +15,14 @@ export const SudokuCreatorGrid: React.FC<SudokuCreatorGridProps> = ({
     const filledValueColor = useColorModeValue("gray.600", "gray.400");
 
     // Handle input validation to only allow numbers 1-9
-    const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
+    const handleInputChange = (position:[number, number], value: string) => {
         // Only allow numbers 1-9 or empty string
         if (value === "" || /^[1-9]$/.test(value)) {
-            onCellChange(rowIndex, colIndex, value);
+            onCellChange(position, value);
         }
     };
 
-    const renderCell = (rowIndex: number, colIndex: number, index: number) => {
+    const renderCell = (position:[number, number], index: number) => {
         const cellValue = sudoku.grid[index]?.toString() || "0";
 
         return (
@@ -34,7 +34,7 @@ export const SudokuCreatorGrid: React.FC<SudokuCreatorGridProps> = ({
                 pattern="[1-9]"
                 maxLength={1}
                 value={cellValue !== "0" ? cellValue : ""}
-                onChange={(e) => handleInputChange(rowIndex, colIndex, e.target.value)}
+                onChange={(e) => handleInputChange(position, e.target.value)}
                 textAlign="center"
                 fontSize="xl"
                 fontWeight="normal"
