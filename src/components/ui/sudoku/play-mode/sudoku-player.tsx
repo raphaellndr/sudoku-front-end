@@ -2,12 +2,14 @@ import { useState } from "react";
 
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
-import { usePlayerGrid } from "./use-player-grid";
+import { notifyError } from "@/toasts/toast";
+import { Sudoku } from "@/types/types";
+import { useSudokuPlayer } from "./use-sudoku-player";
 import CompletionDialog from "./completion-dialog";
 import { useTimer } from "./timer/use-timer";
 import Timer from "./timer/timer";
 import { HintButton } from "./hint-button";
-import { UndoButton } from "./undo-button";
+import { CheckButton } from "./check-button";
 import { useSudoku } from "../use-sudoku";
 import { createSudoku, solveSudoku } from "../sudoku-api";
 import { useSudokuWebSocket } from "../use-sudoku-websocket";
@@ -16,24 +18,30 @@ import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../grid/sudoku-game-grid";
 import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
 
+export type Cell = {
+    position: [number, number];
+    value: string;
+    isHint: boolean;
+}
+
 const SudokuPlayer = () => {
     // Game mode state
     const [mode, setMode] = useState<"create" | "play" | "solved">("create");
 
+    // Grid state
+    const [grid, setGrid] = useState<Cell[]>([])
+
     // Loading state
     const [disableButtons, setDisableButtons] = useState(false);
-
-    // Store original grid
-    const [originalGrid, setOriginalGrid] = useState("")
 
     // Timer state from custom hook
     const {
         timer,
-        setTimer,
+        resetTimer,
+        restartTimer,
         setIsActive: setIsTimerRunning,
         isPaused,
-        setIsPaused: setIsTimerPaused,
-        timerRef
+        setIsPaused: setIsTimerPaused
     } = useTimer();
 
     // Dialog state
@@ -48,22 +56,24 @@ const SudokuPlayer = () => {
 
     // Player grid state from custom hook
     const {
-        playerGrid,
         remainingHints,
-        remainingUndos,
-        hintPositions,
+        remainingChecks,
+        isCheckModeActive,
         handleCellChange: handlePlayerCellChange,
         giveHint,
-        undoMove,
+        toggleCheckMode,
         resetPlayerGrid,
-        checkProgress,
         revealSolution,
-        canUndo
-    } = usePlayerGrid(sudoku.grid, () => {
-        setIsTimerRunning(false);
-        setMode("solved");
-        setIsDialogOpen(true);
-    });
+    } = useSudokuPlayer(
+        grid,
+        setGrid,
+        sudoku,
+        () => {
+            setIsTimerRunning(false);
+            setMode("solved");
+            setIsDialogOpen(true);
+        }
+    );
 
     // WebSocket connection for status updates
     useSudokuWebSocket(
@@ -73,7 +83,7 @@ const SudokuPlayer = () => {
         {
             onComplete: () => {
                 setDisableButtons(false);
-                resetPlayerGrid(sudoku.grid);
+                resetPlayerGrid();
                 setMode("play");
                 setIsTimerRunning(true);
             }
@@ -82,12 +92,20 @@ const SudokuPlayer = () => {
 
     // Handle create and play flow
     const handleStartPlaying = async () => {
-        const sudokuId = await createSudoku(sudoku.grid, headers, setSudoku);
-        if (sudokuId) {
+        if (/^0+$/.test(sudoku.grid)) {
+            notifyError("Cannot start playing with an empty grid!");
+            return;
+        }
+
+        const createSudokuResponse = await createSudoku(sudoku.grid, headers);
+        if (createSudokuResponse?.ok) {
+            const sudoku = await createSudokuResponse.json() as Sudoku;
+            setSudoku(sudoku);
+
             setDisableButtons(true);
-            setOriginalGrid(sudoku.grid);
-            const success = await solveSudoku(sudokuId, headers);
-            if (!success) {
+
+            const solveSudokuResponse = await solveSudoku(sudoku.id, headers);
+            if (!solveSudokuResponse?.ok) {
                 setDisableButtons(false);
             }
         }
@@ -98,20 +116,13 @@ const SudokuPlayer = () => {
         clearSudokuGrid();
         setMode("create");
         setDisableButtons(false);
-        setTimer(0);
-        setIsTimerRunning(false);
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-        }
+        resetTimer();
     };
 
     // Reset the current puzzle
     const handleRestartPuzzle = () => {
-        resetPlayerGrid(sudoku.grid);
-        setTimer(0);
-        setIsTimerRunning(true);
-        setIsTimerPaused(false);
-        setMode("play");
+        resetPlayerGrid();
+        restartTimer();
     };
 
     return (
@@ -135,23 +146,14 @@ const SudokuPlayer = () => {
                                     case "play":
                                         return (
                                             <SudokuGameGrid
-                                                sudoku={{
-                                                    ...sudoku,
-                                                    grid: playerGrid,
-                                                }}
-                                                originalGrid={originalGrid}
-                                                onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v, sudoku)}
-                                                hintPositions={hintPositions}
+                                                sudoku={sudoku}
+                                                grid={grid}
+                                                onCellChange={(r, c, v) => handlePlayerCellChange(r, c, v)}
                                             />
                                         );
                                     case "solved":
                                         return (
-                                            <ReadOnlySudokuGrid
-                                                sudoku={{
-                                                    ...sudoku,
-                                                    grid: playerGrid,
-                                                }}
-                                            />
+                                            <ReadOnlySudokuGrid sudoku={sudoku} />
                                         );
                                 }
                             })()}
@@ -162,8 +164,19 @@ const SudokuPlayer = () => {
                                         isPaused={isPaused}
                                         setIsPaused={setIsTimerPaused}
                                     />
-                                    <UndoButton canUndo={canUndo} remainingUndos={remainingUndos} undoMove={undoMove} isPaused={isPaused} />
-                                    <HintButton sudoku={sudoku} remainingHints={remainingHints} handleHint={giveHint} isPaused={isPaused} />
+                                    <CheckButton
+                                        remainingChecks={remainingChecks}
+                                        canCheck={false}
+                                        isPaused={isPaused}
+                                        onActivateCheckMode={toggleCheckMode}
+                                        isCheckModeActive={isCheckModeActive}
+                                    />
+                                    <HintButton
+                                        sudoku={sudoku}
+                                        remainingHints={remainingHints}
+                                        handleHint={giveHint}
+                                        isPaused={isPaused}
+                                    />
                                     <Button
                                         variant="solid"
                                         onClick={handleRestartPuzzle}
@@ -184,18 +197,11 @@ const SudokuPlayer = () => {
                                 New puzzle
                             </Button>
                             <Button
-                                colorPalette="blue"
-                                variant="outline"
-                                onClick={() => checkProgress(sudoku)}
-                            >
-                                Check progress
-                            </Button>
-                            <Button
                                 colorPalette="red"
                                 variant="solid"
                                 onClick={() => {
-                                    revealSolution(sudoku);
-                                    setIsTimerRunning(false);
+                                    revealSolution();
+                                    resetTimer();
                                     setMode("solved");
                                 }}
                             >
@@ -205,38 +211,36 @@ const SudokuPlayer = () => {
                     )}
                 </VStack>
 
-                <HStack gap={4} flexWrap="wrap" justifyContent="center">
-                    {mode === "create" && (
-                        <>
-                            <Button
-                                disabled={!/[1-9]/.test(sudoku.grid) || disableButtons}
-                                variant="outline"
-                                onClick={clearSudokuGrid}
-                            >
-                                Clear grid
-                            </Button>
-                            <Button
-                                disabled={disableButtons}
-                                loading={disableButtons}
-                                loadingText="Preparing puzzle..."
-                                onClick={handleStartPlaying}
-                            >
-                                Start playing
-                            </Button>
-                        </>
-                    )}
+                {mode === "create" && (
+                    <HStack gap={4} flexWrap="wrap" justifyContent="center">
+                        <Button
+                            disabled={!/[1-9]/.test(sudoku.grid) || disableButtons}
+                            variant="outline"
+                            onClick={clearSudokuGrid}
+                        >
+                            Clear grid
+                        </Button>
+                        <Button
+                            disabled={disableButtons}
+                            loading={disableButtons}
+                            loadingText="Preparing puzzle..."
+                            onClick={handleStartPlaying}
+                        >
+                            Start playing
+                        </Button>
+                    </HStack>
+                )}
 
-                    {mode === "solved" && (
-                        <>
-                            <Button
-                                variant="solid"
-                                onClick={startNewPuzzle}
-                            >
-                                New puzzle
-                            </Button>
-                        </>
-                    )}
-                </HStack>
+                {mode === "solved" && (
+                    <>
+                        <Button
+                            variant="solid"
+                            onClick={startNewPuzzle}
+                        >
+                            New puzzle
+                        </Button>
+                    </>
+                )}
             </VStack>
 
             <CompletionDialog
