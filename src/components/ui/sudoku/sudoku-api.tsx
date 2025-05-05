@@ -54,8 +54,7 @@ export const createSudoku = async (
 export const fetchSolution = async (
     sudokuId: string,
     headers: HeadersInit,
-    setSudoku: (updater: (prevSudoku: Sudoku) => Sudoku) => void
-): Promise<void> => {
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(
             process.env.NEXT_PUBLIC_BACKEND_URL + `api/sudokus/${sudokuId}/solution/`,
@@ -64,16 +63,7 @@ export const fetchSolution = async (
                 headers,
             }
         );
-        const responseData = await response.json();
-        if (response.ok) {
-            const sudokuSolution = responseData as SudokuSolution;
-            setSudoku((prevSudoku) => {
-                if (!prevSudoku) return prevSudoku;
-                return { ...prevSudoku, solution: sudokuSolution };
-            });
-        } else {
-            notifyError("Failed to fetch solution: " + JSON.stringify(responseData));
-        }
+        return response;
     } catch (e: unknown) {
         const error = e as Error;
         notifyError(`Failed to fetch solution: ${error.message}`);
