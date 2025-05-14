@@ -1,4 +1,4 @@
-import { Input, Text } from "@chakra-ui/react";
+import { Input, Text, Box, Flex } from "@chakra-ui/react";
 
 import { Sudoku } from "@/types/types";
 import { BaseSudokuGrid } from "./base-sudoku-grid";
@@ -26,12 +26,15 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     onCellVerify,
     isPaused,
 }) => {
+    // Color Values
     const valueColor = useColorModeValue("black", "white");
     const incorrectValueColor = useColorModeValue("red.600", "red.400");
     const correctValueColor = useColorModeValue("green.600", "green.400");
-    const blurryEmptyCellBg = useColorModeValue("gray.100", "gray.700");
+    const blurryEmptyCellBg = useColorModeValue("gray.400", "gray.700");
+    const overlayBg = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(32, 32, 32, 0.85)");
+    const pauseBoxBg = useColorModeValue("white", "gray.800");
 
-    // Handle input validation to only allow numbers 1-9
+    // Event Handlers
     const handleInputChange = (position: [number, number], value: string) => {
         // Only allow numbers 1-9 or empty string
         if (value === "" || /^[1-9]$/.test(value)) {
@@ -46,45 +49,34 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                     return cell;
                 });
             });
-        };
+        }
     };
 
+    // Cell Rendering Logic
     const renderCell = (position: [number, number], index: number) => {
-        // Check if the cell is an original value or not
+        // Get cell data
         const isOriginal = sudoku.grid[index] !== "0";
-
-        // Get cell in the grid
         const cell = grid.find(cell =>
             cell.position[0] === position[0] && cell.position[1] === position[1]
         );
-
-        // Get cell value default to "0"
         const cellValue = cell?.value || "0";
-
-        // Check if the cell is a hint or not
         const isHint = cell?.isHint || false;
-
-        // Check if this cell has been verified and is correct
         const isVerified = cell?.isVerified;
-
-        // Get the solution value (if any)
         const solutionValue = sudoku.solution?.grid[index];
-
-        // Determine if this is a player-entered value
         const isPlayerEntered = !isOriginal && !isHint && cellValue !== "0" && cellValue !== "";
-
-        // Check if the cell is empty
         const isEmpty = cellValue === "0" || cellValue === "";
-
-        // Check if the value is correct
         const isCorrect = cellValue === solutionValue;
 
-        // Determine cell color
+        // Determine cell styling
         let cellColor = valueColor;
         if (isVerified) {
             cellColor = isCorrect ? correctValueColor : incorrectValueColor;
-        };
+        }
 
+        const isBlurryCell = isCheckModeActive && (isEmpty || isOriginal || isHint || (isVerified && isCorrect));
+        let blurryFilter = isBlurryCell ? "blur(1px)" : "none";
+
+        // Cell click handler
         const handleCellClick = () => {
             if (isCheckModeActive && isPlayerEntered) {
                 // Mark this cell as verified
@@ -104,40 +96,30 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
 
                 // Automatically exit check mode after verifying
                 setIsCheckModeActive(false);
-            };
+            }
         };
 
-        // Style for blurry empty, hint and correct cells in check mode
-        const isBlurryCell = isCheckModeActive && (isEmpty || isOriginal || isHint || (isVerified && isCorrect));
-
-        let blurryFilter = "none";
-        if (isPaused) {
-            blurryFilter = "blur(5px)";
-        } else if (isBlurryCell) {
-            blurryFilter = "blur(1px)";
-        };
-
-        // If it's an original cell or a hint, show a fixed value
+        // Render static cell (original, hint, or verified correct)
         if (isOriginal || isHint || (isVerified && isCorrect)) {
             return (
                 <Text
                     fontWeight="bold"
                     color={(isHint || (isVerified && isCorrect)) ? correctValueColor : valueColor}
                     fontSize="lg"
+                    bg={isBlurryCell ? blurryEmptyCellBg : "transparent"}
                     css={{
-                        filter: blurryFilter,
-                        transition: "all 0.2s ease-in-out",
+                        filter: isPaused ? "blur(5px)" : blurryFilter,
                     }}
                 >
                     {cellValue}
                 </Text>
             );
-        };
+        }
 
-        // Otherwise render an input for user to fill
+        // Render editable input cell
         return (
             <Input
-                disabled={(isCheckModeActive && isEmpty) || isPaused}
+                disabled={isCheckModeActive && isEmpty}
                 width="40px"
                 height="40px"
                 type="text"
@@ -156,7 +138,6 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                 css={{
                     caretColor: "black",
                     filter: isPaused ? "blur(5px)" : "none",
-                    transition: "all 0.2s ease-in-out",
                 }}
                 zIndex="1"
                 onKeyDown={(e) => {
@@ -172,10 +153,47 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
         );
     };
 
+    // Render the grid (and an overlay when the game is paused)
     return (
-        <BaseSudokuGrid
-            sudoku={sudoku}
-            renderCell={renderCell}
-        />
+        <Box position="relative" borderRadius="md">
+            <BaseSudokuGrid
+                sudoku={sudoku}
+                renderCell={renderCell}
+            />
+
+            {/* Pause Overlay */}
+            {isPaused && (
+                <Flex
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    width="100%"
+                    height="100%"
+                    bg={overlayBg}
+                    zIndex="10"
+                    justifyContent="center"
+                    alignItems="center"
+                    transition="opacity 0.3s ease-in-out"
+                    borderRadius="md"
+                >
+                    <Box
+                        bg={pauseBoxBg}
+                        borderRadius="md"
+                        boxShadow="lg"
+                        px="6"
+                        py="4"
+                        transition="transform 0.5s ease-in-out"
+                    >
+                        <Text
+                            fontSize="2xl"
+                            fontWeight="bold"
+                            userSelect="none"
+                        >
+                            GAME PAUSED
+                        </Text>
+                    </Box>
+                </Flex>
+            )}
+        </Box>
     );
 };
