@@ -22,7 +22,8 @@ export type Cell = {
     position: [number, number];
     value: string;
     isHint: boolean;
-}
+    isVerified: boolean;
+};
 
 const SudokuPlayer = () => {
     // Game mode state
@@ -68,6 +69,7 @@ const SudokuPlayer = () => {
         remainingHints,
         remainingChecks,
         isCheckModeActive,
+        setIsCheckModeActive,
         handleCellChange: handlePlayerCellChange,
         giveHint,
         toggleCheckMode,
@@ -157,7 +159,11 @@ const SudokuPlayer = () => {
                                             <SudokuGameGrid
                                                 sudoku={sudoku}
                                                 grid={grid}
+                                                setGrid={setGrid}
+                                                isCheckModeActive={isCheckModeActive}
+                                                setIsCheckModeActive={setIsCheckModeActive}
                                                 onCellChange={(p, v) => handlePlayerCellChange(p, v)}
+                                                isPaused={isPaused}
                                             />
                                         );
                                     case "solved":
@@ -185,6 +191,7 @@ const SudokuPlayer = () => {
                                         remainingHints={remainingHints}
                                         handleHint={giveHint}
                                         isPaused={isPaused}
+                                        isCheckModeActive={isCheckModeActive}
                                     />
                                     <Button
                                         variant="solid"
