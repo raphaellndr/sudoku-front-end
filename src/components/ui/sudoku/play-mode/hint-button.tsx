@@ -12,15 +12,16 @@ interface HintButtonProps {
     handleHint: (sudoku: Sudoku) => void;
     remainingHints: number;
     isPaused: boolean;
-}
+    isCheckModeActive: boolean;
+};
 
 export const HintButton: React.FC<HintButtonProps> = (
-    { sudoku, handleHint, remainingHints, isPaused }
+    { sudoku, handleHint, remainingHints, isPaused, isCheckModeActive }
 ) => {
     const circleBg = useColorModeValue("purple", "purple");
     const circleBgDisabled = useColorModeValue("purple.400", "mediumpurple");
 
-    const disabled = remainingHints === 0 || isPaused;
+    const disabled = remainingHints === 0 || isPaused || isCheckModeActive;
 
     return (
         <Box position="relative">
