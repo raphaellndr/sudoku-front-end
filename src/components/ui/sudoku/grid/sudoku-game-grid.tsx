@@ -30,9 +30,17 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     const valueColor = useColorModeValue("black", "white");
     const incorrectValueColor = useColorModeValue("red.600", "red.400");
     const correctValueColor = useColorModeValue("green.600", "green.400");
-    const blurryEmptyCellBg = useColorModeValue("gray.400", "gray.700");
+    const checkModeBg = useColorModeValue("rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.06)");
+    const verifiableCellBg = useColorModeValue("yellow.100", "yellow.900");
+    const verifiableCellBorder = useColorModeValue("yellow.400", "yellow.600");
     const overlayBg = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(32, 32, 32, 0.85)");
     const pauseBoxBg = useColorModeValue("white", "gray.800");
+
+    // Optional: Add a glow effect for verifiable cells without using animations
+    const verifiableCellGlow = useColorModeValue(
+        "0 0 0 1px rgba(236, 201, 75, 0.4), 0 0 0 3px rgba(236, 201, 75, 0.2)",
+        "0 0 0 1px rgba(214, 158, 46, 0.4), 0 0 0 3px rgba(214, 158, 46, 0.2)"
+    );
 
     // Event Handlers
     const handleInputChange = (position: [number, number], value: string) => {
@@ -67,14 +75,26 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
         const isEmpty = cellValue === "0" || cellValue === "";
         const isCorrect = cellValue === solutionValue;
 
+        // Determine if this cell is verifiable during check mode
+        const isVerifiable = isCheckModeActive && isPlayerEntered && !isVerified;
+
         // Determine cell styling
         let cellColor = valueColor;
         if (isVerified) {
             cellColor = isCorrect ? correctValueColor : incorrectValueColor;
         }
 
-        const isBlurryCell = isCheckModeActive && (isEmpty || isOriginal || isHint || (isVerified && isCorrect));
-        let blurryFilter = isBlurryCell ? "blur(1px)" : "none";
+        // Apply special styling for check mode
+        const checkModeStyles = isCheckModeActive ? {
+            opacity: isVerifiable ? 1 : 0.5,
+            bg: isVerifiable ? verifiableCellBg : checkModeBg,
+            borderWidth: isVerifiable ? "2px" : "0px",
+            borderColor: isVerifiable ? verifiableCellBorder : "transparent",
+            borderRadius: isVerifiable ? "md" : "none",
+            transition: "opacity 0.2s ease-in-out, background 0.2s ease-in-out",
+            cursor: isVerifiable ? "pointer" : "default",
+            boxShadow: isVerifiable ? verifiableCellGlow : "none",
+        } : {};
 
         // Cell click handler
         const handleCellClick = () => {
@@ -106,9 +126,16 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                     fontWeight="bold"
                     color={(isHint || (isVerified && isCorrect)) ? correctValueColor : valueColor}
                     fontSize="lg"
-                    bg={isBlurryCell ? blurryEmptyCellBg : "transparent"}
+                    p="2"
+                    textAlign="center"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    height="40px"
+                    width="40px"
+                    {...checkModeStyles}
                     css={{
-                        filter: isPaused ? "blur(5px)" : blurryFilter,
+                        filter: isPaused ? "blur(5px)" : "none",
                     }}
                 >
                     {cellValue}
@@ -119,7 +146,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
         // Render editable input cell
         return (
             <Input
-                disabled={isCheckModeActive && isEmpty}
+                disabled={isCheckModeActive && !isVerifiable}
                 width="40px"
                 height="40px"
                 type="text"
@@ -133,8 +160,8 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                 fontSize="xl"
                 border="none"
                 borderRadius="none"
-                bg={isBlurryCell ? blurryEmptyCellBg : "transparent"}
                 color={cellColor}
+                {...checkModeStyles}
                 css={{
                     caretColor: "black",
                     filter: isPaused ? "blur(5px)" : "none",
