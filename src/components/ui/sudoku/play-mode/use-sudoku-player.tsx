@@ -101,7 +101,8 @@ export const useSudokuPlayer = (
             return {
                 position: [row, col] as [number, number],
                 value: value,
-                isHint: false
+                isHint: false,
+                isVerified: false
             };
         });
 
@@ -135,7 +136,8 @@ export const useSudokuPlayer = (
             return {
                 position: [row, col] as [number, number],
                 value: value,
-                isHint: false
+                isHint: false,
+                isVerified: false
             };
         });
 
@@ -147,6 +149,7 @@ export const useSudokuPlayer = (
         remainingHints,
         remainingChecks,
         isCheckModeActive,
+        setIsCheckModeActive,
         handleCellChange,
         giveHint,
         toggleCheckMode,
