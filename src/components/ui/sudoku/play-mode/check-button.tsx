@@ -1,5 +1,6 @@
 import { Box, Circle, Float } from "@chakra-ui/react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
+import { MdOutlineCancel } from "react-icons/md";
 
 import { useColorModeValue } from "../../color-mode";
 import { TooltipIconButton } from "../../tooltip-icon-button";
@@ -26,9 +27,12 @@ export const CheckButton: React.FC<CheckButtonProps> = (
     return (
         <Box position="relative">
             <TooltipIconButton
-                icon={<HiMagnifyingGlass />}
-                buttonText="Verify"
-                tooltipText="Check if the value in a cell is the right one or not"
+                icon={isCheckModeActive ? <MdOutlineCancel /> : <HiMagnifyingGlass />}
+                buttonText={isCheckModeActive ? "Cancel" : "Verify"}
+                tooltipText={isCheckModeActive
+                    ? "Cancel checking a cell"
+                    : "Check if the value in a cell is the right one or not"
+                }
                 disabled={isDisabled}
                 variant="outline"
                 width="100%"

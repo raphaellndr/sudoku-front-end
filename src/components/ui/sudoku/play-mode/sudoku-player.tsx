@@ -73,6 +73,7 @@ const SudokuPlayer = () => {
         handleCellChange: handlePlayerCellChange,
         giveHint,
         toggleCheckMode,
+        verifyCellValue,
         resetPlayerGrid,
         revealSolution,
     } = useSudokuPlayer(
@@ -163,6 +164,7 @@ const SudokuPlayer = () => {
                                                 isCheckModeActive={isCheckModeActive}
                                                 setIsCheckModeActive={setIsCheckModeActive}
                                                 onCellChange={(p, v) => handlePlayerCellChange(p, v)}
+                                                onCellVerify={verifyCellValue}
                                                 isPaused={isPaused}
                                             />
                                         );

@@ -18,6 +18,7 @@ export const useSudokuPlayer = (
     const [remainingHints, setRemainingHints] = useState(MAX_HINTS);
     const [remainingChecks, setRemainingChecks] = useState(MAX_CHECKS);
     const [isCheckModeActive, setIsCheckModeActive] = useState(false);
+    const [hasUsedCheck, setHasUsedCheck] = useState(false);
 
     /**
      * Updates a cell value in the player grid with the given properties
@@ -110,18 +111,35 @@ export const useSudokuPlayer = (
         setRemainingHints(MAX_HINTS);
         setRemainingChecks(MAX_CHECKS);
         setIsCheckModeActive(false);
+        setHasUsedCheck(false);
     };
 
     /**
      * Toggle check mode to verify cell values
      */
     const toggleCheckMode = () => {
-        if (!isCheckModeActive && remainingChecks > 0) {
+        if (!isCheckModeActive) {
+            // Entering check mode
             setIsCheckModeActive(true);
-            setRemainingChecks(prev => Math.max(0, prev - 1));
+            setHasUsedCheck(false);
         } else {
+            // Exiting check mode without using the check
             setIsCheckModeActive(false);
+
+            // Only decrease the count if the check was actually used
+            if (hasUsedCheck) {
+                setRemainingChecks(prev => Math.max(0, prev - 1));
+            }
         }
+    };
+
+    /**
+     * Verify a cell by updating the check usage
+     */
+    const verifyCellValue = () => {
+        setHasUsedCheck(true);
+        setIsCheckModeActive(false);
+        setRemainingChecks(prev => Math.max(0, prev - 1));
     };
 
     /**
@@ -153,6 +171,7 @@ export const useSudokuPlayer = (
         handleCellChange,
         giveHint,
         toggleCheckMode,
+        verifyCellValue,
         resetPlayerGrid,
         revealSolution,
     };

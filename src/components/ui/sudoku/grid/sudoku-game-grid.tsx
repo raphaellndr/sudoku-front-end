@@ -12,6 +12,7 @@ interface SudokuGameGridProps {
     isCheckModeActive: boolean;
     setIsCheckModeActive: React.Dispatch<React.SetStateAction<boolean>>;
     onCellChange: (position: [number, number], value: string) => void;
+    onCellVerify?: (position: [number, number]) => void;
     isPaused: boolean;
 };
 
@@ -22,6 +23,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     isCheckModeActive,
     setIsCheckModeActive,
     onCellChange,
+    onCellVerify,
     isPaused,
 }) => {
     const valueColor = useColorModeValue("black", "white");
@@ -94,6 +96,11 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                         return cell;
                     });
                 });
+
+                // Notify parent that a verification was performed
+                if (onCellVerify) {
+                    onCellVerify(position);
+                }
 
                 // Automatically exit check mode after verifying
                 setIsCheckModeActive(false);
