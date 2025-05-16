@@ -31,15 +31,15 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     const incorrectValueColor = useColorModeValue("red.600", "red.400");
     const correctValueColor = useColorModeValue("green.600", "green.400");
     const checkModeBg = useColorModeValue("rgba(0, 0, 0, 0.06)", "rgba(255, 255, 255, 0.06)");
-    const verifiableCellBg = useColorModeValue("yellow.100", "yellow.900");
-    const verifiableCellBorder = useColorModeValue("yellow.400", "yellow.600");
+    const verifiableCellBg = useColorModeValue("blue.50", "blue.900");
+    const verifiableCellBorder = useColorModeValue("blue.200", "blue.700");
     const overlayBg = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(32, 32, 32, 0.85)");
     const pauseBoxBg = useColorModeValue("white", "gray.800");
 
-    // Optional: Add a glow effect for verifiable cells without using animations
+    // Add a glow effect for verifiable cells
     const verifiableCellGlow = useColorModeValue(
-        "0 0 0 1px rgba(236, 201, 75, 0.4), 0 0 0 3px rgba(236, 201, 75, 0.2)",
-        "0 0 0 1px rgba(214, 158, 46, 0.4), 0 0 0 3px rgba(214, 158, 46, 0.2)"
+        "0 2px 8px rgba(49, 130, 206, 0.15), 0 0 0 1px rgba(49, 130, 206, 0.2)",
+        "0 2px 8px rgba(49, 130, 206, 0.2), 0 0 0 1px rgba(49, 130, 206, 0.3)"
     );
 
     // Event Handlers
@@ -72,7 +72,6 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
         const isVerified = cell?.isVerified;
         const solutionValue = sudoku.solution?.grid[index];
         const isPlayerEntered = !isOriginal && !isHint && cellValue !== "0" && cellValue !== "";
-        const isEmpty = cellValue === "0" || cellValue === "";
         const isCorrect = cellValue === solutionValue;
 
         // Determine if this cell is verifiable during check mode
