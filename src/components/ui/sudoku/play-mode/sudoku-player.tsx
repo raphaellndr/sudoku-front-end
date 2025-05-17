@@ -172,6 +172,7 @@ const SudokuPlayer = () => {
                                                 onCellChange={(p, v) => handlePlayerCellChange(p, v)}
                                                 onCellVerify={verifyCellValue}
                                                 isPaused={isPaused}
+                                                setIsPaused={setIsTimerPaused}
                                             />
                                         );
                                     case "solved":
