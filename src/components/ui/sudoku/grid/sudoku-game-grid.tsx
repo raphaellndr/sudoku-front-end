@@ -1,9 +1,10 @@
-import { Input, Text, Box, Flex } from "@chakra-ui/react";
+import { Input, Text, Box, Flex, IconButton } from "@chakra-ui/react";
 
 import { Sudoku } from "@/types/types";
 import { BaseSudokuGrid } from "./base-sudoku-grid";
 import { Cell } from "../play-mode/sudoku-player";
 import { useColorModeValue } from "../../color-mode";
+import { IoIosPlay } from "react-icons/io";
 
 interface SudokuGameGridProps {
     sudoku: Sudoku;
@@ -14,6 +15,7 @@ interface SudokuGameGridProps {
     onCellChange: (position: [number, number], value: string) => void;
     onCellVerify?: (position: [number, number]) => void;
     isPaused: boolean;
+    setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
@@ -25,6 +27,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     onCellChange,
     onCellVerify,
     isPaused,
+    setIsPaused,
 }) => {
     // Color Values
     const valueColor = useColorModeValue("black", "white");
@@ -34,7 +37,6 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     const verifiableCellBg = useColorModeValue("blue.50", "blue.900");
     const verifiableCellBorder = useColorModeValue("blue.200", "blue.700");
     const overlayBg = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(32, 32, 32, 0.85)");
-    const pauseBoxBg = useColorModeValue("white", "gray.800");
 
     // Add a glow effect for verifiable cells
     const verifiableCellGlow = useColorModeValue(
@@ -202,22 +204,14 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                     transition="opacity 0.3s ease-in-out"
                     borderRadius="md"
                 >
-                    <Box
-                        bg={pauseBoxBg}
-                        borderRadius="md"
-                        boxShadow="lg"
-                        px="6"
-                        py="4"
-                        transition="transform 0.5s ease-in-out"
+                    <IconButton
+                        size="2xl"
+                        variant="ghost"
+                        onClick={() => { setIsPaused(!isPaused) }}
+                        _hover={{ bg: "transparent" }}
                     >
-                        <Text
-                            fontSize="2xl"
-                            fontWeight="bold"
-                            userSelect="none"
-                        >
-                            GAME PAUSED
-                        </Text>
-                    </Box>
+                        <IoIosPlay />
+                    </IconButton>
                 </Flex>
             )}
         </Box>
