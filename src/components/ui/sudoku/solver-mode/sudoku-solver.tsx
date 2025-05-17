@@ -13,7 +13,7 @@ import { Sudoku } from "@/types/types";
 
 const SudokuSolver = () => {
     // Sudoku state from custom hook
-    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, headers } = useSudoku();
+    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, validateSudokuGrid, headers } = useSudoku();
 
     // Mode state
     const [mode, setMode] = useState<"create" | "display">("create");
@@ -53,6 +53,12 @@ const SudokuSolver = () => {
     const handleSolveSudoku = async () => {
         if (/^0+$/.test(sudoku.grid)) {
             notifyError("Cannot solve a sudoku with an empty grid!");
+            return;
+        }
+
+        const validation = validateSudokuGrid();
+        if (!validation.valid) {
+            notifyError(validation?.message);
             return;
         }
 

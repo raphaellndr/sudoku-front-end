@@ -53,7 +53,7 @@ const SudokuPlayer = () => {
     const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
 
     // Sudoku state from custom hook
-    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, headers } = useSudoku();
+    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, validateSudokuGrid, headers } = useSudoku();
 
     // Boolean whether a player has entered a value or not
     const hasPlayerEnteredValues = useMemo(() => {
@@ -106,6 +106,12 @@ const SudokuPlayer = () => {
     const handleStartPlaying = async () => {
         if (/^0+$/.test(sudoku.grid)) {
             notifyError("Cannot start playing with an empty grid!");
+            return;
+        }
+
+        const validation = validateSudokuGrid();
+        if (!validation.valid) {
+            notifyError(validation.message);
             return;
         }
 
