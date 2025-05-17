@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+
 import { Sudoku } from "@/types/types";
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
 import { createHeaders } from "./sudoku-api";
