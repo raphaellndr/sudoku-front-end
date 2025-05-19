@@ -16,7 +16,7 @@ const SudokuSolver = () => {
     const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, validateSudokuGrid, headers } = useSudoku();
 
     // Mode state
-    const [mode, setMode] = useState<"create" | "display">("create");
+    const [mode, setMode] = useState<"create" | "display" | "solved">("create");
 
     // Color mode values
     const bgColor = useColorModeValue("gray.100", "gray.800");
@@ -29,7 +29,7 @@ const SudokuSolver = () => {
         setSudoku,
         {
             onComplete: () => {
-                setMode("display");
+                setMode("solved");
             }
         }
     );
@@ -74,6 +74,12 @@ const SudokuSolver = () => {
         };
     };
 
+    // Reset everything for a new puzzle
+    const startNewPuzzle = () => {
+        clearSudokuGrid();
+        setMode("create");
+    };
+
     return (
         <Box p="5">
             <VStack gap="4">
@@ -91,30 +97,41 @@ const SudokuSolver = () => {
                     )}
                 </Box>
                 <HStack>
-                    {!(!/[1-9]/.test(sudoku.grid) || isLoading) && (
+                    {mode !== "solved" ? (
+                        <>
+                            {!(!/[1-9]/.test(sudoku.grid) || isLoading) && (
+                                <Button
+                                    variant="outline"
+                                    onClick={handleClearButton}
+                                >
+                                    Clear grid
+                                </Button>
+                            )}
+                            {isLoading && (
+                                <Button
+                                    variant="outline"
+                                    onClick={handleAbortButton}
+                                >
+                                    Abort solving
+                                </Button>
+                            )}
+                            <Button
+                                disabled={isLoading}
+                                loadingText="Solving..."
+                                loading={isLoading}
+                                onClick={handleSolveSudoku}
+                            >
+                                Solve sudoku
+                            </Button>
+                        </>
+                    ) : (
                         <Button
-                            variant="outline"
-                            onClick={handleClearButton}
+                            variant="solid"
+                            onClick={startNewPuzzle}
                         >
-                            Clear grid
+                            New puzzle
                         </Button>
                     )}
-                    {isLoading && (
-                        <Button
-                            variant="outline"
-                            onClick={handleAbortButton}
-                        >
-                            Abort solving
-                        </Button>
-                    )}
-                    <Button
-                        disabled={isLoading}
-                        loadingText="Solving..."
-                        loading={isLoading}
-                        onClick={handleSolveSudoku}
-                    >
-                        Solve sudoku
-                    </Button>
                 </HStack>
             </VStack>
         </Box>
