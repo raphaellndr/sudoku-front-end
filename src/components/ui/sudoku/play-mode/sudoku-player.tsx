@@ -27,7 +27,7 @@ export type Cell = {
 
 const SudokuPlayer = () => {
     // Game mode state
-    const [mode, setMode] = useState<"create" | "play" | "solved">("create");
+    const [mode, setMode] = useState<"create" | "display" | "play" | "solved">("create");
 
     // Grid state
     const [grid, setGrid] = useState<Cell[]>([]);
@@ -113,10 +113,11 @@ const SudokuPlayer = () => {
 
         const createSudokuResponse = await createSudoku(sudoku.grid, headers);
         if (createSudokuResponse?.ok) {
+            setMode("display");
+
             const sudoku = await createSudokuResponse.json() as Sudoku;
             setSudoku(sudoku);
-
-            const solveSudokuResponse = await solveSudoku(sudoku.id, headers);
+            solveSudoku(sudoku.id, headers);
         }
     };
 
@@ -125,7 +126,9 @@ const SudokuPlayer = () => {
         if (sudoku.id) {
             const abortSolvingResponse = await abortSolving(sudoku.id, headers);
             if (!abortSolvingResponse?.ok) {
-                notifyError("Failed to abort solving")
+                notifyError("Failed to abort solving");
+            } else {
+                setMode("create");
             }
         };
     };
@@ -176,6 +179,7 @@ const SudokuPlayer = () => {
                                             />
                                         );
                                     case "solved":
+                                    case "display":
                                         return (
                                             <ReadOnlySudokuGrid sudoku={sudoku} />
                                         );
@@ -247,20 +251,21 @@ const SudokuPlayer = () => {
                                 Clear grid
                             </Button>
                         )}
-                        {isLoading && (
-                            <HStack gap={2}>
-                                <Button
-                                    variant="outline"
-                                    colorPalette="red"
-                                    onClick={handleAbortButton}
-                                >
-                                    Cancel puzzle generation
-                                </Button>
-                            </HStack>
-                        )}
                         {!isLoading && (
                             <Button onClick={handleStartPlaying}> Start playing </Button>
                         )}
+                    </HStack>
+                )}
+
+                {(mode === "display" && isLoading) && (
+                    <HStack gap={2}>
+                        <Button
+                            variant="outline"
+                            colorPalette="red"
+                            onClick={handleAbortButton}
+                        >
+                            Cancel puzzle generation
+                        </Button>
                     </HStack>
                 )}
 
