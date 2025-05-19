@@ -10,6 +10,7 @@ import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
 import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
 import { notifyError } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
+import { useColorModeValue } from "../../color-mode";
 
 const SudokuSolver = () => {
     // Sudoku state from custom hook
@@ -25,6 +26,10 @@ const SudokuSolver = () => {
         [SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)
     const disableAbortButton =
         ![SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)
+
+    // Color mode values
+    const bgColor = useColorModeValue("gray.100", "gray.800");
+    const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
 
     useEffect(() => {
         setDisableSolveButton(!/[1-9]/.test(sudoku.grid));
@@ -88,13 +93,21 @@ const SudokuSolver = () => {
     };
 
     return (
-        <Box p={5}>
-            <VStack>
-                {mode === "create" ? (
-                    <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
-                ) : (
-                    <ReadOnlySudokuGrid sudoku={sudoku} />
-                )}
+        <Box p="5">
+            <VStack gap="4">
+                <Box
+                    borderRadius="xl"
+                    boxShadow={boxShadow}
+                    bg={bgColor}
+                    p="4"
+                    pos="relative"
+                >
+                    {mode === "create" ? (
+                        <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
+                    ) : (
+                        <ReadOnlySudokuGrid sudoku={sudoku} />
+                    )}
+                </Box>
                 <HStack>
                     <Button
                         disabled={disableClearButton}
