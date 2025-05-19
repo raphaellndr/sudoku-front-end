@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import { Sudoku } from "@/types/types";
 import { notifySuccess } from "@/toasts/toast";
-import { MAX_HINTS } from "./hint-button";
-import { MAX_CHECKS } from "./check-button";
+import { MAX_HINTS } from "./buttons/hint-button";
+import { MAX_CHECKS } from "./buttons/check-button";
 import { Cell } from "./sudoku-player";
 
 /**
