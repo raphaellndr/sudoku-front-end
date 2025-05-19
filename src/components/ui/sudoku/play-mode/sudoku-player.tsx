@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Box, Button, HStack, VStack, Spinner, Float } from "@chakra-ui/react";
+import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
@@ -9,6 +9,7 @@ import { useTimer } from "./timer/use-timer";
 import Timer from "./timer/timer";
 import { HintButton } from "./buttons/hint-button";
 import { CheckButton } from "./buttons/check-button";
+import { LoadingStatus } from "./loading-status";
 import { useSudoku } from "../use-sudoku";
 import { abortSolving, createSudoku, solveSudoku } from "../sudoku-api";
 import { useSudokuWebSocket } from "../use-sudoku-websocket";
@@ -16,7 +17,6 @@ import { useColorModeValue } from "../../color-mode";
 import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../grid/sudoku-game-grid";
 import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
-import { Tooltip } from "../../tooltip";
 
 export type Cell = {
     position: [number, number];
@@ -30,7 +30,7 @@ const SudokuPlayer = () => {
     const [mode, setMode] = useState<"create" | "play" | "solved">("create");
 
     // Grid state
-    const [grid, setGrid] = useState<Cell[]>([])
+    const [grid, setGrid] = useState<Cell[]>([]);
 
     // Timer state from custom hook
     const {
@@ -211,13 +211,7 @@ const SudokuPlayer = () => {
                                 </VStack>
                             )}
                         </HStack>
-                        {isLoading && (
-                            <Tooltip content="Generating puzzle">
-                                <Float>
-                                    <Spinner size="sm" />
-                                </Float>
-                            </Tooltip>
-                        )}
+                        {isLoading && (<LoadingStatus />)}
                     </Box>
                     {mode === "play" && (
                         <HStack gap="4">
