@@ -10,6 +10,7 @@ import { useSudokuWebSocket } from "../use-sudoku-websocket";
 import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
 import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
 import { useColorModeValue } from "../../color-mode";
+import { LoadingStatus } from "../play-mode/loading-status";
 
 const SudokuSolver = () => {
     // Sudoku state from custom hook
@@ -95,6 +96,7 @@ const SudokuSolver = () => {
                     ) : (
                         <ReadOnlySudokuGrid sudoku={sudoku} />
                     )}
+                    {isLoading && (<LoadingStatus />)}
                 </Box>
                 <HStack>
                     {mode !== "solved" ? (
@@ -115,14 +117,14 @@ const SudokuSolver = () => {
                                     Abort solving
                                 </Button>
                             )}
-                            <Button
-                                disabled={isLoading}
-                                loadingText="Solving..."
-                                loading={isLoading}
-                                onClick={handleSolveSudoku}
-                            >
-                                Solve sudoku
-                            </Button>
+                            {!isLoading && (
+                                <Button
+                                    disabled={!/[1-9]/.test(sudoku.grid)}
+                                    onClick={handleSolveSudoku}
+                                >
+                                    Solve sudoku
+                                </Button>
+                            )}
                         </>
                     ) : (
                         <Button
