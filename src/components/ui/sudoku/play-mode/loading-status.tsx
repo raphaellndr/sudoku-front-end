@@ -21,7 +21,7 @@ export const LoadingStatus = () => {
         };
     }, []);
 
-    const tooltipContent = `Generating content (${formatTime(timer)})`
+    const tooltipContent = `Solving sudoku (${formatTime(timer)})`
 
     return (
         <Tooltip content={tooltipContent}>
