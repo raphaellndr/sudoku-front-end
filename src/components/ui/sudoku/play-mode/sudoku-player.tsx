@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
-
-import { Box, Button, HStack, VStack } from "@chakra-ui/react";
+import { Box, Button, HStack, VStack, Spinner, Float } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
@@ -8,15 +7,16 @@ import { useSudokuPlayer } from "./use-sudoku-player";
 import CompletionDialog from "./completion-dialog";
 import { useTimer } from "./timer/use-timer";
 import Timer from "./timer/timer";
-import { HintButton } from "./hint-button";
-import { CheckButton } from "./check-button";
+import { HintButton } from "./buttons/hint-button";
+import { CheckButton } from "./buttons/check-button";
 import { useSudoku } from "../use-sudoku";
-import { createSudoku, solveSudoku } from "../sudoku-api";
+import { abortSolving, createSudoku, solveSudoku } from "../sudoku-api";
 import { useSudokuWebSocket } from "../use-sudoku-websocket";
 import { useColorModeValue } from "../../color-mode";
 import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../grid/sudoku-game-grid";
 import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
+import { Tooltip } from "../../tooltip";
 
 export type Cell = {
     position: [number, number];
@@ -31,9 +31,6 @@ const SudokuPlayer = () => {
 
     // Grid state
     const [grid, setGrid] = useState<Cell[]>([])
-
-    // Loading state
-    const [disableButtons, setDisableButtons] = useState(false);
 
     // Timer state from custom hook
     const {
@@ -88,13 +85,12 @@ const SudokuPlayer = () => {
     );
 
     // WebSocket connection for status updates
-    useSudokuWebSocket(
+    const { isLoading } = useSudokuWebSocket(
         sudoku.id,
         headers,
         setSudoku,
         {
             onComplete: () => {
-                setDisableButtons(false);
                 resetPlayerGrid();
                 setMode("play");
                 setIsTimerRunning(true);
@@ -120,20 +116,24 @@ const SudokuPlayer = () => {
             const sudoku = await createSudokuResponse.json() as Sudoku;
             setSudoku(sudoku);
 
-            setDisableButtons(true);
-
             const solveSudokuResponse = await solveSudoku(sudoku.id, headers);
-            if (!solveSudokuResponse?.ok) {
-                setDisableButtons(false);
-            }
         }
+    };
+
+    // Handler for abort button
+    const handleAbortButton = async () => {
+        if (sudoku.id) {
+            const abortSolvingResponse = await abortSolving(sudoku.id, headers);
+            if (!abortSolvingResponse?.ok) {
+                notifyError("Failed to abort solving")
+            }
+        };
     };
 
     // Reset everything for a new puzzle
     const startNewPuzzle = () => {
         clearSudokuGrid();
         setMode("create");
-        setDisableButtons(false);
         resetTimer();
     };
 
@@ -211,6 +211,13 @@ const SudokuPlayer = () => {
                                 </VStack>
                             )}
                         </HStack>
+                        {isLoading && (
+                            <Tooltip content="Generating puzzle">
+                                <Float>
+                                    <Spinner size="sm" />
+                                </Float>
+                            </Tooltip>
+                        )}
                     </Box>
                     {mode === "play" && (
                         <HStack gap="4">
@@ -238,21 +245,28 @@ const SudokuPlayer = () => {
 
                 {mode === "create" && (
                     <HStack gap={4} flexWrap="wrap" justifyContent="center">
-                        <Button
-                            disabled={!/[1-9]/.test(sudoku.grid) || disableButtons}
-                            variant="outline"
-                            onClick={clearSudokuGrid}
-                        >
-                            Clear grid
-                        </Button>
-                        <Button
-                            disabled={disableButtons}
-                            loading={disableButtons}
-                            loadingText="Preparing puzzle..."
-                            onClick={handleStartPlaying}
-                        >
-                            Start playing
-                        </Button>
+                        {!(!/[1-9]/.test(sudoku.grid) || isLoading) && (
+                            <Button
+                                variant="outline"
+                                onClick={clearSudokuGrid}
+                            >
+                                Clear grid
+                            </Button>
+                        )}
+                        {isLoading && (
+                            <HStack gap={2}>
+                                <Button
+                                    variant="outline"
+                                    colorPalette="red"
+                                    onClick={handleAbortButton}
+                                >
+                                    Cancel puzzle generation
+                                </Button>
+                            </HStack>
+                        )}
+                        {!isLoading && (
+                            <Button onClick={handleStartPlaying}> Start playing </Button>
+                        )}
                     </HStack>
                 )}
 
