@@ -112,6 +112,7 @@ const SudokuSolver = () => {
                             {isLoading && (
                                 <Button
                                     variant="outline"
+                                    colorPalette="red"
                                     onClick={handleAbortButton}
                                 >
                                     Abort solving
