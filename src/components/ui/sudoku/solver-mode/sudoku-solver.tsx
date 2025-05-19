@@ -67,7 +67,9 @@ const SudokuSolver = () => {
         if (sudoku.id) {
             const abortSolvingResponse = await abortSolving(sudoku.id, headers);
             if (!abortSolvingResponse?.ok) {
-                notifyError("Failed to abort solving")
+                notifyError("Failed to abort solving");
+            } else {
+                setMode("create");
             }
         };
     };
@@ -90,12 +92,12 @@ const SudokuSolver = () => {
                 </Box>
                 <HStack>
                     {!(!/[1-9]/.test(sudoku.grid) || isLoading) && (
-                    <Button
-                        variant="outline"
-                        onClick={handleClearButton}
-                    >
-                        Clear grid
-                    </Button>
+                        <Button
+                            variant="outline"
+                            onClick={handleClearButton}
+                        >
+                            Clear grid
+                        </Button>
                     )}
                     {isLoading && (
                         <Button
