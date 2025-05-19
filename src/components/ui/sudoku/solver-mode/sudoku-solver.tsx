@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
+import { notifyError } from "@/toasts/toast";
+import { Sudoku } from "@/types/types";
 import { useSudoku } from "../use-sudoku";
 import { createSudoku, solveSudoku, abortSolving } from "../sudoku-api";
 import { useSudokuWebSocket } from "../use-sudoku-websocket";
-import { SudokuStatusEnum } from "@/types/enums";
 import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
 import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
-import { notifyError } from "@/toasts/toast";
-import { Sudoku } from "@/types/types";
 import { useColorModeValue } from "../../color-mode";
 
 const SudokuSolver = () => {
@@ -19,21 +18,9 @@ const SudokuSolver = () => {
     // Mode state
     const [mode, setMode] = useState<"create" | "display">("create");
 
-    // Buttons state
-    const [disableSolveButton, setDisableSolveButton] = useState(!/[1-9]/.test(sudoku.grid));
-    const disableClearButton =
-        !/[1-9]/.test(sudoku.grid) ||
-        [SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)
-    const disableAbortButton =
-        ![SudokuStatusEnum.Values.running, SudokuStatusEnum.Values.pending].includes(sudoku.status as any)
-
     // Color mode values
     const bgColor = useColorModeValue("gray.100", "gray.800");
     const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
-
-    useEffect(() => {
-        setDisableSolveButton(!/[1-9]/.test(sudoku.grid));
-    }, [sudoku.grid])
 
     // WebSocket connection for status updates
     const { isLoading } = useSudokuWebSocket(
@@ -43,7 +30,6 @@ const SudokuSolver = () => {
         {
             onComplete: () => {
                 setMode("display");
-                setDisableSolveButton(true);
             }
         }
     );
@@ -51,7 +37,6 @@ const SudokuSolver = () => {
     const handleClearButton = () => {
         clearSudokuGrid();
         setMode("create");
-        setDisableSolveButton(false);
     }
 
     // Handler for solve button
@@ -69,16 +54,11 @@ const SudokuSolver = () => {
 
         const createSudokuResponse = await createSudoku(sudoku.grid, headers);
         if (createSudokuResponse?.ok) {
-            setDisableSolveButton(true);
             setMode("display");
 
             const sudoku = await createSudokuResponse.json() as Sudoku;
             setSudoku(sudoku);
-
-            const solveSudokuResponse = await solveSudoku(sudoku.id, headers);
-            if (solveSudokuResponse?.ok) {
-                setDisableSolveButton(false);
-            }
+            solveSudoku(sudoku.id, headers);
         }
     };
 
