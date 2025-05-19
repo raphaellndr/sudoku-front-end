@@ -109,16 +109,16 @@ const SudokuSolver = () => {
                     )}
                 </Box>
                 <HStack>
+                    {!(!/[1-9]/.test(sudoku.grid) || isLoading) && (
                     <Button
-                        disabled={disableClearButton}
                         variant="outline"
                         onClick={handleClearButton}
                     >
                         Clear grid
                     </Button>
+                    )}
                     {isLoading && (
                         <Button
-                            disabled={disableAbortButton}
                             variant="outline"
                             onClick={handleAbortButton}
                         >
@@ -126,7 +126,7 @@ const SudokuSolver = () => {
                         </Button>
                     )}
                     <Button
-                        disabled={disableSolveButton}
+                        disabled={isLoading}
                         loadingText="Solving..."
                         loading={isLoading}
                         onClick={handleSolveSudoku}
