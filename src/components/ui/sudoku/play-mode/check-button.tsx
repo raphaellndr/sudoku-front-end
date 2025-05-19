@@ -21,6 +21,7 @@ export const CheckButton: React.FC<CheckButtonProps> = (
     const circleBg = useColorModeValue("black", "white");
     const circleBgDisabled = useColorModeValue("gray", "gray");
     const circleColor = useColorModeValue("white", "black");
+    const borderColor = useColorModeValue("grey.500", "white");
 
     const isDisabled = remainingChecks === 0 || !canCheck || isPaused;
 
@@ -36,6 +37,7 @@ export const CheckButton: React.FC<CheckButtonProps> = (
                 disabled={isDisabled}
                 variant="outline"
                 width="100%"
+                borderColor={borderColor}
                 onClick={onActivateCheckMode}
             />
             <Float>
