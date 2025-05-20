@@ -11,7 +11,7 @@ export default function Home() {
     return (
         <Center height="100vh">
             <VStack gap="10">
-                <Heading size="6xl" textAlign="center">Sign in to SudokuSolver</Heading>
+                <Heading size="6xl" textAlign="center">Sign in to SudokuArena</Heading>
                 <Stack gap="4">
                     <LoginForm />
                     <OrSeparator />

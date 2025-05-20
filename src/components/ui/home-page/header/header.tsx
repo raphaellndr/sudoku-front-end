@@ -33,7 +33,7 @@ const Header: React.FC = () => {
                             textAlign={{ base: "center", md: "left" }}
                             fontWeight={"bold"}
                         >
-                            SudokuSolver
+                            SudokuArena
                         </Text>
 
                         <Flex display={{ base: "none", md: "flex" }} ml={4}>

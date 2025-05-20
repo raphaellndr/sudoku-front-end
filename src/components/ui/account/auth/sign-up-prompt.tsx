@@ -8,7 +8,7 @@ const SignUpPrompt = () => {
     return (
         <Center>
             <VStack>
-                <Text fontSize="sm">New to SudokuSolver?</Text>
+                <Text fontSize="sm">New to SudokuArena?</Text>
                 <Text
                     fontSize="sm"
                     color="blue.500"

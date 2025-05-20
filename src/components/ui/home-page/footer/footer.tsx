@@ -11,7 +11,7 @@ const Footer = () => {
         <Box py={8} borderTop="1px" borderColor="gray.200" mt="auto">
             <Container maxW="container.lg">
                 <HStack justify="space-between" align="center">
-                    <Text>&copy; {new Date().getFullYear()} SudokuSolver. All rights reserved.</Text>
+                    <Text>&copy; {new Date().getFullYear()} SudokuArena. All rights reserved.</Text>
                     <HStack gap={6}>
                         <GithubMenu />
                         <LinkedInButton />
