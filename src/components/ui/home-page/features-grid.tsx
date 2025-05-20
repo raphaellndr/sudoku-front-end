@@ -9,6 +9,13 @@ const FeaturesGrid = () => {
                 <CustomCard
                     title="Play Sudokus"
                     description="Create your own Sudoku puzzle and play with it! Compete against time, get hints when stuck, and check your results."
+                    rootProps={{
+                        _hover: {
+                            shadow: "lg",
+                            transform: "translateY(-5px)",
+                            transition: "all 0.2s ease-in-out",
+                        }
+                    }}
                 />
                 <CustomCard
                     title="Solve Sudokus"
