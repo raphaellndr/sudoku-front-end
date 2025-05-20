@@ -6,6 +6,7 @@ import {
     Text,
     Button,
     HStack,
+    Group,
 } from "@chakra-ui/react";
 import { IoMdExit } from "react-icons/io";
 
@@ -27,12 +28,11 @@ const Header: React.FC = () => {
             >
                 <Flex justify="space-between" align="center" width="100%">
                     <HStack>
-                        <Text
-                            fontSize="2xl"
-                            textAlign={{ base: "center", md: "left" }}
-                            fontWeight={"bold"}
-                        >
-                            SudokuArena
+                        <Text fontSize="2xl" textAlign={{ base: "center", md: "left" }}>
+                            <Text as="span" fontWeight="bold">
+                                Sudoku
+                            </Text>
+                            Arena
                         </Text>
 
                         <Flex display={{ base: "none", md: "flex" }} ml={10}>
