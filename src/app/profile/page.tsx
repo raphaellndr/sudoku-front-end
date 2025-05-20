@@ -3,8 +3,8 @@
 import { Box, Flex, VStack, Separator } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
 
-import Header from "@/components/ui/home-page/header/header";
-import Footer from "@/components/ui/home-page/footer/footer";
+import Header from "@/components/ui/header/header";
+import Footer from "@/components/ui/footer/footer";
 import ProfileAccordion from "@/components/ui/profile/profile-accordion";
 import ProfileInformation from "@/components/ui/profile/profile-information";
 

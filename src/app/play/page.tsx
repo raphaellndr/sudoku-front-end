@@ -4,8 +4,8 @@ import { useSession } from "next-auth/react";
 import { Box, Flex, Separator, Show, Spinner } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
 
-import Header from "@/components/ui/home-page/header/header";
-import Footer from "@/components/ui/home-page/footer/footer";
+import Header from "@/components/ui/header/header";
+import Footer from "@/components/ui/footer/footer";
 import SudokuPlayer from "@/components/ui/sudoku/play-mode/sudoku-player";
 
 export default function Home() {
