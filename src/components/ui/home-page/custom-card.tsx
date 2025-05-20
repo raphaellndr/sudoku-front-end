@@ -7,7 +7,7 @@ interface CustomCardProps {
     description: string;
 }
 
-export const CustomCard: React.FC<CustomCardProps> = ({ title, description }) => {
+const CustomCard: React.FC<CustomCardProps> = ({ title, description }) => {
     return (
         <Card.Root
             _hover={{
@@ -25,3 +25,5 @@ export const CustomCard: React.FC<CustomCardProps> = ({ title, description }) =>
         </Card.Root>
     );
 };
+
+export default CustomCard;
