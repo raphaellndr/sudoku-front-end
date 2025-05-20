@@ -1,18 +1,17 @@
 import { signIn, signOut, useSession } from "next-auth/react";
+
 import {
     Box,
     Flex,
     Text,
     Button,
     HStack,
-    IconButton,
 } from "@chakra-ui/react";
 import { IoMdExit } from "react-icons/io";
 
-import { ColorModeButton } from "../../color-mode";
-import CustomDrawer from "../header/custom-drawer";
 import HeaderButton from "./header-button";
-import { Tooltip } from "../../tooltip";
+import CustomDrawer from "../header/custom-drawer";
+import { ColorModeButton } from "../../color-mode";
 import { TooltipIconButton } from "../../tooltip-icon-button";
 
 const Header: React.FC = () => {
@@ -22,8 +21,8 @@ const Header: React.FC = () => {
         <Flex align="center">
             <Box
                 minH="60px"
-                py={{ base: 2 }}
-                px={{ base: 4 }}
+                py={{ base: 4 }}
+                px={{ base: 10 }}
                 width="100%"
             >
                 <Flex justify="space-between" align="center" width="100%">
@@ -36,7 +35,7 @@ const Header: React.FC = () => {
                             SudokuArena
                         </Text>
 
-                        <Flex display={{ base: "none", md: "flex" }} ml={4}>
+                        <Flex display={{ base: "none", md: "flex" }} ml={10}>
                             <HStack>
                                 <HeaderButton buttonText="Play" routerHref="/play" />
                                 <HeaderButton buttonText="Solver" routerHref="/solver" />
