@@ -18,7 +18,6 @@ export const useSudokuWebSocket = (
     setSudoku: (updater: (prevSudoku: Sudoku) => Sudoku) => void,
     callbacks?: WebSocketCallbacks
 ) => {
-    const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const socketRef = useRef<WebSocket | null>(null);
 
@@ -37,7 +36,6 @@ export const useSudokuWebSocket = (
 
         socket.onopen = () => {
             console.log(`WebSocket connected for Sudoku ${sudokuId}`);
-            setIsConnected(true);
         };
 
         socket.onmessage = async (event) => {
@@ -69,7 +67,6 @@ export const useSudokuWebSocket = (
 
         socket.onclose = () => {
             console.log(`WebSocket closed for Sudoku ${sudokuId}`);
-            setIsConnected(false);
             setIsLoading(false);
         };
 
@@ -81,5 +78,5 @@ export const useSudokuWebSocket = (
         };
     }, [sudokuId]);
 
-    return { isConnected, isLoading };
+    return { isLoading };
 };
