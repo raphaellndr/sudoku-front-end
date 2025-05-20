@@ -1,6 +1,6 @@
 import { Container, SimpleGrid } from "@chakra-ui/react";
 
-import CustomCard from "./custom-card";
+import CustomCard from "../custom-card";
 
 const FeaturesGrid = () => {
     return (
