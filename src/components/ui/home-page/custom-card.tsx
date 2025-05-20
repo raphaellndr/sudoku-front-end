@@ -1,12 +1,13 @@
 import React from "react";
+
 import { Card, Heading, Text } from "@chakra-ui/react";
 
-interface FeatureProps {
+interface CustomCardProps {
     title: string;
     description: string;
 }
 
-export const Feature: React.FC<FeatureProps> = ({ title, description }) => {
+export const CustomCard: React.FC<CustomCardProps> = ({ title, description }) => {
     return (
         <Card.Root
             _hover={{
