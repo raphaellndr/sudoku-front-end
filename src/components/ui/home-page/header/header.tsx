@@ -3,10 +3,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import {
     Box,
     Flex,
-    Text,
     Button,
     HStack,
-    Group,
 } from "@chakra-ui/react";
 import { IoMdExit } from "react-icons/io";
 
@@ -29,7 +27,12 @@ const Header: React.FC = () => {
             >
                 <Flex justify="space-between" align="center" width="100%">
                     <HStack>
-                        <SudokuArenaButton fontSize="2xl" textAlign={{ base: "center", md: "left" }} />
+                        <SudokuArenaButton
+                            textProps={{
+                                fontSize: "2xl",
+                                textAlign: { base: "center", md: "left" }
+                            }}
+                        />
 
                         <Flex display={{ base: "none", md: "flex" }} ml={10}>
                             <HStack>
