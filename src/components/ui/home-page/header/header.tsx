@@ -14,6 +14,7 @@ import HeaderButton from "./header-button";
 import CustomDrawer from "../header/custom-drawer";
 import { ColorModeButton } from "../../color-mode";
 import { TooltipIconButton } from "../../tooltip-icon-button";
+import { SudokuArenaButton } from "../../sudoku-arena-button";
 
 const Header: React.FC = () => {
     const { data: session } = useSession();
@@ -28,12 +29,7 @@ const Header: React.FC = () => {
             >
                 <Flex justify="space-between" align="center" width="100%">
                     <HStack>
-                        <Text fontSize="2xl" textAlign={{ base: "center", md: "left" }}>
-                            <Text as="span" fontWeight="bold">
-                                Sudoku
-                            </Text>
-                            Arena
-                        </Text>
+                        <SudokuArenaButton fontSize="2xl" textAlign={{ base: "center", md: "left" }} />
 
                         <Flex display={{ base: "none", md: "flex" }} ml={10}>
                             <HStack>
