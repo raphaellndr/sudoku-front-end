@@ -1,8 +1,16 @@
 import { useRouter } from "next/navigation";
 
-import { Button, Text, TextProps } from "@chakra-ui/react";
+import { Button, ButtonProps, Text, TextProps } from "@chakra-ui/react";
 
-export const SudokuArenaButton: React.FC<TextProps> = ({ ...props }) => {
+interface SudokuArenaButtonProps {
+    buttonProps?: ButtonProps;
+    textProps?: TextProps;
+};
+
+export const SudokuArenaButton: React.FC<SudokuArenaButtonProps> = ({
+    buttonProps,
+    textProps,
+}) => {
     const router = useRouter();
 
     const handleClick = () => router.push("/");
@@ -12,8 +20,9 @@ export const SudokuArenaButton: React.FC<TextProps> = ({ ...props }) => {
             variant="ghost"
             onClick={handleClick}
             _hover={{ backgroundColor: "transparent" }}
+            {...buttonProps}
         >
-            <Text {...props}>
+            <Text {...textProps}>
                 <Text as="span" fontWeight="bold">
                     Sudoku
                 </Text>
