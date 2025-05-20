@@ -5,21 +5,21 @@ import { Card, Heading, Text } from "@chakra-ui/react";
 interface CustomCardProps {
     title: string;
     description: string;
+    rootProps?: Card.RootProps;
+    bodyProps?: Card.BodyProps;
 }
 
-const CustomCard: React.FC<CustomCardProps> = ({ title, description }) => {
+const CustomCard: React.FC<CustomCardProps> = ({
+    title, description, rootProps, bodyProps
+}) => {
     return (
         <Card.Root
-            _hover={{
-                shadow: "lg",
-                transform: "translateY(-5px)",
-                transition: "all 0.2s ease-in-out",
-            }}
+            {...rootProps}
         >
             <Card.Header>
                 <Heading size="md">{title}</Heading>
             </Card.Header>
-            <Card.Body>
+            <Card.Body {...bodyProps}>
                 <Text>{description}</Text>
             </Card.Body>
         </Card.Root>
