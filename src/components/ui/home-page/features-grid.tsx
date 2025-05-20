@@ -20,10 +20,24 @@ const FeaturesGrid = () => {
                 <CustomCard
                     title="Solve Sudokus"
                     description="Fill in a grid and solve it using various algorithms. View solution and solving time."
+                    rootProps={{
+                        _hover: {
+                            shadow: "lg",
+                            transform: "translateY(-5px)",
+                            transition: "all 0.2s ease-in-out",
+                        }
+                    }}
                 />
                 <CustomCard
                     title="User Stats"
                     description="Create an account to track your progress and achievements."
+                    rootProps={{
+                        _hover: {
+                            shadow: "lg",
+                            transform: "translateY(-5px)",
+                            transition: "all 0.2s ease-in-out",
+                        }
+                    }}
                 />
             </SimpleGrid>
         </Container>
