@@ -24,7 +24,7 @@ const AboutSections = () => {
                 description="A few years ago, as part of my studies, I worked on a project aimed
                     at solving Sudokus. This project sparked my interest in exploring web development,
                     an area I had always wanted to learn but never found the time to dive into."
-                rootProps={{ size: "sm", bg: "", border: "none" }}
+                rootProps={{ size: "sm", bg: "transparent", border: "none" }}
                 bodyProps={{ color: "fg.muted" }}
             />
 
@@ -51,7 +51,7 @@ const AboutSections = () => {
                     learning and growth. It's a way to demonstrate my skills to recruiters,
                     peers, and most importantly, to myself. It represents my capability to
                     learn, adapt, and create something meaningful."
-                rootProps={{ size: "sm", bg: "", border: "none" }}
+                rootProps={{ size: "sm", bg: "transparent", border: "none" }}
                 bodyProps={{ color: "fg.muted" }}
             />
         </>
