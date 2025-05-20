@@ -252,7 +252,12 @@ const SudokuPlayer = () => {
                             </Button>
                         )}
                         {!isLoading && (
-                            <Button onClick={handleStartPlaying}> Start playing </Button>
+                            <Button
+                                disabled={!/[1-9]/.test(sudoku.grid)}
+                                onClick={handleStartPlaying}
+                            >
+                                Start playing
+                            </Button>
                         )}
                     </HStack>
                 )}
@@ -264,7 +269,7 @@ const SudokuPlayer = () => {
                             colorPalette="red"
                             onClick={handleAbortButton}
                         >
-                            Cancel puzzle generation
+                            Cancel
                         </Button>
                     </HStack>
                 )}
