@@ -13,7 +13,6 @@ import { LoadingStatus } from "./loading-status";
 import { useSudoku } from "../sudoku/use-sudoku";
 import { abortSolving, createSudoku, solveSudoku } from "../sudoku/sudoku-api";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
-import { useColorModeValue } from "../color-mode";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../sudoku/grid/sudoku-game-grid";
 import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
@@ -44,10 +43,6 @@ const SudokuPlayer = () => {
 
     // Dialog state
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    // Color mode values
-    const bgColor = useColorModeValue("gray.100", "gray.800");
-    const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
 
     // Sudoku state from custom hook
     const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, validateSudokuGrid, headers } = useSudoku();
@@ -152,8 +147,6 @@ const SudokuPlayer = () => {
                 <VStack gap="4">
                     <Box
                         borderRadius="xl"
-                        boxShadow={boxShadow}
-                        bg={bgColor}
                         p={4}
                         pos="relative"
                     >
