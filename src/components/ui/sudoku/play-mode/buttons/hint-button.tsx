@@ -1,9 +1,9 @@
 import { Box, Circle, Float } from "@chakra-ui/react";
 import { FaRegLightbulb } from "react-icons/fa";
 
+import TooltipIconButton from "@/components/ui/tooltip-icon-button";
 import { Sudoku } from "@/types/types";
 import { useColorModeValue } from "@/components/ui/color-mode";
-import { TooltipIconButton } from "@/components/ui/tooltip-icon-button";
 
 export const MAX_HINTS = 3;
 
@@ -26,7 +26,7 @@ export const HintButton: React.FC<HintButtonProps> = (
     return (
         <Box position="relative">
             <TooltipIconButton
-                icon={<FaRegLightbulb />}
+                leftIcon={<FaRegLightbulb />}
                 buttonText="Hint"
                 tooltipText="Reveal a correct number"
                 disabled={disabled}

@@ -10,8 +10,8 @@ import { IoMdExit } from "react-icons/io";
 
 import HeaderButton from "./header-button";
 import CustomDrawer from "./custom-drawer";
+import TooltipIconButton from "../tooltip-icon-button";
 import { ColorModeButton } from "../color-mode";
-import { TooltipIconButton } from "../tooltip-icon-button";
 import { SudokuArenaButton } from "../sudoku-arena-button";
 
 const Header: React.FC = () => {
@@ -51,7 +51,7 @@ const Header: React.FC = () => {
 
                         {session ? (
                             <TooltipIconButton
-                                icon={<IoMdExit />}
+                                leftIcon={<IoMdExit />}
                                 tooltipText="Sign out"
                                 variant="ghost"
                                 display={{ base: "none", md: "inline-flex" }}
