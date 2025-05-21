@@ -13,7 +13,7 @@ export default function Home() {
             <Header />
             <Box flex="1" maxW={"100"}>
                 <Container maxW="container.lg">
-                    <VStack gap={8} align="stretch">
+                    <VStack gap={8} align="stretch" marginTop="5" marginBottom="10">
                         <AboutHeader />
                         <AboutSections />
                     </VStack>
