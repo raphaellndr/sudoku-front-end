@@ -28,7 +28,6 @@ export default function Home() {
             <Box
                 flex="1"
                 width="100%"
-                py={8}
                 px={4}
             >
                 <Container maxW="container.xl">
