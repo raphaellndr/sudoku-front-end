@@ -6,13 +6,13 @@ const AboutSections = () => {
             <CustomCard
                 title="My Background"
                 description="I am an engineer specialized in computer science, with a strong
-                    background in data and AI. Throughout my career, I've always been
+                    background in data and AI. Throughout my studies and career, I've always been
                     fascinated by the potential of technology to solve complex problems."
                 rootProps={{
                     size: "sm",
                     _hover: {
                         shadow: "lg",
-                        transform: "translateY(-1px)",
+                        transform: "translateY(-2px)",
                         transition: "all 0.2s ease-in-out",
                     }
                 }}
@@ -38,7 +38,7 @@ const AboutSections = () => {
                     size: "sm",
                     _hover: {
                         shadow: "lg",
-                        transform: "translateY(-1px)",
+                        transform: "translateY(-2px)",
                         transition: "all 0.2s ease-in-out",
                     }
                 }}
