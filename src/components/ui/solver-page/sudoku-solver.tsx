@@ -4,13 +4,13 @@ import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
-import { useSudoku } from "../use-sudoku";
-import { createSudoku, solveSudoku, abortSolving } from "../sudoku-api";
-import { useSudokuWebSocket } from "../use-sudoku-websocket";
-import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
-import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
-import { useColorModeValue } from "../../color-mode";
-import { LoadingStatus } from "../play-mode/loading-status";
+import { useSudoku } from "../sudoku/use-sudoku";
+import { createSudoku, solveSudoku, abortSolving } from "../sudoku/sudoku-api";
+import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
+import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
+import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
+import { useColorModeValue } from "../color-mode";
+import { LoadingStatus } from "../play-page/loading-status";
 
 const SudokuSolver = () => {
     // Sudoku state from custom hook

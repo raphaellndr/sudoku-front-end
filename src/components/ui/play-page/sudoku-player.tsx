@@ -10,13 +10,13 @@ import Timer from "./timer/timer";
 import { HintButton } from "./buttons/hint-button";
 import { CheckButton } from "./buttons/check-button";
 import { LoadingStatus } from "./loading-status";
-import { useSudoku } from "../use-sudoku";
-import { abortSolving, createSudoku, solveSudoku } from "../sudoku-api";
-import { useSudokuWebSocket } from "../use-sudoku-websocket";
-import { useColorModeValue } from "../../color-mode";
-import { SudokuCreatorGrid } from "../grid/sudoku-creator-grid";
-import { SudokuGameGrid } from "../grid/sudoku-game-grid";
-import { ReadOnlySudokuGrid } from "../grid/read-only-sudoku-grid";
+import { useSudoku } from "../sudoku/use-sudoku";
+import { abortSolving, createSudoku, solveSudoku } from "../sudoku/sudoku-api";
+import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
+import { useColorModeValue } from "../color-mode";
+import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
+import { SudokuGameGrid } from "../sudoku/grid/sudoku-game-grid";
+import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
 
 export type Cell = {
     position: [number, number];

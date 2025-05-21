@@ -2,7 +2,7 @@ import { Input, Text, Box, Flex, IconButton } from "@chakra-ui/react";
 
 import { Sudoku } from "@/types/types";
 import { BaseSudokuGrid } from "./base-sudoku-grid";
-import { Cell } from "../play-mode/sudoku-player";
+import { Cell } from "../../play-page/sudoku-player";
 import { useColorModeValue } from "../../color-mode";
 import { IoIosPlay } from "react-icons/io";
 
