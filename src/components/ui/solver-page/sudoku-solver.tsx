@@ -9,7 +9,6 @@ import { createSudoku, solveSudoku, abortSolving } from "../sudoku/sudoku-api";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
-import { useColorModeValue } from "../color-mode";
 import { LoadingStatus } from "../play-page/loading-status";
 
 const SudokuSolver = () => {
@@ -18,10 +17,6 @@ const SudokuSolver = () => {
 
     // Mode state
     const [mode, setMode] = useState<"create" | "display" | "solved">("create");
-
-    // Color mode values
-    const bgColor = useColorModeValue("gray.100", "gray.800");
-    const boxShadow = useColorModeValue("0 4px 12px rgba(0, 0, 0, 0.05)", "0 4px 12px rgba(0, 0, 0, 0.2)");
 
     // WebSocket connection for status updates
     const { isLoading } = useSudokuWebSocket(
@@ -86,8 +81,6 @@ const SudokuSolver = () => {
             <VStack gap="4">
                 <Box
                     borderRadius="xl"
-                    boxShadow={boxShadow}
-                    bg={bgColor}
                     p="4"
                     pos="relative"
                 >
