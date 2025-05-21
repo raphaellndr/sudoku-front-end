@@ -3,22 +3,24 @@ import { IconButton, IconButtonProps } from "@chakra-ui/react"
 import { Tooltip } from "./tooltip"
 
 interface TooltipIconButtonProps extends IconButtonProps {
-    icon: React.ReactNode;
+    rightIcon?: React.ReactNode;
+    leftIcon?: React.ReactNode;
     buttonText?: string;
-    isTextBeforeIcon?: boolean;
     tooltipText: string;
 };
 
-export const TooltipIconButton: React.FC<TooltipIconButtonProps> = (
-    { icon, buttonText = "", isTextBeforeIcon = true, tooltipText, ...props }
+const TooltipIconButton: React.FC<TooltipIconButtonProps> = (
+    { rightIcon, leftIcon, buttonText = "", tooltipText, ...props }
 ) => {
     return (
         <Tooltip content={tooltipText}>
             <IconButton {...props}>
-                {isTextBeforeIcon && buttonText}
-                {icon}
-                {!isTextBeforeIcon && buttonText}
+                {leftIcon}
+                {buttonText}
+                {rightIcon}
             </IconButton>
         </Tooltip>
-    )
-}
+    );
+};
+
+export default TooltipIconButton;
