@@ -47,9 +47,9 @@ export const useTimer = () => {
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                setIsActive(false);
+                setIsPaused(false);
             } else {
-                setIsActive(true);
+                setIsPaused(true);
             }
         };
 
