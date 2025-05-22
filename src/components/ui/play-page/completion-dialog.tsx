@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, CloseButton, Dialog, Portal, Text, VStack } from "@chakra-ui/react";
 
-import { formatTime } from "./timer/timer";
+import { formatTime } from "./timer";
 import { MAX_HINTS } from "./buttons/hint-button";
 
 interface CompletionDialogProps {
