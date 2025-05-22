@@ -21,9 +21,6 @@ const CustomDrawer = () => {
                 <Drawer.Backdrop />
                 <Drawer.Positioner padding="1">
                     <Drawer.Content rounded="sm">
-                        <Drawer.Header>
-                            <Drawer.Title>Drawer Title</Drawer.Title>
-                        </Drawer.Header>
                         <Drawer.Body>
                             <VStack>
                                 <DrawerButton buttonText="Play" routerHref="/play" />
