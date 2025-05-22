@@ -34,7 +34,7 @@ const HowToPlayAccordion = () => {
                     <Icon fontSize="lg">
                         <MdOutlineRule />
                     </Icon>
-                    Classic Sudoku Rules
+                    Classic Sudoku rules
                     <Accordion.ItemIndicator />
                 </Accordion.ItemTrigger>
                 <Accordion.ItemContent>
