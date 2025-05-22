@@ -9,7 +9,6 @@ import { createSudoku, solveSudoku, abortSolving } from "../sudoku/sudoku-api";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
-import { LoadingStatus } from "../play-page/loading-status";
 
 const SudokuSolver = () => {
     // Sudoku state from custom hook
@@ -79,18 +78,11 @@ const SudokuSolver = () => {
     return (
         <Box p="5">
             <VStack gap="4">
-                <Box
-                    borderRadius="xl"
-                    p="4"
-                    pos="relative"
-                >
-                    {mode === "create" ? (
-                        <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
-                    ) : (
-                        <ReadOnlySudokuGrid sudoku={sudoku} />
-                    )}
-                    {isLoading && (<LoadingStatus />)}
-                </Box>
+                {mode === "create" ? (
+                    <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
+                ) : (
+                    <ReadOnlySudokuGrid sudoku={sudoku} isLoading={isLoading} />
+                )}
                 <HStack>
                     {mode !== "solved" ? (
                         <>
