@@ -46,7 +46,7 @@ export default function Home() {
                 </Container>
             </Box>
 
-            <Separator />
+            <Separator marginLeft="5" marginRight="5" />
             <Footer />
         </Flex>
     );
