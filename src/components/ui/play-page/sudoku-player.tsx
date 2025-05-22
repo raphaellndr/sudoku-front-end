@@ -9,7 +9,6 @@ import { useTimer } from "./timer/use-timer";
 import Timer from "./timer/timer";
 import { HintButton } from "./buttons/hint-button";
 import { CheckButton } from "./buttons/check-button";
-import { LoadingStatus } from "./loading-status";
 import { useSudoku } from "../sudoku/use-sudoku";
 import { abortSolving, createSudoku, solveSudoku } from "../sudoku/sudoku-api";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
@@ -145,71 +144,64 @@ const SudokuPlayer = () => {
         <Box p={5}>
             <VStack gap={4}>
                 <VStack gap="4">
-                    <Box
-                        borderRadius="xl"
-                        p={4}
-                        pos="relative"
-                    >
-                        <HStack gap="4">
-                            {(() => {
-                                switch (mode) {
-                                    case "create":
-                                        return (
-                                            <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
-                                        );
-                                    case "play":
-                                        return (
-                                            <SudokuGameGrid
-                                                sudoku={sudoku}
-                                                grid={grid}
-                                                setGrid={setGrid}
-                                                isCheckModeActive={isCheckModeActive}
-                                                setIsCheckModeActive={setIsCheckModeActive}
-                                                onCellChange={(p, v) => handlePlayerCellChange(p, v)}
-                                                onCellVerify={verifyCellValue}
-                                                isPaused={isPaused}
-                                                setIsPaused={setIsTimerPaused}
-                                            />
-                                        );
-                                    case "solved":
-                                    case "display":
-                                        return (
-                                            <ReadOnlySudokuGrid sudoku={sudoku} />
-                                        );
-                                }
-                            })()}
-                            {mode === "play" && (
-                                <VStack gap="4" align="stretch">
-                                    <Timer
-                                        timer={timer}
-                                        isPaused={isPaused}
-                                        setIsPaused={setIsTimerPaused}
-                                    />
-                                    <CheckButton
-                                        remainingChecks={remainingChecks}
-                                        canCheck={hasPlayerEnteredValues}
-                                        isPaused={isPaused}
-                                        onActivateCheckMode={toggleCheckMode}
-                                        isCheckModeActive={isCheckModeActive}
-                                    />
-                                    <HintButton
-                                        sudoku={sudoku}
-                                        remainingHints={remainingHints}
-                                        handleHint={giveHint}
-                                        isPaused={isPaused}
-                                        isCheckModeActive={isCheckModeActive}
-                                    />
-                                    <Button
-                                        variant="solid"
-                                        onClick={handleRestartPuzzle}
-                                    >
-                                        Restart
-                                    </Button>
-                                </VStack>
-                            )}
-                        </HStack>
-                        {isLoading && (<LoadingStatus />)}
-                    </Box>
+                    <HStack gap="4">
+                        {(() => {
+                            switch (mode) {
+                                case "create":
+                                    return (
+                                        <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
+                                    );
+                                case "play":
+                                    return (
+                                        <SudokuGameGrid
+                                            sudoku={sudoku}
+                                            grid={grid}
+                                            setGrid={setGrid}
+                                            isCheckModeActive={isCheckModeActive}
+                                            setIsCheckModeActive={setIsCheckModeActive}
+                                            onCellChange={(p, v) => handlePlayerCellChange(p, v)}
+                                            onCellVerify={verifyCellValue}
+                                            isPaused={isPaused}
+                                            setIsPaused={setIsTimerPaused}
+                                        />
+                                    );
+                                case "solved":
+                                case "display":
+                                    return (
+                                        <ReadOnlySudokuGrid sudoku={sudoku} isLoading={isLoading} />
+                                    );
+                            }
+                        })()}
+                        {mode === "play" && (
+                            <VStack gap="4" align="stretch">
+                                <Timer
+                                    timer={timer}
+                                    isPaused={isPaused}
+                                    setIsPaused={setIsTimerPaused}
+                                />
+                                <CheckButton
+                                    remainingChecks={remainingChecks}
+                                    canCheck={hasPlayerEnteredValues}
+                                    isPaused={isPaused}
+                                    onActivateCheckMode={toggleCheckMode}
+                                    isCheckModeActive={isCheckModeActive}
+                                />
+                                <HintButton
+                                    sudoku={sudoku}
+                                    remainingHints={remainingHints}
+                                    handleHint={giveHint}
+                                    isPaused={isPaused}
+                                    isCheckModeActive={isCheckModeActive}
+                                />
+                                <Button
+                                    variant="solid"
+                                    onClick={handleRestartPuzzle}
+                                >
+                                    Restart
+                                </Button>
+                            </VStack>
+                        )}
+                    </HStack>
                     {mode === "play" && (
                         <HStack gap="4">
                             <Button
