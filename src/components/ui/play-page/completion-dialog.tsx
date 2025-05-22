@@ -11,7 +11,7 @@ import { useColorModeValue } from "../color-mode";
 const fireConfetti = (): void => {
     const count = 200;
     const defaults = {
-        origin: { y: 0.7 },
+        origin: { y: 0.5 },
         zIndex: 10000
     };
 
