@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 
-import { Button, CloseButton, Dialog, Flex, Portal, Text, VStack, Box } from "@chakra-ui/react";
-import { FaRegClock, FaRegLightbulb } from "react-icons/fa";
+import { Button, CloseButton, Dialog, Portal, Text, VStack } from "@chakra-ui/react";
+import { FaRegClock, FaRegLightbulb, FaUndo } from "react-icons/fa";
 import confetti from "canvas-confetti";
 
 import { formatTime } from "./timer";
 import { MAX_HINTS } from "./buttons/hint-button";
+import InfoBox from "./info-box";
 import { useColorModeValue } from "../color-mode";
 
 const fireConfetti = (): void => {
@@ -53,18 +54,17 @@ interface CompletionDialogProps {
     timer: number;
     remainingHints: number;
     clearSudokuGrid: () => void;
+    cellDeletionCount: number;
 };
 
-const CompletionDialog: React.FC<CompletionDialogProps> = (
-    { isDialogOpen, setIsDialogOpen, timer, remainingHints, clearSudokuGrid }
-) => {
+const CompletionDialog: React.FC<CompletionDialogProps> = ({
+    isDialogOpen, setIsDialogOpen, timer, remainingHints, clearSudokuGrid, cellDeletionCount
+}) => {
     // Color mode values
     const bgColor = useColorModeValue("white", "gray.800");
     const borderColor = useColorModeValue("green.300", "green.400");
     const titleColor = useColorModeValue("green.600", "green.300");
     const textColor = useColorModeValue("gray.700", "gray.200");
-    const cardBg = useColorModeValue("gray.50", "gray.700");
-    const cardBorder = useColorModeValue("gray.200", "gray.600");
     const iconColor = useColorModeValue("#4A5568", "#A0AEC0");
 
     useEffect(() => {
@@ -97,36 +97,21 @@ const CompletionDialog: React.FC<CompletionDialogProps> = (
                                     Congratulations on completing the sudoku puzzle!
                                 </Text>
                                 <VStack gap={4}>
-                                    <Box
-                                        p={4}
-                                        bg={cardBg}
-                                        borderRadius="lg"
-                                        w="full"
-                                        border="1px solid"
-                                        borderColor={cardBorder}
-                                    >
-                                        <Flex align="center" justify="center">
-                                            <FaRegClock color={iconColor} size={18} />
-                                            <Text ml={3} fontSize="lg">
-                                                <Text as="span" fontWeight="bold">Time:</Text> {formatTime(timer)}
-                                            </Text>
-                                        </Flex>
-                                    </Box>
-                                    <Box
-                                        p={4}
-                                        bg={cardBg}
-                                        borderRadius="lg"
-                                        w="full"
-                                        border="1px solid"
-                                        borderColor={cardBorder}
-                                    >
-                                        <Flex align="center" justify="center">
-                                            <FaRegLightbulb color={iconColor} size={18} />
-                                            <Text ml={3} fontSize="lg">
-                                                <Text as="span" fontWeight="bold">Hints used:</Text> {MAX_HINTS - remainingHints}
-                                            </Text>
-                                        </Flex>
-                                    </Box>
+                                    <InfoBox
+                                        icon={<FaRegClock />}
+                                        statTitle="Time:"
+                                        stat={formatTime(timer)}
+                                    />
+                                    <InfoBox
+                                        icon={<FaRegLightbulb />}
+                                        statTitle="Hints used:"
+                                        stat={MAX_HINTS - remainingHints}
+                                    />
+                                    <InfoBox
+                                        icon={<FaUndo />}
+                                        statTitle="Changes made:"
+                                        stat={cellDeletionCount}
+                                    />
                                 </VStack>
                             </VStack>
                         </Dialog.Body>
