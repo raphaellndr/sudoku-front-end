@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
@@ -29,6 +30,9 @@ const SudokuPlayer = () => {
 
     // Grid state
     const [grid, setGrid] = useState<Cell[]>([]);
+
+    // Backtracking state
+    const [cellDeletionCount, setCellDeletionCount] = useState(0);
 
     // Timer state from custom hook
     const {
@@ -163,6 +167,7 @@ const SudokuPlayer = () => {
                                             onCellVerify={verifyCellValue}
                                             isPaused={isPaused}
                                             setIsPaused={setIsTimerPaused}
+                                            setCellDeletionCount={setCellDeletionCount}
                                         />
                                     );
                                 case "solved":
@@ -277,6 +282,7 @@ const SudokuPlayer = () => {
                 timer={timer}
                 remainingHints={remainingHints}
                 clearSudokuGrid={startNewPuzzle}
+                cellDeletionCount={cellDeletionCount}
             />
         </Box>
     );
