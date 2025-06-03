@@ -1,10 +1,10 @@
 import { Input, Text, Box, Flex, IconButton } from "@chakra-ui/react";
+import { IoIosPlay } from "react-icons/io";
 
 import { Sudoku } from "@/types/types";
 import { BaseSudokuGrid } from "./base-sudoku-grid";
 import { Cell } from "../../play-page/sudoku-player";
 import { useColorModeValue } from "../../color-mode";
-import { IoIosPlay } from "react-icons/io";
 
 interface SudokuGameGridProps {
     sudoku: Sudoku;
@@ -16,6 +16,7 @@ interface SudokuGameGridProps {
     onCellVerify?: (position: [number, number]) => void;
     isPaused: boolean;
     setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
+    setCellDeletionCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
@@ -28,6 +29,7 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     onCellVerify,
     isPaused,
     setIsPaused,
+    setCellDeletionCount,
 }) => {
     // Color Values
     const valueColor = useColorModeValue("black", "white");
@@ -37,8 +39,6 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
     const verifiableCellBg = useColorModeValue("blue.50", "blue.900");
     const verifiableCellBorder = useColorModeValue("blue.200", "blue.700");
     const overlayBg = useColorModeValue("rgba(255, 255, 255, 0.85)", "rgba(32, 32, 32, 0.85)");
-
-    // Add a glow effect for verifiable cells
     const verifiableCellGlow = useColorModeValue(
         "0 2px 8px rgba(49, 130, 206, 0.15), 0 0 0 1px rgba(49, 130, 206, 0.2)",
         "0 2px 8px rgba(49, 130, 206, 0.2), 0 0 0 1px rgba(49, 130, 206, 0.3)"
@@ -169,6 +169,12 @@ export const SudokuGameGrid: React.FC<SudokuGameGridProps> = ({
                 }}
                 zIndex="1"
                 onKeyDown={(e) => {
+                    // Increase backtracks
+                    if (e.key === "Backspace") {
+                        if (cellValue !== "0") {
+                            setCellDeletionCount(prev => prev + 1);
+                        }
+                    }
                     // Prevent non-numeric keys except for backspace, delete, tab, etc.
                     if (
                         !/^[1-9]$/.test(e.key) &&
