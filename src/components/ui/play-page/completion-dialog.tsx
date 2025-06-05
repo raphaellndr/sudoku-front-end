@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { Button, CloseButton, Dialog, Portal, Text, VStack } from "@chakra-ui/react";
 import { FaRegClock, FaRegLightbulb, FaUndo } from "react-icons/fa";
@@ -60,22 +60,27 @@ interface CompletionDialogProps {
 const CompletionDialog: React.FC<CompletionDialogProps> = ({
     isDialogOpen, setIsDialogOpen, timer, remainingHints, clearSudokuGrid, cellDeletionCount
 }) => {
+    const partyHornRef = useRef<HTMLAudioElement>(null);
+
     // Color mode values
     const bgColor = useColorModeValue("white", "gray.800");
     const borderColor = useColorModeValue("green.300", "green.400");
     const titleColor = useColorModeValue("green.600", "green.300");
     const textColor = useColorModeValue("gray.700", "gray.200");
-    const iconColor = useColorModeValue("#4A5568", "#A0AEC0");
 
     useEffect(() => {
         if (isDialogOpen) {
             fireConfetti();
+            if (partyHornRef.current) {
+                partyHornRef.current.play().catch(e => console.error("Error playing sound:", e));
+            }
         }
     }, [isDialogOpen]);
 
     return (
         <Dialog.Root open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e.open)}>
             <Portal>
+                <audio ref={partyHornRef} src="/sounds/party_horn.mp3" />
                 <Dialog.Backdrop backdropFilter="blur(4px)" />
                 <Dialog.Positioner>
                     <Dialog.Content
