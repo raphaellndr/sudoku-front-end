@@ -6,9 +6,12 @@ const GAMES_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/games/`;
  * Fetches the games from the backend API.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchGames = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchGames = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(GAMES_API_BASE_URL, {
             method: "GET",
@@ -32,9 +35,13 @@ export const fetchGames = async (headers: HeadersInit): Promise<Response | undef
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {any} data - The data for the new game.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const createGame = async (headers: HeadersInit, data: any): Promise<Response | undefined> => {
+export const createGame = async (
+    headers: HeadersInit,
+    data: any,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(GAMES_API_BASE_URL, {
             method: "POST",
@@ -59,9 +66,13 @@ export const createGame = async (headers: HeadersInit, data: any): Promise<Respo
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to fetch.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchGameById = async (headers: HeadersInit, gameId: string): Promise<Response | undefined> => {
+export const fetchGameById = async (
+    headers: HeadersInit,
+    gameId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "GET",
@@ -86,9 +97,14 @@ export const fetchGameById = async (headers: HeadersInit, gameId: string): Promi
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to update.
  * @param {any} data - The data to be updated for the game.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const partialUpdateGameById = async (headers: HeadersInit, gameId: string, data: any): Promise<Response | undefined> => {
+export const partialUpdateGameById = async (
+    headers: HeadersInit,
+    gameId: string,
+    data: any,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "PATCH",
@@ -114,9 +130,13 @@ export const partialUpdateGameById = async (headers: HeadersInit, gameId: string
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to fully update.
  * @param {any} data - The data to update the game with.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
- */
-export const fullUpdateGameById = async (headers: HeadersInit, gameId: string, data: any): Promise<Response | undefined> => {
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error. */
+export const fullUpdateGameById = async (
+    headers: HeadersInit,
+    gameId: string,
+    data: any,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "PUT",
@@ -141,9 +161,13 @@ export const fullUpdateGameById = async (headers: HeadersInit, gameId: string, d
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to delete.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const deleteGameById = async (headers: HeadersInit, gameId: string): Promise<Response | undefined> => {
+export const deleteGameById = async (
+    headers: HeadersInit,
+    gameId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "DELETE",
@@ -167,9 +191,12 @@ export const deleteGameById = async (headers: HeadersInit, gameId: string): Prom
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to abandon.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
- */
-export const abandonGameById = async (headers: HeadersInit, gameId: string): Promise<Response | undefined> => {
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error. */
+export const abandonGameById = async (
+    headers: HeadersInit,
+    gameId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/abandon/`, {
             method: "POST",
@@ -193,9 +220,12 @@ export const abandonGameById = async (headers: HeadersInit, gameId: string): Pro
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to complete.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
- */
-export const completeGameById = async (headers: HeadersInit, gameId: string): Promise<Response | undefined> => {
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error. */
+export const completeGameById = async (
+    headers: HeadersInit,
+    gameId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/complete/`, {
             method: "POST",
@@ -219,9 +249,12 @@ export const completeGameById = async (headers: HeadersInit, gameId: string): Pr
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to stop.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
- */
-export const stopGameById = async (headers: HeadersInit, gameId: string): Promise<Response | undefined> => {
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error. */
+export const stopGameById = async (
+    headers: HeadersInit,
+    gameId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/stop/`, {
             method: "POST",
@@ -244,9 +277,11 @@ export const stopGameById = async (headers: HeadersInit, gameId: string): Promis
  * Fetches the best scores from the backend API.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
- */
-export const fetchBestScores = async (headers: HeadersInit): Promise<Response | undefined> => {
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error. */
+export const fetchBestScores = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}best_scores/`, {
             method: "GET",
@@ -270,9 +305,12 @@ export const fetchBestScores = async (headers: HeadersInit): Promise<Response | 
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string[]} gameIds - An array of game IDs to delete.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
- */
-export const bulkDeleteGames = async (headers: HeadersInit, gameIds: string[]): Promise<Response | undefined> => {
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error. */
+export const bulkDeleteGames = async (
+    headers: HeadersInit,
+    gameIds: string[],
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}bulk_delete/`, {
             method: "POST",
@@ -297,9 +335,12 @@ export const bulkDeleteGames = async (headers: HeadersInit, gameIds: string[]): 
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {number} [limit=10] - The maximum number of recent games to fetch.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
- */
-export const fetchRecentGames = async (headers: HeadersInit, limit: number = 10): Promise<Response | undefined> => {
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error. */
+export const fetchRecentGames = async (
+    headers: HeadersInit,
+    limit: number = 10,
+): Promise<Response | undefined> => {
     try {
         if (limit <= 0) {
             throw new Error("Limit must be a positive integer.");
