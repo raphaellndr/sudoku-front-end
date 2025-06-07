@@ -5,11 +5,15 @@ const USERS_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/`;
 /**
  * Fetches the games for a specific user identified by UUID.
  *
- * @param {string} userId - The UUID of the user.
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchUserGames = async (userId: string, headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchUserGames = async (
+    headers: HeadersInit,
+    userId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/games/`, {
             method: "GET",
@@ -31,11 +35,15 @@ export const fetchUserGames = async (userId: string, headers: HeadersInit): Prom
 /**
  * Fetches the overall statistics for a specific user identified by UUID.
  *
- * @param {string} userId - The UUID of the user.
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchUserStats = async (userId: string, headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchUserStats = async (
+    headers: HeadersInit,
+    userId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/`, {
             method: "GET",
@@ -57,11 +65,15 @@ export const fetchUserStats = async (userId: string, headers: HeadersInit): Prom
 /**
  * Fetches the daily statistics for a specific user identified by UUID.
  *
- * @param {string} userId - The UUID of the user.
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchUserDailyStats = async (userId: string, headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchUserDailyStats = async (
+    headers: HeadersInit,
+    userId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/daily/`, {
             method: "GET",
@@ -83,11 +95,15 @@ export const fetchUserDailyStats = async (userId: string, headers: HeadersInit):
 /**
  * Fetches the monthly statistics for a specific user identified by UUID.
  *
- * @param {string} userId - The UUID of the user.
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchUserMonthlyStats = async (userId: string, headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchUserMonthlyStats = async (
+    headers: HeadersInit,
+    userId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/monthly/`, {
             method: "GET",
@@ -109,11 +125,15 @@ export const fetchUserMonthlyStats = async (userId: string, headers: HeadersInit
 /**
  * Fetches the weekly statistics for a specific user identified by UUID.
  *
- * @param {string} userId - The UUID of the user.
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchUserWeeklyStats = async (userId: string, headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchUserWeeklyStats = async (
+    headers: HeadersInit,
+    userId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/weekly/`, {
             method: "GET",
@@ -135,11 +155,15 @@ export const fetchUserWeeklyStats = async (userId: string, headers: HeadersInit)
 /**
  * Fetches the yearly statistics for a specific user identified by UUID.
  *
- * @param {string} userId - The UUID of the user.
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchUserYearlyStats = async (userId: string, headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchUserYearlyStats = async (
+    headers: HeadersInit,
+    userId: string,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/yearly/`, {
             method: "GET",
@@ -162,9 +186,12 @@ export const fetchUserYearlyStats = async (userId: string, headers: HeadersInit)
  * Fetches the leaderboard data.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
+ * in case of an error.
  */
-export const fetchLeaderboard = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchLeaderboard = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}stats/leaderboard/`, {
             method: "GET",

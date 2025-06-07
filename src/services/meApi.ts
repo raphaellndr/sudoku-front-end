@@ -8,7 +8,9 @@ const ME_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/me/`;
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fetchCurrentUser = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchCurrentUser = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(ME_API_BASE_URL, {
             method: "GET",
@@ -34,7 +36,10 @@ export const fetchCurrentUser = async (headers: HeadersInit): Promise<Response |
  * @param {any} data - The data to be updated for the current user.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const partialUpdateCurrentUser = async (headers: HeadersInit, data: any): Promise<Response | undefined> => {
+export const partialUpdateCurrentUser = async (
+    headers: HeadersInit,
+    data: any,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(ME_API_BASE_URL, {
             method: "PATCH",
@@ -61,7 +66,10 @@ export const partialUpdateCurrentUser = async (headers: HeadersInit, data: any):
  * @param {any} data - The data to update the current user with.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fullUpdateCurrentUser = async (headers: HeadersInit, data: any): Promise<Response | undefined> => {
+export const fullUpdateCurrentUser = async (
+    headers: HeadersInit,
+    data: any,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(ME_API_BASE_URL, {
             method: "PUT",
@@ -87,7 +95,9 @@ export const fullUpdateCurrentUser = async (headers: HeadersInit, data: any): Pr
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fetchCurrentUserGames = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchCurrentUserGames = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}games/`, {
             method: "GET",
@@ -112,7 +122,9 @@ export const fetchCurrentUserGames = async (headers: HeadersInit): Promise<Respo
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fetchCurrentUserStats = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchCurrentUserStats = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/`, {
             method: "GET",
@@ -137,7 +149,9 @@ export const fetchCurrentUserStats = async (headers: HeadersInit): Promise<Respo
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fetchCurrentUserDailyStats = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchCurrentUserDailyStats = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/daily/`, {
             method: "GET",
@@ -162,7 +176,9 @@ export const fetchCurrentUserDailyStats = async (headers: HeadersInit): Promise<
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fetchCurrentUserWeeklyStats = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchCurrentUserWeeklyStats = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/weekly/`, {
             method: "GET",
@@ -187,7 +203,9 @@ export const fetchCurrentUserWeeklyStats = async (headers: HeadersInit): Promise
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fetchCurrentUserMonthlyStats = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchCurrentUserMonthlyStats = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/monthly/`, {
             method: "GET",
@@ -212,7 +230,9 @@ export const fetchCurrentUserMonthlyStats = async (headers: HeadersInit): Promis
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const fetchCurrentUserYearlyStats = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const fetchCurrentUserYearlyStats = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/yearly/`, {
             method: "GET",
@@ -237,7 +257,9 @@ export const fetchCurrentUserYearlyStats = async (headers: HeadersInit): Promise
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
  */
-export const refreshCurrentUserStats = async (headers: HeadersInit): Promise<Response | undefined> => {
+export const refreshCurrentUserStats = async (
+    headers: HeadersInit,
+): Promise<Response | undefined> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/refresh/`, {
             method: "POST",
