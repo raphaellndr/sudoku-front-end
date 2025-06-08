@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Sudoku } from "@/types/types";
 import { notifySuccess } from "@/toasts/toast";
@@ -6,22 +6,57 @@ import { MAX_HINTS } from "./buttons/hint-button";
 import { MAX_CHECKS } from "./buttons/check-button";
 import { Cell } from "./sudoku-player";
 
+interface UseSudokuPlayerProps {
+    grid: Cell[];
+    setGrid: React.Dispatch<React.SetStateAction<Cell[]>>;
+    sudoku: Sudoku;
+    onPuzzleSolved?: () => void;
+    onPuzzleUnsolved?: () => void;
+};
+
 /**
- * Custom hook to manage the player's grid state during play mode
+ * Custom hook to manage the Sudoku player state and actions.
+ * 
+ * @param grid - The current player grid.
+ * @param setGrid - Function to update the player grid.
+ * @param sudoku - The Sudoku puzzle data.
+ * @param onPuzzleSolved - Callback when the puzzle is solved.
+ * @param onPuzzleUnsolved - Callback when the puzzle is unsolved.
+ * @returns An object containing player actions and state.
  */
-export const useSudokuPlayer = (
-    grid: Cell[],
-    setGrid: React.Dispatch<React.SetStateAction<Cell[]>>,
-    sudoku: Sudoku,
-    onPuzzleSolved?: () => void
-) => {
+export const useSudokuPlayer = ({
+    grid,
+    setGrid,
+    sudoku,
+    onPuzzleSolved,
+    onPuzzleUnsolved,
+}: UseSudokuPlayerProps) => {
     const [remainingHints, setRemainingHints] = useState(MAX_HINTS);
     const [remainingChecks, setRemainingChecks] = useState(MAX_CHECKS);
     const [isCheckModeActive, setIsCheckModeActive] = useState(false);
     const [hasUsedCheck, setHasUsedCheck] = useState(false);
 
+    useEffect(() => {
+        const isFilled = !grid.some(cell => cell.value === "0");
+
+        if (isFilled && sudoku.solution) {
+            const gridString = grid.map(cell => cell.value).join("");
+            const isCorrect = gridString === sudoku.solution.grid;
+
+            if (isCorrect) {
+                onPuzzleSolved?.();
+            } else {
+                onPuzzleUnsolved?.();
+            }
+        }
+    }, [grid]);
+
     /**
-     * Updates a cell value in the player grid with the given properties
+     * Updates a cell value in the player grid with the given properties.
+     * 
+     * @param position - The position of the cell to update, as a tuple [row, col].
+     * @param updates - The properties to update in the cell, excluding the position.
+     *                  This can include `value`, `isHint`, and `isVerified`.
      */
     const updateCellProperties = (
         position: [number, number],
@@ -37,18 +72,6 @@ export const useSudokuPlayer = (
                 }
                 return cell;
             });
-
-            const isFilled = !newGrid.some(cell => cell.value === "0");
-
-            if (isFilled && sudoku.solution) {
-                const gridString = newGrid.map(cell => cell.value).join("");
-                const isCorrect = gridString === sudoku.solution.grid;
-
-                if (isCorrect) {
-                    onPuzzleSolved?.();
-                }
-            }
-
             return newGrid;
         });
     };
