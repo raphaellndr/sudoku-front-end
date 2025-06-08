@@ -55,32 +55,47 @@ interface CompletionDialogProps {
     remainingHints: number;
     clearSudokuGrid: () => void;
     cellDeletionCount: number;
+    won: boolean,
 };
 
 const CompletionDialog: React.FC<CompletionDialogProps> = ({
-    isDialogOpen, setIsDialogOpen, timer, remainingHints, clearSudokuGrid, cellDeletionCount
+    isDialogOpen,
+    setIsDialogOpen,
+    timer,
+    remainingHints,
+    clearSudokuGrid,
+    cellDeletionCount,
+    won,
 }) => {
-    const partyHornRef = useRef<HTMLAudioElement>(null);
+    const winAudioRef = useRef<HTMLAudioElement>(null);
+    const loseAudioRef = useRef<HTMLAudioElement>(null);
 
     // Color mode values
     const bgColor = useColorModeValue("white", "gray.800");
-    const borderColor = useColorModeValue("green.300", "green.400");
-    const titleColor = useColorModeValue("green.600", "green.300");
+    const borderColor = useColorModeValue(won ? "green.300" : "red.300", won ? "green.400" : "red.400");
+    const titleColor = useColorModeValue(won ? "green.600" : "red.600", won ? "green.300" : "red.300");
     const textColor = useColorModeValue("gray.700", "gray.200");
 
     useEffect(() => {
         if (isDialogOpen) {
-            fireConfetti();
-            if (partyHornRef.current) {
-                partyHornRef.current.play().catch(e => console.error("Error playing sound:", e));
+            if (won) {
+                fireConfetti();
+                if (winAudioRef.current) {
+                    winAudioRef.current.play().catch(e => console.error("Error playing win sound:", e));
+                }
+            } else {
+                if (loseAudioRef.current) {
+                    loseAudioRef.current.play().catch(e => console.error("Error playing lose sound:", e));
+                }
             }
         }
-    }, [isDialogOpen]);
+    }, [isDialogOpen, won]);
 
     return (
         <Dialog.Root open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e.open)}>
             <Portal>
-                <audio ref={partyHornRef} src="/sounds/party_horn.mp3" />
+                <audio ref={winAudioRef} src="/sounds/party_horn.mp3" />
+                <audio ref={loseAudioRef} src="/sounds/game_lost.mp3" />
                 <Dialog.Backdrop backdropFilter="blur(4px)" />
                 <Dialog.Positioner>
                     <Dialog.Content
@@ -93,13 +108,16 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
                     >
                         <Dialog.Header display="flex" justifyContent="center" pb={2}>
                             <Dialog.Title fontSize="2xl" fontWeight="bold" color={titleColor}>
-                                🎉 Puzzle Completed! 🎉
+                                {won ? "🎉 Puzzle Completed! 🎉" : "😔 Game Over 😔"}
                             </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body py={6} px={8}>
                             <VStack gap={6} align="stretch">
                                 <Text textStyle="lg" textAlign="center" color={textColor} fontWeight="medium">
-                                    Congratulations on completing the sudoku puzzle!
+                                    {won
+                                        ? "Congratulations on completing the sudoku puzzle!"
+                                        : "Don't give up! Try again with a new puzzle."
+                                    }
                                 </Text>
                                 <VStack gap={4}>
                                     <InfoBox
@@ -126,7 +144,7 @@ const CompletionDialog: React.FC<CompletionDialogProps> = ({
                                     clearSudokuGrid();
                                     setIsDialogOpen(false);
                                 }}
-                                colorScheme="green"
+                                colorScheme={won ? "green" : "red"}
                                 size="lg"
                                 borderRadius="lg"
                                 fontWeight="semibold"
