@@ -22,7 +22,7 @@ const CustomDrawer = () => {
                 <Drawer.Positioner padding="1">
                     <Drawer.Content rounded="sm">
                         <Drawer.Body>
-                            <VStack>
+                            <VStack mt="10">
                                 <DrawerButton buttonText="Play" routerHref="/play" />
                                 <DrawerButton buttonText="Solver" routerHref="/solver" />
                                 <DrawerButton buttonText="About" routerHref="/about" />
