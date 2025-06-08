@@ -35,8 +35,11 @@ export const useSudokuPlayer = ({
     const [remainingChecks, setRemainingChecks] = useState(MAX_CHECKS);
     const [isCheckModeActive, setIsCheckModeActive] = useState(false);
     const [hasUsedCheck, setHasUsedCheck] = useState(false);
+    const [solutionRevealed, setSolutionRevealed] = useState(false);
 
     useEffect(() => {
+        if (solutionRevealed) return;
+
         const isFilled = !grid.some(cell => cell.value === "0");
 
         if (isFilled && sudoku.solution) {
@@ -49,7 +52,7 @@ export const useSudokuPlayer = ({
                 onPuzzleUnsolved?.();
             }
         }
-    }, [grid]);
+    }, [grid, solutionRevealed]);
 
     /**
      * Updates a cell value in the player grid with the given properties.
@@ -90,6 +93,7 @@ export const useSudokuPlayer = ({
      * Provides a hint by filling a random empty cell with the correct value
      */
     const giveHint = () => {
+        // Don't trigger win/lose logic if solution was manually revealed
         if (!sudoku.solution) return;
 
         // Find all empty cells
@@ -135,6 +139,7 @@ export const useSudokuPlayer = ({
         setRemainingChecks(MAX_CHECKS);
         setIsCheckModeActive(false);
         setHasUsedCheck(false);
+        setSolutionRevealed(false);
     };
 
     /**
@@ -169,7 +174,9 @@ export const useSudokuPlayer = ({
      * Reveal the complete solution
      */
     const revealSolution = () => {
-        if (!sudoku.solution) return;
+        if (!sudoku.solution || solutionRevealed) return;
+
+        setSolutionRevealed(true);
 
         const solutionGrid = sudoku.solution.grid.split("").map((value, index) => {
             const row = Math.floor(index / 9);
