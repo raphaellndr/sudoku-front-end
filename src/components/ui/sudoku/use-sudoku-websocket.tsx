@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Sudoku, SudokuSolution } from "@/types/types";
 import { SudokuStatusEnum } from "@/types/enums";
 import { notifyError } from "@/toasts/toast";
-import { fetchSolution } from "./sudoku-api";
+import { fetchSudokuSolution } from "@/services/sudokusApi";
 
 type WebSocketCallbacks = {
     onComplete?: (sudokuId: string) => void;
@@ -46,7 +46,7 @@ export const useSudokuWebSocket = (
 
                 switch (status) {
                     case SudokuStatusEnum.Values.completed:
-                        const fetchSolutionResponse = await fetchSolution(sudoku_id, headers);
+                        const fetchSolutionResponse = await fetchSudokuSolution(headers, sudoku_id);
                         if (fetchSolutionResponse?.ok) {
                             const sudokuSolution = await fetchSolutionResponse.json() as SudokuSolution;
                             setSudoku((prevSudoku) => ({ ...prevSudoku, solution: sudokuSolution }));
