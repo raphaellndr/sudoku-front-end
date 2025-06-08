@@ -4,8 +4,8 @@ import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
+import { abortSolving, createSudoku, solveSudoku } from "@/services/sudokusApi";
 import { useSudoku } from "../sudoku/use-sudoku";
-import { createSudoku, solveSudoku, abortSolving } from "../sudoku/sudoku-api";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
@@ -47,20 +47,20 @@ const SudokuSolver = () => {
             return;
         }
 
-        const createSudokuResponse = await createSudoku(sudoku.grid, headers);
+        const createSudokuResponse = await createSudoku(headers, sudoku.grid);
         if (createSudokuResponse?.ok) {
             setMode("display");
 
             const sudoku = await createSudokuResponse.json() as Sudoku;
             setSudoku(sudoku);
-            solveSudoku(sudoku.id, headers);
+            solveSudoku(headers, sudoku.id);
         }
     };
 
     // Handler for abort button
     const handleAbortButton = async () => {
         if (sudoku.id) {
-            const abortSolvingResponse = await abortSolving(sudoku.id, headers);
+            const abortSolvingResponse = await abortSolving(headers, sudoku.id);
             if (!abortSolvingResponse?.ok) {
                 notifyError("Failed to abort solving");
             } else {
