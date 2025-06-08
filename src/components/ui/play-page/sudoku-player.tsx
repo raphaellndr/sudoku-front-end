@@ -3,19 +3,22 @@ import { useMemo, useState } from "react";
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
-import { Sudoku } from "@/types/types";
+import { GameRecord, Sudoku } from "@/types/types";
+import { abortSolving, createSudoku, solveSudoku } from "@/services/sudokusApi";
+import { createGame } from "@/services/gamesApi";
 import { useSudokuPlayer } from "./use-sudoku-player";
 import CompletionDialog from "./completion-dialog";
 import Timer from "./timer";
-import { HintButton } from "./buttons/hint-button";
-import { CheckButton } from "./buttons/check-button";
+import { HintButton, MAX_HINTS } from "./buttons/hint-button";
+import { CheckButton, MAX_CHECKS } from "./buttons/check-button";
 import { useTimer } from "../use-timer";
 import { useSudoku } from "../sudoku/use-sudoku";
-import { abortSolving, createSudoku, solveSudoku } from "../sudoku/sudoku-api";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../sudoku/grid/sudoku-game-grid";
 import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
+import { calculateScore } from "@/utils/score";
+import { GameStatusEnum } from "@/types/enums";
 
 export type Cell = {
     position: [number, number];
@@ -50,6 +53,9 @@ const SudokuPlayer = () => {
     // Sudoku state from custom hook
     const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, validateSudokuGrid, headers } = useSudoku();
 
+    // Timestamps states
+    const [startDate, setStartDate] = useState<Date>(new Date());
+
     // Boolean whether a player has entered a value or not
     const hasPlayerEnteredValues = useMemo(() => {
         return grid.some(cell => {
@@ -71,16 +77,61 @@ const SudokuPlayer = () => {
         verifyCellValue,
         resetPlayerGrid,
         revealSolution,
-    } = useSudokuPlayer(
-        grid,
-        setGrid,
-        sudoku,
-        () => {
+    } = useSudokuPlayer({
+        grid: grid,
+        setGrid: setGrid,
+        sudoku: sudoku,
+        onPuzzleSolved: () => {
             setIsTimerRunning(false);
+
+            const endDate = new Date();
+            const score = calculateScore(remainingHints, remainingChecks, cellDeletionCount, timer);
+            const gameData: GameRecord = {
+                sudoku_id: sudoku.id,
+                score: score,
+                hints_used: 3,
+                checks_used: MAX_CHECKS - remainingChecks,
+                deletions: cellDeletionCount,
+                time_taken: timer,
+                won: true,
+                status: GameStatusEnum.Values.completed,
+                original_puzzle: sudoku.grid,
+                solution: sudoku.solution ? sudoku.solution.grid : "",
+                final_state: grid.map(cell => cell.value).join(""),
+                started_at: startDate.toISOString(),
+                completed_at: endDate.toISOString(),
+            };
+            createGame(headers, gameData);
+
             setMode("solved");
             setIsDialogOpen(true);
-        }
-    );
+        },
+        onPuzzleUnsolved: () => {
+            setIsTimerRunning(false);
+
+            const endDate = new Date();
+            const score = calculateScore(remainingHints, remainingChecks, cellDeletionCount, timer);
+            const gameData: GameRecord = {
+                sudoku_id: sudoku.id,
+                score: score,
+                hints_used: 3,
+                checks_used: MAX_CHECKS - remainingChecks,
+                deletions: cellDeletionCount,
+                time_taken: timer,
+                won: false,
+                status: GameStatusEnum.Values.completed,
+                original_puzzle: sudoku.grid,
+                solution: sudoku.solution ? sudoku.solution.grid : "",
+                final_state: grid.map(cell => cell.value).join(""),
+                started_at: startDate.toISOString(),
+                completed_at: endDate.toISOString(),
+            };
+            createGame(headers, gameData);
+
+            setMode("display");
+            setIsDialogOpen(true);
+        },
+    });
 
     // WebSocket connection for status updates
     const { isLoading } = useSudokuWebSocket(
@@ -92,6 +143,7 @@ const SudokuPlayer = () => {
                 resetPlayerGrid();
                 setMode("play");
                 setIsTimerRunning(true);
+                setStartDate(new Date());
             }
         }
     );
@@ -109,20 +161,20 @@ const SudokuPlayer = () => {
             return;
         }
 
-        const createSudokuResponse = await createSudoku(sudoku.grid, headers);
+        const createSudokuResponse = await createSudoku(headers, sudoku.grid);
         if (createSudokuResponse?.ok) {
             setMode("display");
 
             const sudoku = await createSudokuResponse.json() as Sudoku;
             setSudoku(sudoku);
-            solveSudoku(sudoku.id, headers);
+            solveSudoku(headers, sudoku.id);
         }
     };
 
     // Handler for abort button
     const handleAbortButton = async () => {
         if (sudoku.id) {
-            const abortSolvingResponse = await abortSolving(sudoku.id, headers);
+            const abortSolvingResponse = await abortSolving(headers, sudoku.id);
             if (!abortSolvingResponse?.ok) {
                 notifyError("Failed to abort solving");
             } else {
@@ -283,6 +335,7 @@ const SudokuPlayer = () => {
                 remainingHints={remainingHints}
                 clearSudokuGrid={startNewPuzzle}
                 cellDeletionCount={cellDeletionCount}
+                won={mode === "solved"}
             />
         </Box>
     );
