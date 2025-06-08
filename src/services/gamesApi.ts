@@ -1,4 +1,5 @@
 import { notifyError } from "@/toasts/toast";
+import { GameRecord } from "@/types/types";
 
 const GAMES_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/games/`;
 
@@ -40,7 +41,7 @@ export const fetchGames = async (
  */
 export const createGame = async (
     headers: HeadersInit,
-    data: any,
+    data: GameRecord,
 ): Promise<Response | undefined> => {
     try {
         const response = await fetch(GAMES_API_BASE_URL, {
