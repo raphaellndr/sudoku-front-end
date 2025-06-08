@@ -1,11 +1,14 @@
 import { useMemo, useState } from "react";
 
+import { useSession } from "next-auth/react";
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
 import { GameRecord, Sudoku } from "@/types/types";
 import { abortSolving, createSudoku, solveSudoku } from "@/services/sudokusApi";
 import { createGame } from "@/services/gamesApi";
+import { calculateScore } from "@/utils/score";
+import { GameStatusEnum } from "@/types/enums";
 import { useSudokuPlayer } from "./use-sudoku-player";
 import CompletionDialog from "./completion-dialog";
 import Timer from "./timer";
@@ -16,9 +19,8 @@ import { useSudoku } from "../sudoku/use-sudoku";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../sudoku/grid/sudoku-game-grid";
-import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
-import { calculateScore } from "@/utils/score";
-import { GameStatusEnum } from "@/types/enums";
+import PlayerResultGrid from "../sudoku/grid/player-result-grid";
+import DisplayGrid from "../sudoku/grid/display-grid";
 
 export type Cell = {
     position: [number, number];
@@ -28,8 +30,12 @@ export type Cell = {
 };
 
 const SudokuPlayer = () => {
+    // Session state
+    const { data: session } = useSession();
+
     // Game mode state
-    const [mode, setMode] = useState<"create" | "display" | "play" | "solved">("create");
+    const [mode, setMode] = useState<"create" | "display" | "play" | "completed">("create");
+    const [isGameWon, setIsGameWon] = useState<boolean>(false);
 
     // Grid state
     const [grid, setGrid] = useState<Cell[]>([]);
@@ -82,53 +88,59 @@ const SudokuPlayer = () => {
         setGrid: setGrid,
         sudoku: sudoku,
         onPuzzleSolved: () => {
+            setIsGameWon(true);
             setIsTimerRunning(false);
 
-            const endDate = new Date();
-            const score = calculateScore(remainingHints, remainingChecks, cellDeletionCount, timer);
-            const gameData: GameRecord = {
-                sudoku_id: sudoku.id,
-                score: score,
-                hints_used: 3,
-                checks_used: MAX_CHECKS - remainingChecks,
-                deletions: cellDeletionCount,
-                time_taken: timer,
-                won: true,
-                status: GameStatusEnum.Values.completed,
-                original_puzzle: sudoku.grid,
-                solution: sudoku.solution ? sudoku.solution.grid : "",
-                final_state: grid.map(cell => cell.value).join(""),
-                started_at: startDate.toISOString(),
-                completed_at: endDate.toISOString(),
-            };
-            createGame(headers, gameData);
+            if (session) {
+                const endDate = new Date();
+                const score = calculateScore(remainingHints, remainingChecks, cellDeletionCount, timer);
+                const gameData: GameRecord = {
+                    sudoku_id: sudoku.id,
+                    score: score,
+                    hints_used: MAX_HINTS - remainingHints,
+                    checks_used: MAX_CHECKS - remainingChecks,
+                    deletions: cellDeletionCount,
+                    time_taken: timer,
+                    won: true,
+                    status: GameStatusEnum.Values.completed,
+                    original_puzzle: sudoku.grid,
+                    solution: sudoku.solution ? sudoku.solution.grid : "",
+                    final_state: grid.map(cell => cell.value).join(""),
+                    started_at: startDate.toISOString(),
+                    completed_at: endDate.toISOString(),
+                };
+                createGame(headers, gameData);
+            }
 
-            setMode("solved");
+            setMode("completed");
             setIsDialogOpen(true);
         },
         onPuzzleUnsolved: () => {
+            setIsGameWon(false);
             setIsTimerRunning(false);
 
-            const endDate = new Date();
-            const score = calculateScore(remainingHints, remainingChecks, cellDeletionCount, timer);
-            const gameData: GameRecord = {
-                sudoku_id: sudoku.id,
-                score: score,
-                hints_used: 3,
-                checks_used: MAX_CHECKS - remainingChecks,
-                deletions: cellDeletionCount,
-                time_taken: timer,
-                won: false,
-                status: GameStatusEnum.Values.completed,
-                original_puzzle: sudoku.grid,
-                solution: sudoku.solution ? sudoku.solution.grid : "",
-                final_state: grid.map(cell => cell.value).join(""),
-                started_at: startDate.toISOString(),
-                completed_at: endDate.toISOString(),
-            };
-            createGame(headers, gameData);
+            if (session) {
+                const endDate = new Date();
+                const score = calculateScore(remainingHints, remainingChecks, cellDeletionCount, timer);
+                const gameData: GameRecord = {
+                    sudoku_id: sudoku.id,
+                    score: score,
+                    hints_used: 3,
+                    checks_used: MAX_CHECKS - remainingChecks,
+                    deletions: cellDeletionCount,
+                    time_taken: timer,
+                    won: false,
+                    status: GameStatusEnum.Values.completed,
+                    original_puzzle: sudoku.grid,
+                    solution: sudoku.solution ? sudoku.solution.grid : "",
+                    final_state: grid.map(cell => cell.value).join(""),
+                    started_at: startDate.toISOString(),
+                    completed_at: endDate.toISOString(),
+                };
+                createGame(headers, gameData);
+            }
 
-            setMode("display");
+            setMode("completed");
             setIsDialogOpen(true);
         },
     });
@@ -222,10 +234,13 @@ const SudokuPlayer = () => {
                                             setCellDeletionCount={setCellDeletionCount}
                                         />
                                     );
-                                case "solved":
+                                case "completed":
+                                    return (
+                                        <PlayerResultGrid sudoku={sudoku} grid={grid} isLoading={isLoading} won={isGameWon} />
+                                    );
                                 case "display":
                                     return (
-                                        <ReadOnlySudokuGrid sudoku={sudoku} isLoading={isLoading} />
+                                        <DisplayGrid sudoku={sudoku} isLoading={isLoading} />
                                     );
                             }
                         })()}
@@ -274,7 +289,7 @@ const SudokuPlayer = () => {
                                 onClick={() => {
                                     revealSolution();
                                     resetTimer();
-                                    setMode("solved");
+                                    setMode("completed");
                                 }}
                             >
                                 Give up
@@ -316,16 +331,25 @@ const SudokuPlayer = () => {
                     </HStack>
                 )}
 
-                {mode === "solved" && (
-                    <>
+                <HStack gap={2}>
+                    {(mode === "completed" && !isGameWon) && (
+                        <Button
+                            variant="subtle"
+                            colorPalette="green"
+                            onClick={revealSolution}
+                        >
+                            Reveal solution
+                        </Button>
+                    )}
+                    {mode === "completed" && (
                         <Button
                             variant="solid"
                             onClick={startNewPuzzle}
                         >
                             New puzzle
                         </Button>
-                    </>
-                )}
+                    )}
+                </HStack>
             </VStack>
 
             <CompletionDialog
@@ -335,7 +359,7 @@ const SudokuPlayer = () => {
                 remainingHints={remainingHints}
                 clearSudokuGrid={startNewPuzzle}
                 cellDeletionCount={cellDeletionCount}
-                won={mode === "solved"}
+                won={isGameWon}
             />
         </Box>
     );
