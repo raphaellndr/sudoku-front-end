@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 
 import { Sudoku } from "@/types/types";
 import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/types/enums";
-import { createHeaders } from "./sudoku-api";
+import { createHeaders } from "@/utils/apiUtils";
 
 export const defaultSudoku: Sudoku = {
     id: "",
