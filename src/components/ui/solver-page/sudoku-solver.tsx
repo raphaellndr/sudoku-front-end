@@ -8,7 +8,7 @@ import { abortSolving, createSudoku, solveSudoku } from "@/services/sudokusApi";
 import { useSudoku } from "../sudoku/use-sudoku";
 import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
-import { ReadOnlySudokuGrid } from "../sudoku/grid/read-only-sudoku-grid";
+import DisplayGrid from "../sudoku/grid/display-grid";
 
 const SudokuSolver = () => {
     // Sudoku state from custom hook
@@ -81,7 +81,7 @@ const SudokuSolver = () => {
                 {mode === "create" ? (
                     <SudokuCreatorGrid sudoku={sudoku} onCellChange={handleCellChange} />
                 ) : (
-                    <ReadOnlySudokuGrid sudoku={sudoku} isLoading={isLoading} />
+                    <DisplayGrid sudoku={sudoku} isLoading={isLoading} />
                 )}
                 <HStack>
                     {mode !== "solved" ? (
