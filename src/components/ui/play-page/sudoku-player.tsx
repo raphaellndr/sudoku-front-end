@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 import { useSession } from "next-auth/react";
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
@@ -50,26 +50,17 @@ const SudokuPlayer = () => {
         restartTimer,
         setIsActive: setIsTimerRunning,
         isPaused,
-        setIsPaused: setIsTimerPaused
+        setIsPaused: setIsTimerPaused,
     } = useTimer();
 
     // Dialog state
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    // Sudoku state from custom hook
-    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, validateSudokuGrid, headers } = useSudoku();
-
     // Timestamps states
     const [startDate, setStartDate] = useState<Date>(new Date());
 
-    // Boolean whether a player has entered a value or not
-    const hasPlayerEnteredValues = useMemo(() => {
-        return grid.some(cell => {
-            const index = cell.position[0] * 9 + cell.position[1];
-            const isOriginalValue = sudoku.grid[index] !== "0";
-            return cell.value !== "0" && cell.value !== "" && !cell.isHint && !isOriginalValue;
-        });
-    }, [grid, sudoku.grid]);
+    // Sudoku state from custom hook
+    const { sudoku, setSudoku, handleCellChange, clearSudokuGrid, validateSudokuGrid, headers } = useSudoku();
 
     // Player grid state from custom hook
     const {
@@ -160,8 +151,17 @@ const SudokuPlayer = () => {
         }
     );
 
+    // Boolean whether a player has entered a value or not
+    const hasPlayerEnteredValues = useMemo(() => {
+        return grid.some(cell => {
+            const index = cell.position[0] * 9 + cell.position[1];
+            const isOriginalValue = sudoku.grid[index] !== "0";
+            return cell.value !== "0" && cell.value !== "" && !cell.isHint && !isOriginalValue;
+        });
+    }, [grid, sudoku.grid]);
+
     // Handle create and play flow
-    const handleStartPlaying = async () => {
+    const handleStartPlaying = useCallback(async () => {
         if (/^0+$/.test(sudoku.grid)) {
             notifyError("Cannot start playing with an empty grid!");
             return;
@@ -177,14 +177,14 @@ const SudokuPlayer = () => {
         if (createSudokuResponse?.ok) {
             setMode("display");
 
-            const sudoku = await createSudokuResponse.json() as Sudoku;
-            setSudoku(sudoku);
-            solveSudoku(headers, sudoku.id);
+            const sudokuData = await createSudokuResponse.json() as Sudoku;
+            setSudoku(sudokuData);
+            solveSudoku(headers, sudokuData.id);
         }
-    };
+    }, [sudoku.grid, headers, validateSudokuGrid]);
 
     // Handler for abort button
-    const handleAbortButton = async () => {
+    const handleAbortButton = useCallback(async () => {
         if (sudoku.id) {
             const abortSolvingResponse = await abortSolving(headers, sudoku.id);
             if (!abortSolvingResponse?.ok) {
@@ -192,11 +192,11 @@ const SudokuPlayer = () => {
             } else {
                 setMode("create");
             }
-        };
-    };
+        }
+    }, [sudoku.id, headers]);
 
     // Handler for give up button
-    const handleGiveUpButton = () => {
+    const handleGiveUpButton = useCallback(() => {
         if (session) {
             const endDate = new Date();
             const gameData: GameRecord = {
@@ -220,20 +220,20 @@ const SudokuPlayer = () => {
         revealSolution();
         resetTimer();
         setMode("completed");
-    };
+    }, [session, sudoku, remainingChecks, cellDeletionCount, timer, grid, startDate, headers]);
 
     // Reset everything for a new puzzle
-    const startNewPuzzle = () => {
+    const startNewPuzzle = useCallback(() => {
         clearSudokuGrid();
         setMode("create");
         resetTimer();
-    };
+    }, [clearSudokuGrid, resetTimer]);
 
     // Reset the current puzzle
-    const handleRestartPuzzle = () => {
+    const handleRestartPuzzle = useCallback(() => {
         resetPlayerGrid();
         restartTimer();
-    };
+    }, [resetPlayerGrid, restartTimer]);
 
     return (
         <Box p={5}>
@@ -254,7 +254,7 @@ const SudokuPlayer = () => {
                                             setGrid={setGrid}
                                             isCheckModeActive={isCheckModeActive}
                                             setIsCheckModeActive={setIsCheckModeActive}
-                                            onCellChange={(p, v) => handlePlayerCellChange(p, v)}
+                                            onCellChange={handlePlayerCellChange}
                                             onCellVerify={verifyCellValue}
                                             isPaused={isPaused}
                                             setIsPaused={setIsTimerPaused}
@@ -342,7 +342,7 @@ const SudokuPlayer = () => {
                     </HStack>
                 )}
 
-                {(mode === "display" && isLoading) && (
+                {mode === "display" && isLoading && (
                     <HStack gap={2}>
                         <Button
                             variant="outline"
@@ -355,7 +355,7 @@ const SudokuPlayer = () => {
                 )}
 
                 <HStack gap={2}>
-                    {(mode === "completed" && !isGameWon) && (
+                    {mode === "completed" && !isGameWon && (
                         <Button
                             variant="subtle"
                             colorPalette="green"
