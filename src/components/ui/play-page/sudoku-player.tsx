@@ -195,6 +195,33 @@ const SudokuPlayer = () => {
         };
     };
 
+    // Handler for give up button
+    const handleGiveUpButton = () => {
+        if (session) {
+            const endDate = new Date();
+            const gameData: GameRecord = {
+                sudoku_id: sudoku.id,
+                score: 0,
+                hints_used: 3,
+                checks_used: MAX_CHECKS - remainingChecks,
+                deletions: cellDeletionCount,
+                time_taken: timer,
+                won: false,
+                status: GameStatusEnum.Values.abandoned,
+                original_puzzle: sudoku.grid,
+                solution: sudoku.solution ? sudoku.solution.grid : "",
+                final_state: grid.map(cell => cell.value).join(""),
+                started_at: startDate.toISOString(),
+                completed_at: endDate.toISOString(),
+            };
+            createGame(headers, gameData);
+        }
+
+        revealSolution();
+        resetTimer();
+        setMode("completed");
+    };
+
     // Reset everything for a new puzzle
     const startNewPuzzle = () => {
         clearSudokuGrid();
@@ -286,11 +313,7 @@ const SudokuPlayer = () => {
                             <Button
                                 colorPalette="red"
                                 variant="solid"
-                                onClick={() => {
-                                    revealSolution();
-                                    resetTimer();
-                                    setMode("completed");
-                                }}
+                                onClick={handleGiveUpButton}
                             >
                                 Give up
                             </Button>
