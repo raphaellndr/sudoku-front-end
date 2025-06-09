@@ -1,8 +1,10 @@
 import { Accordion, Icon } from "@chakra-ui/react";
 import { ImStatsDots } from "react-icons/im";
 import { LuSettings } from "react-icons/lu";
+import { IoMdStats } from "react-icons/io";
 
 import SettingsBody from "./settings-body";
+import ChartsBody from "./charts-body";
 import StatsBody from "./stats-body";
 
 const ProfileAccordion = () => {
@@ -11,12 +13,24 @@ const ProfileAccordion = () => {
             <Accordion.Item value="stats">
                 <Accordion.ItemTrigger>
                     <Icon fontSize="lg" color="fg.subtle">
-                        <ImStatsDots />
+                        <IoMdStats />
                     </Icon>
                     Stats
                 </Accordion.ItemTrigger>
                 <Accordion.ItemContent>
                     <StatsBody />
+                </Accordion.ItemContent>
+            </Accordion.Item>
+
+            <Accordion.Item value="charts">
+                <Accordion.ItemTrigger>
+                    <Icon fontSize="lg" color="fg.subtle">
+                        <ImStatsDots />
+                    </Icon>
+                    Charts
+                </Accordion.ItemTrigger>
+                <Accordion.ItemContent>
+                    <ChartsBody />
                 </Accordion.ItemContent>
             </Accordion.Item>
 
