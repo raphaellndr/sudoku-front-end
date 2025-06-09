@@ -94,10 +94,10 @@ const StatsBody = () => {
                 <Card.Body>
                     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                         <GamesWon value={userStats ? userStats.won_games : 0} />
-                        <WinRate value={userStats ? userStats.win_rate : 0} />
+                        <WinRate value={userStats ? userStats.win_rate : 0.0} />
                         <GamesPlayed value={userStats ? userStats.total_games : 0} />
                         <TotalScore value={userStats ? userStats.total_score : 0} />
-                        <AverageScore value={userStats ? userStats.average_score : 0} />
+                        <AverageScore value={userStats ? userStats.average_score : 0.0} />
                     </SimpleGrid>
                 </Card.Body>
             </Card.Root>
