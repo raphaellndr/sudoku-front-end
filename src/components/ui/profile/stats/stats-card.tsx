@@ -1,7 +1,4 @@
-import { Badge, Card, Flex, FormatNumber, Group, HStack, Icon, Stat, Text } from "@chakra-ui/react";
-
-import { StatChangeEnum } from "@/types/enums";
-import { getStatBadgeColor } from "@/utils/statBadgeColor";
+import { Badge, Card, FormatNumber, HStack, Stat } from "@chakra-ui/react";
 
 interface StatCardProps {
     label: string;
@@ -20,12 +17,6 @@ const StatCard: React.FC<StatCardProps> = ({
     percentageChange,
     helpText,
 }) => {
-    const statBadgeColor = getStatBadgeColor({
-        statHasIncreased: statHasIncreased,
-        percentageChange: percentageChange,
-        changeType: StatChangeEnum.Values.increase
-    });
-
     return (
         <Card.Root size="sm" variant="subtle">
             <Card.Body>
@@ -41,7 +32,6 @@ const StatCard: React.FC<StatCardProps> = ({
                             />
                         </Stat.ValueText>
                         <Badge
-                            colorPalette={statBadgeColor}
                             background="transparent"
                             gap="0"
                             size="sm"
