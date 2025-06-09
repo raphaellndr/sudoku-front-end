@@ -20,6 +20,7 @@ import GamesPlayed from "./games-played";
 import TotalScore from "./total-score";
 import AverageScore from "./average-score";
 import TooltipIconButton from "../../tooltip-icon-button";
+import AverageTime from "./average-time";
 
 const StatsBody = () => {
     const { data: session, status } = useSession();
@@ -98,6 +99,7 @@ const StatsBody = () => {
                         <GamesPlayed value={userStats ? userStats.total_games : 0} />
                         <TotalScore value={userStats ? userStats.total_score : 0} />
                         <AverageScore value={userStats ? userStats.average_score : 0.0} />
+                        <AverageTime value={userStats ? userStats.average_time_seconds : 0.0} />
                     </SimpleGrid>
                 </Card.Body>
             </Card.Root>
