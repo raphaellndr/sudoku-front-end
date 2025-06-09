@@ -1,10 +1,16 @@
 import StatCard from "./stats-card";
 
-const GamesWon = () => {
+interface GamesWonProps {
+    value: number;
+};
+
+const GamesWon: React.FC<GamesWonProps> = ({
+    value,
+}) => {
     return (
         <StatCard
             label="Games Won"
-            statValue={17}
+            statValue={value}
             statHasIncreased={true}
             percentageChange={12}
             helpText="since last month"

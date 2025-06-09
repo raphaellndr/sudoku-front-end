@@ -1,5 +1,5 @@
-import { SudokuDifficultyEnum } from "@/types/enums";
 import { notifyError } from "@/toasts/toast";
+import { SudokuDifficultyEnum } from "@/types/enums";
 import { SudokuDifficulty } from "@/types/types";
 
 const SUDOKUS_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/sudokus/`;
@@ -12,20 +12,21 @@ const SUDOKUS_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/sudokus/
  * @param {string} [title="New sudoku"] - The title of the Sudoku puzzle.
  * @param {SudokuDifficulty} [difficulty=SudokuDifficultyEnum.Values.unknown] - The difficulty level of
  * the Sudoku puzzle.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the API response or undefined
- * if an error occurs.
+ * @returns {Promise<Response>} - A promise that resolves to the API response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const createSudoku = async (
     headers: HeadersInit,
     grid: string,
     title: string = "New sudoku",
     difficulty: SudokuDifficulty = SudokuDifficultyEnum.Values.unknown,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     const data = {
         title,
         difficulty,
         grid,
     };
+
     try {
         const response = await fetch(SUDOKUS_API_BASE_URL, {
             method: "POST",
@@ -38,10 +39,10 @@ export const createSudoku = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error creating Sudoku: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error creating Sudoku: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -50,13 +51,13 @@ export const createSudoku = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} sudokuId - The ID of the Sudoku puzzle for which to fetch the solution.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the API response containing
- * the solution or undefined if an error occurs.
+ * @returns {Promise<Response>} - A promise that resolves to the API response containing the solution.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchSudokuSolution = async (
     headers: HeadersInit,
     sudokuId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${SUDOKUS_API_BASE_URL}${sudokuId}/solution/`, {
             method: "GET",
@@ -68,10 +69,10 @@ export const fetchSudokuSolution = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Failed to fetch solution: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Failed to fetch solution: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -80,13 +81,13 @@ export const fetchSudokuSolution = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} sudokuId - The ID of the Sudoku puzzle to solve.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the API response or undefined
- * if an error occurs.
+ * @returns {Promise<Response>} - A promise that resolves to the API response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const solveSudoku = async (
     headers: HeadersInit,
     sudokuId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${SUDOKUS_API_BASE_URL}${sudokuId}/solver/`, {
             method: "POST",
@@ -98,10 +99,10 @@ export const solveSudoku = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`An error occurred while running the solver task: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`An error occurred while running the solver task: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -110,13 +111,13 @@ export const solveSudoku = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} sudokuId - The ID of the Sudoku puzzle for which to abort solving.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the API response or undefined 
- * if an error occurs.
+ * @returns {Promise<Response>} - A promise that resolves to the API response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const abortSolving = async (
     headers: HeadersInit,
     sudokuId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${SUDOKUS_API_BASE_URL}${sudokuId}/solver/`, {
             method: "DELETE",
@@ -128,9 +129,9 @@ export const abortSolving = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`An error occurred while aborting the solver task: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`An error occurred while aborting the solver task: ${errorMessage}`);
+        throw error;
     }
 };

@@ -7,12 +7,12 @@ const GAMES_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/games/`;
  * Fetches the games from the backend API.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchGames = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(GAMES_API_BASE_URL, {
             method: "GET",
@@ -24,10 +24,10 @@ export const fetchGames = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching games: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error fetching games: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -35,14 +35,14 @@ export const fetchGames = async (
  * Creates a new game in the backend API.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @param {any} data - The data for the new game.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @param {GameRecord} data - The data for the new game.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const createGame = async (
     headers: HeadersInit,
     data: GameRecord,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(GAMES_API_BASE_URL, {
             method: "POST",
@@ -55,10 +55,10 @@ export const createGame = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error creating game: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error creating game: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -67,13 +67,13 @@ export const createGame = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to fetch.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchGameById = async (
     headers: HeadersInit,
     gameId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "GET",
@@ -85,10 +85,10 @@ export const fetchGameById = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching game by ID: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error fetching game by ID: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -98,14 +98,14 @@ export const fetchGameById = async (
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to update.
  * @param {any} data - The data to be updated for the game.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const partialUpdateGameById = async (
     headers: HeadersInit,
     gameId: string,
     data: any,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "PATCH",
@@ -118,10 +118,10 @@ export const partialUpdateGameById = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error partially updating game by ID: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error partially updating game by ID: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -130,14 +130,15 @@ export const partialUpdateGameById = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to fully update.
- * @param {any} data - The data to update the game with.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error. */
+ * @param {GameRecord} data - The data to update the game with.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const fullUpdateGameById = async (
     headers: HeadersInit,
     gameId: string,
-    data: any,
-): Promise<Response | undefined> => {
+    data: GameRecord,
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "PUT",
@@ -150,10 +151,10 @@ export const fullUpdateGameById = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fully updating game by ID: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error fully updating game by ID: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -162,13 +163,13 @@ export const fullUpdateGameById = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to delete.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const deleteGameById = async (
     headers: HeadersInit,
     gameId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/`, {
             method: "DELETE",
@@ -180,10 +181,10 @@ export const deleteGameById = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error deleting game by ID: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error deleting game by ID: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -192,12 +193,13 @@ export const deleteGameById = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to abandon.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error. */
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const abandonGameById = async (
     headers: HeadersInit,
     gameId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/abandon/`, {
             method: "POST",
@@ -209,10 +211,10 @@ export const abandonGameById = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error marking the game as abandoned: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error marking the game as abandoned: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -221,12 +223,13 @@ export const abandonGameById = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to complete.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error. */
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const completeGameById = async (
     headers: HeadersInit,
     gameId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/complete/`, {
             method: "POST",
@@ -238,10 +241,10 @@ export const completeGameById = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error marking the game as completed: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error marking the game as completed: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -250,12 +253,13 @@ export const completeGameById = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} gameId - The ID of the game to stop.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error. */
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const stopGameById = async (
     headers: HeadersInit,
     gameId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}${gameId}/stop/`, {
             method: "POST",
@@ -267,10 +271,10 @@ export const stopGameById = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error marking the game as stopped: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error marking the game as stopped: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -278,11 +282,12 @@ export const stopGameById = async (
  * Fetches the best scores from the backend API.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error. */
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const fetchBestScores = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}best_scores/`, {
             method: "GET",
@@ -294,10 +299,10 @@ export const fetchBestScores = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching the best scores: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error fetching the best scores: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -306,12 +311,13 @@ export const fetchBestScores = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string[]} gameIds - An array of game IDs to delete.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error. */
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const bulkDeleteGames = async (
     headers: HeadersInit,
     gameIds: string[],
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${GAMES_API_BASE_URL}bulk_delete/`, {
             method: "POST",
@@ -324,10 +330,10 @@ export const bulkDeleteGames = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error bulk deleting games: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error bulk deleting games: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -336,12 +342,13 @@ export const bulkDeleteGames = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {number} [limit=10] - The maximum number of recent games to fetch.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error. */
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
 export const fetchRecentGames = async (
     headers: HeadersInit,
     limit: number = 10,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         if (limit <= 0) {
             throw new Error("Limit must be a positive integer.");
@@ -360,9 +367,9 @@ export const fetchRecentGames = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching recent games: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        notifyError(`Error fetching recent games: ${errorMessage}`);
+        throw error;
     }
 };

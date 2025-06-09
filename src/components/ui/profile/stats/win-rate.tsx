@@ -1,10 +1,16 @@
 import StatCard from "./stats-card";
 
-const WinRatio = () => {
+interface WinRateProps {
+    value: number;
+};
+
+const WinRate: React.FC<WinRateProps> = ({
+    value,
+}) => {
     return (
         <StatCard
-            label="Win ratio"
-            statValue={0.68}
+            label="Win rate"
+            statValue={value}
             numberStyle="percent"
             statHasIncreased={true}
             percentageChange={5}
@@ -13,4 +19,4 @@ const WinRatio = () => {
     );
 };
 
-export default WinRatio;
+export default WinRate;

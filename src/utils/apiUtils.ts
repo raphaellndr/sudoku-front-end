@@ -4,7 +4,7 @@
  * @param {Object} session - The session object containing user authentication details.
  * @returns {HeadersInit} - An object containing the headers to be used in API requests.
  */
-export const createHeaders = (session: any): HeadersInit => {
+export const createHeaders = (session?: any): HeadersInit => {
     const headers: HeadersInit = {
         "Content-Type": "application/json",
     };

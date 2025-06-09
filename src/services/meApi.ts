@@ -6,11 +6,12 @@ const ME_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/me/`;
  * Fetches the current user's data.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUser = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(ME_API_BASE_URL, {
             method: "GET",
@@ -22,10 +23,10 @@ export const fetchCurrentUser = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching current user: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching current user: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -34,12 +35,13 @@ export const fetchCurrentUser = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {any} data - The data to be updated for the current user.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const partialUpdateCurrentUser = async (
     headers: HeadersInit,
     data: any,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(ME_API_BASE_URL, {
             method: "PATCH",
@@ -52,10 +54,10 @@ export const partialUpdateCurrentUser = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error partially updating current user: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error partially updating current user: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -64,12 +66,13 @@ export const partialUpdateCurrentUser = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {any} data - The data to update the current user with.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fullUpdateCurrentUser = async (
     headers: HeadersInit,
     data: any,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(ME_API_BASE_URL, {
             method: "PUT",
@@ -82,10 +85,10 @@ export const fullUpdateCurrentUser = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fully updating current user: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fully updating current user: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -93,11 +96,12 @@ export const fullUpdateCurrentUser = async (
  * Fetches the games data for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserGames = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}games/`, {
             method: "GET",
@@ -109,10 +113,10 @@ export const fetchCurrentUserGames = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching current user games: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching current user games: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -120,11 +124,12 @@ export const fetchCurrentUserGames = async (
  * Fetches the overall statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserStats = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/`, {
             method: "GET",
@@ -136,10 +141,10 @@ export const fetchCurrentUserStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching current user stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching current user stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -147,11 +152,12 @@ export const fetchCurrentUserStats = async (
  * Fetches the daily statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserDailyStats = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/daily/`, {
             method: "GET",
@@ -163,10 +169,10 @@ export const fetchCurrentUserDailyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching current user daily stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching current user daily stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -174,11 +180,12 @@ export const fetchCurrentUserDailyStats = async (
  * Fetches the weekly statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserWeeklyStats = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/weekly/`, {
             method: "GET",
@@ -190,10 +197,10 @@ export const fetchCurrentUserWeeklyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching current user weekly stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching current user weekly stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -201,11 +208,12 @@ export const fetchCurrentUserWeeklyStats = async (
  * Fetches the monthly statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserMonthlyStats = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/monthly/`, {
             method: "GET",
@@ -217,10 +225,10 @@ export const fetchCurrentUserMonthlyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching current user monthly stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching current user monthly stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -228,11 +236,12 @@ export const fetchCurrentUserMonthlyStats = async (
  * Fetches the yearly statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserYearlyStats = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/yearly/`, {
             method: "GET",
@@ -244,10 +253,10 @@ export const fetchCurrentUserYearlyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching current user yearly stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching current user yearly stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -255,11 +264,12 @@ export const fetchCurrentUserYearlyStats = async (
  * Refreshes the current user's statistics.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const refreshCurrentUserStats = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${ME_API_BASE_URL}stats/refresh/`, {
             method: "POST",
@@ -271,9 +281,9 @@ export const refreshCurrentUserStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error refreshing user stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error refreshing user stats: ${errorMessage}`);
+        throw error;
     }
 };

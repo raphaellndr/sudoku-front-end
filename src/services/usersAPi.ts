@@ -7,13 +7,13 @@ const USERS_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/users/`;
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} userId - The UUID of the user.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchUserGames = async (
     headers: HeadersInit,
     userId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/games/`, {
             method: "GET",
@@ -25,10 +25,10 @@ export const fetchUserGames = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching user games: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching user games: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -37,13 +37,13 @@ export const fetchUserGames = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} userId - The UUID of the user.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchUserStats = async (
     headers: HeadersInit,
     userId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/`, {
             method: "GET",
@@ -55,10 +55,10 @@ export const fetchUserStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching user stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching user stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -67,13 +67,13 @@ export const fetchUserStats = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} userId - The UUID of the user.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchUserDailyStats = async (
     headers: HeadersInit,
     userId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/daily/`, {
             method: "GET",
@@ -85,10 +85,10 @@ export const fetchUserDailyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching user daily stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching user daily stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -97,13 +97,13 @@ export const fetchUserDailyStats = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} userId - The UUID of the user.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchUserMonthlyStats = async (
     headers: HeadersInit,
     userId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/monthly/`, {
             method: "GET",
@@ -115,10 +115,10 @@ export const fetchUserMonthlyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching user monthly stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching user monthly stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -127,13 +127,13 @@ export const fetchUserMonthlyStats = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} userId - The UUID of the user.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchUserWeeklyStats = async (
     headers: HeadersInit,
     userId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/weekly/`, {
             method: "GET",
@@ -145,10 +145,10 @@ export const fetchUserWeeklyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching user weekly stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching user weekly stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -157,13 +157,13 @@ export const fetchUserWeeklyStats = async (
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
  * @param {string} userId - The UUID of the user.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchUserYearlyStats = async (
     headers: HeadersInit,
     userId: string,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}${userId}/stats/yearly/`, {
             method: "GET",
@@ -175,10 +175,10 @@ export const fetchUserYearlyStats = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching user yearly stats: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching user yearly stats: ${errorMessage}`);
+        throw error;
     }
 };
 
@@ -186,12 +186,12 @@ export const fetchUserYearlyStats = async (
  * Fetches the leaderboard data.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @returns {Promise<Response | undefined>} - A promise that resolves to the response or undefined
- * in case of an error.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchLeaderboard = async (
     headers: HeadersInit,
-): Promise<Response | undefined> => {
+): Promise<Response> => {
     try {
         const response = await fetch(`${USERS_API_BASE_URL}stats/leaderboard/`, {
             method: "GET",
@@ -203,9 +203,9 @@ export const fetchLeaderboard = async (
         }
 
         return response;
-    } catch (e: unknown) {
-        const error = e as Error;
-        notifyError(`Error fetching leaderboard: ${error.message}`);
-        return;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching leaderboard: ${errorMessage}`);
+        throw error;
     }
 };

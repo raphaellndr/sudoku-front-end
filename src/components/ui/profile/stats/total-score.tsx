@@ -1,10 +1,16 @@
 import StatCard from "./stats-card";
 
-const TotalScore = () => {
+interface TotalScoreProps {
+    value: number;
+};
+
+const TotalScore: React.FC<TotalScoreProps> = ({
+    value,
+}) => {
     return (
         <StatCard
             label="Total Score"
-            statValue={3425}
+            statValue={value}
             statHasIncreased={true}
             percentageChange={15}
             helpText="all time total"
