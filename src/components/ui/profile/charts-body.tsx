@@ -1,11 +1,11 @@
 import { Accordion } from "@chakra-ui/react";
 
-import StatsCharts from "./stats-charts";
+import Charts from "./charts";
 
 const ChartsBody = () => {
     return (
         <Accordion.ItemBody>
-            <StatsCharts />
+            <Charts />
         </Accordion.ItemBody>
     );
 };

@@ -12,7 +12,7 @@ import {
     YAxis,
 } from "recharts"
 
-const StatsCharts = () => {
+const Charts = () => {
     const chart = useChart({
         data: [
             { windows: 186, mac: 80, linux: 120, month: "January" },
@@ -70,4 +70,4 @@ const StatsCharts = () => {
     )
 }
 
-export default StatsCharts;
+export default Charts;
