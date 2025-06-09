@@ -28,7 +28,7 @@ const StatCard: React.FC<StatCardProps> = ({
                                 value={statValue}
                                 style={numberStyle ? numberStyle : "decimal"}
                                 maximumFractionDigits={2}
-                                minimumFractionDigits={2}
+                                minimumFractionDigits={numberStyle === "percent" ? 2 : undefined}
                             />
                         </Stat.ValueText>
                         <Badge
