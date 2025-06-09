@@ -2,14 +2,22 @@ import { Badge, Card, HStack, Stat } from "@chakra-ui/react";
 
 interface AverageTimeProps {
     value: number;
+    evolution?: number | null;
+    evolutionPercentage?: number | null;
 }
 
-const AverageTime: React.FC<AverageTimeProps> = ({ value }) => {
+const AverageTime: React.FC<AverageTimeProps> = ({
+    value,
+    evolution,
+    evolutionPercentage,
+}) => {
     const totalSeconds = Math.round(value);
 
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const secs = totalSeconds % 60;
+
+    const statHasIncreased = evolution !== undefined && evolution !== null ? evolution >= 0 : false;
 
     return (
         <Card.Root size="sm" variant="subtle">
@@ -33,8 +41,8 @@ const AverageTime: React.FC<AverageTimeProps> = ({ value }) => {
                             {secs}<Stat.ValueUnit>sec</Stat.ValueUnit>
                         </Stat.ValueText>
                         <Badge background="transparent" gap="0" size="sm">
-                            {true ? <Stat.UpIndicator /> : <Stat.DownIndicator />}
-                            {3}%
+                            {statHasIncreased ? <Stat.UpIndicator /> : <Stat.DownIndicator />}
+                            {evolutionPercentage || 0}%
                         </Badge>
                     </HStack>
                     <Stat.HelpText fontSize="xs">since last month</Stat.HelpText>

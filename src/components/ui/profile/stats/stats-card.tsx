@@ -36,7 +36,7 @@ const StatCard: React.FC<StatCardProps> = ({
                             gap="0"
                             size="sm"
                         >
-                            {statHasIncreased ? <Stat.UpIndicator /> : <Stat.DownIndicator />}
+                            {statHasIncreased ? <Stat.UpIndicator color={percentageChange === 0 ? "gray" : ""} /> : <Stat.DownIndicator />}
                             {percentageChange}%
                         </Badge>
                     </HStack>
