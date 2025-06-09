@@ -15,7 +15,7 @@ import WinRatio from "./win-ratio";
 import GamesPlayed from "./games-played";
 import TotalScore from "./total-score";
 import AverageScore from "./average-score";
-import TooltipIconButton from "../tooltip-icon-button";
+import TooltipIconButton from "../../tooltip-icon-button";
 
 const StatsBody = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);

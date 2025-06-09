@@ -5,7 +5,7 @@ import { IoMdStats } from "react-icons/io";
 
 import SettingsBody from "./settings-body";
 import ChartsBody from "./charts-body";
-import StatsBody from "./stats-body";
+import StatsBody from "./stats/stats-body";
 
 const ProfileAccordion = () => {
     return (
