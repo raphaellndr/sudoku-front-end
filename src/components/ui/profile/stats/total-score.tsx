@@ -19,7 +19,7 @@ const TotalScore: React.FC<TotalScoreProps> = ({
             statValue={value}
             statHasIncreased={statHasIncreased}
             percentageChange={evolutionPercentage || 0}
-            helpText="all time total"
+            helpText="since last month"
         />
     );
 };
