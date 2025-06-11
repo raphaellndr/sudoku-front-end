@@ -11,7 +11,7 @@ const ChartsDisplay = ({ data, period }: { data: ChartDataPoint[], period: Chart
             <ChartCard
                 data={data}
                 series={[
-                    { name: "games played", color: "blue.solid" },
+                    { name: "games_played", label: "games played", color: "blue.solid" },
                     { name: "wins", color: "green.solid" },
                     { name: "losses", color: "red.solid" }
                 ]}
