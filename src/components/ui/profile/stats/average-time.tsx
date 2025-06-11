@@ -19,7 +19,7 @@ const AverageTime: React.FC<AverageTimeProps> = ({
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const secs = totalSeconds % 60;
 
-    const statHasIncreased = evolution !== undefined && evolution !== null ? evolution >= 0 : false;
+    const statHasIncreased = evolution !== undefined && evolution !== null ? evolution <= 0 : true;
 
     return (
         <Card.Root size="sm" variant="subtle">
