@@ -152,14 +152,23 @@ export const fetchCurrentUserStats = async (
  * Fetches the daily statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
+ * @param {string} [date] - Optional date string in the format YYYY-MM-DD.
  * @returns {Promise<Response>} - A promise that resolves to the response.
  * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserDailyStats = async (
     headers: HeadersInit,
+    date?: string,
 ): Promise<Response> => {
     try {
-        const response = await fetch(`${ME_API_BASE_URL}stats/daily/`, {
+        const url = new URL(`${ME_API_BASE_URL}stats/daily/`);
+
+        // Append the date parameter if it is provided
+        if (date) {
+            url.searchParams.append("date", date);
+        }
+
+        const response = await fetch(url.toString(), {
             method: "GET",
             headers,
         });
@@ -180,14 +189,26 @@ export const fetchCurrentUserDailyStats = async (
  * Fetches the weekly statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
+ * @param {string} [week] - Optional week string.
+ * @param {string} [year] - Optional year string.
  * @returns {Promise<Response>} - A promise that resolves to the response.
  * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserWeeklyStats = async (
     headers: HeadersInit,
+    week?: string,
+    year?: string,
 ): Promise<Response> => {
     try {
-        const response = await fetch(`${ME_API_BASE_URL}stats/weekly/`, {
+        const url = new URL(`${ME_API_BASE_URL}stats/weekly/`);
+
+        // Append the week and year parameters if they are provided
+        if (week && year) {
+            url.searchParams.append("week", week);
+            url.searchParams.append("year", year);
+        }
+
+        const response = await fetch(url.toString(), {
             method: "GET",
             headers,
         });
@@ -208,8 +229,8 @@ export const fetchCurrentUserWeeklyStats = async (
  * Fetches the monthly statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @param {number} [month] - The month for which to fetch statistics.
- * @param {number} [year] - The year for which to fetch statistics.
+ * @param {number} [month] - Optional month for which to fetch statistics.
+ * @param {number} [year] - Optional year for which to fetch statistics.
  * @returns {Promise<Response>} - A promise that resolves to the response.
  * @throws {Error} - Throws an error if the request fails.
  */
@@ -249,14 +270,22 @@ export const fetchCurrentUserMonthlyStats = async (
  * Fetches the yearly statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
+ * @param {number} year - Optional year for which to fetch statistics.
  * @returns {Promise<Response>} - A promise that resolves to the response.
  * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserYearlyStats = async (
     headers: HeadersInit,
+    year?: number,
 ): Promise<Response> => {
     try {
-        const response = await fetch(`${ME_API_BASE_URL}stats/yearly/`, {
+        const url = new URL(`${ME_API_BASE_URL}stats/yearly/`);
+
+        if (year) {
+            url.searchParams.append("year", year.toString());
+        }
+
+        const response = await fetch(url.toString(), {
             method: "GET",
             headers,
         });
