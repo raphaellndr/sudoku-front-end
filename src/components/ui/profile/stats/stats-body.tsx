@@ -20,18 +20,63 @@ import {
     fetchCurrentUserYearlyStats
 } from "@/services/meApi";
 import { createHeaders } from "@/utils/apiUtils";
-import { StatsPeriod, UserStats } from "@/types/types";
-
+import { PreviousDateParams, StatsPeriod, UserStats } from "@/types/types";
+import { getWeekNumber } from "@/utils/date";
 
 import StatsGrid from "./stats-grid";
 import TooltipIconButton from "../../tooltip-icon-button";
-import { getPreviousDateParams } from "@/utils/date";
+
+const getPreviousDateParams = (
+    period: StatsPeriod,
+): PreviousDateParams | {} => {
+    const now = new Date();
+
+    switch (period) {
+        case "daily": {
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            return {
+                date: yesterday.toISOString().split("T")[0] // YYYY-MM-DD format
+            };
+        }
+
+        case "weekly": {
+            const lastWeek = new Date(now);
+            lastWeek.setDate(lastWeek.getDate() - 7);
+            const year = lastWeek.getFullYear().toString();
+            const week = getWeekNumber(lastWeek).toString();
+            return { week, year };
+        }
+
+        case "monthly": {
+            const lastMonth = new Date(now);
+            lastMonth.setMonth(lastMonth.getMonth() - 1);
+            return {
+                month: lastMonth.getMonth() + 1,
+                year: lastMonth.getFullYear()
+            };
+        }
+
+        case "yearly": {
+            const lastYear = now.getFullYear() - 1;
+            return { year: lastYear };
+        }
+
+        case "allTime": {
+            const yearAgo = now.getFullYear() - 1;
+            return { year: yearAgo };
+        }
+
+        default:
+            return {};
+    }
+};
 
 interface PeriodStats {
     current: UserStats | null;
     previous: UserStats | null;
     isLoading: boolean;
-}
+};
 
 interface StatsData {
     daily: PeriodStats;
@@ -39,9 +84,9 @@ interface StatsData {
     monthly: PeriodStats;
     yearly: PeriodStats;
     allTime: PeriodStats;
-}
+};
 
-const StatsBody: React.FC = () => {
+const StatsBody = () => {
     const { data: session, status } = useSession();
     const headers = createHeaders(session);
 

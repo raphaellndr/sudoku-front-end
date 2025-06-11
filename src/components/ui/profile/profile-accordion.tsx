@@ -4,7 +4,7 @@ import { LuSettings } from "react-icons/lu";
 import { IoMdStats } from "react-icons/io";
 
 import SettingsBody from "./settings-body";
-import ChartsBody from "./charts-body";
+import ChartsBody from "./charts/charts-body";
 import StatsBody from "./stats/stats-body";
 
 const ProfileAccordion = () => {

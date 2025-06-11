@@ -8,3 +8,4 @@ export const SudokuStatusEnum = z.enum(["created", "running", "pending", "comple
 export const GameStatusEnum = z.enum(["in_progress", "completed", "abandoned", "stopped"]);
 
 export const StatsPeriodEnum = z.enum(["daily", "weekly", "monthly", "yearly", "allTime"]);
+export const ChartsPeriodEnum = z.enum(["daily", "monthly"]);

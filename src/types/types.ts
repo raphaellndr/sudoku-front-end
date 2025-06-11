@@ -2,7 +2,13 @@
 
 import { z } from "zod";
 
-import { GameStatusEnum, StatsPeriodEnum, SudokuDifficultyEnum, SudokuStatusEnum } from "./enums";
+import {
+    ChartsPeriodEnum,
+    GameStatusEnum,
+    StatsPeriodEnum,
+    SudokuDifficultyEnum,
+    SudokuStatusEnum,
+} from "./enums";
 import {
     GameRecordSchema,
     RegisterFormSchema,
@@ -29,6 +35,7 @@ export type GameStatus = z.infer<typeof GameStatusEnum>;
 export type UserStats = z.infer<typeof UserStatsSchema>;
 
 export type StatsPeriod = z.infer<typeof StatsPeriodEnum>;
+export type ChartsPeriod = z.infer<typeof ChartsPeriodEnum>;
 
 export type DailyParams = {
     date: string;
