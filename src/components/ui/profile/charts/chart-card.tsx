@@ -69,7 +69,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
                                 dataKey={dataChart.key(item.name)}
                                 stroke={dataChart.color(item.color)}
                                 strokeWidth={2}
-                                dot={{ r: 4 }}
+                                dot={false}
                             />
                         ))}
                     </LineChart>
