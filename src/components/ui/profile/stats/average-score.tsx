@@ -4,12 +4,14 @@ interface AverageScoreProps {
     value: number;
     evolution?: number | null;
     evolutionPercentage?: number | null;
+    helpText: string;
 };
 
 const AverageScore: React.FC<AverageScoreProps> = ({
     value,
     evolution,
     evolutionPercentage,
+    helpText,
 }) => {
     const statHasIncreased = evolution !== undefined && evolution !== null ? evolution >= 0 : false;
 
@@ -19,7 +21,7 @@ const AverageScore: React.FC<AverageScoreProps> = ({
             statValue={value}
             statHasIncreased={statHasIncreased}
             percentageChange={evolutionPercentage || 0}
-            helpText="since last month"
+            helpText={helpText}
         />
     );
 };

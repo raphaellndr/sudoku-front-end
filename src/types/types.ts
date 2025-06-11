@@ -29,3 +29,23 @@ export type GameStatus = z.infer<typeof GameStatusEnum>;
 export type UserStats = z.infer<typeof UserStatsSchema>;
 
 export type StatsPeriod = z.infer<typeof StatsPeriodEnum>;
+
+export type DailyParams = {
+    date: string;
+};
+
+export type WeeklyParams = {
+    week: number;
+    year: number;
+};
+
+export type MonthlyParams = {
+    month: number;
+    year: number;
+};
+
+export type YearlyParams = {
+    year: number;
+};
+
+export type PreviousDateParams = DailyParams | WeeklyParams | MonthlyParams | YearlyParams;

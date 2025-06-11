@@ -189,23 +189,23 @@ export const fetchCurrentUserDailyStats = async (
  * Fetches the weekly statistics for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
- * @param {string} [week] - Optional week string.
- * @param {string} [year] - Optional year string.
+ * @param {number} [week] - Optional week string.
+ * @param {number} [year] - Optional year string.
  * @returns {Promise<Response>} - A promise that resolves to the response.
  * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserWeeklyStats = async (
     headers: HeadersInit,
-    week?: string,
-    year?: string,
+    week?: number,
+    year?: number,
 ): Promise<Response> => {
     try {
         const url = new URL(`${ME_API_BASE_URL}stats/weekly/`);
 
         // Append the week and year parameters if they are provided
         if (week && year) {
-            url.searchParams.append("week", week);
-            url.searchParams.append("year", year);
+            url.searchParams.append("week", week.toString());
+            url.searchParams.append("year", year.toString());
         }
 
         const response = await fetch(url.toString(), {

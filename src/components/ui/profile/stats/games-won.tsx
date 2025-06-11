@@ -5,12 +5,14 @@ interface GamesWonProps {
     value: number;
     evolution?: number | null;
     evolutionPercentage?: number | null;
+    helpText: string;
 }
 
 const GamesWon: React.FC<GamesWonProps> = ({
     value,
     evolution,
-    evolutionPercentage
+    evolutionPercentage,
+    helpText,
 }) => {
     const statHasIncreased = evolution !== undefined && evolution !== null ? evolution >= 0 : false;
 
@@ -20,7 +22,7 @@ const GamesWon: React.FC<GamesWonProps> = ({
             statValue={value}
             statHasIncreased={statHasIncreased}
             percentageChange={evolutionPercentage || 0}
-            helpText="since last month"
+            helpText={helpText}
         />
     );
 };

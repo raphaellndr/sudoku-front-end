@@ -4,12 +4,14 @@ interface AverageTimeProps {
     value: number;
     evolution?: number | null;
     evolutionPercentage?: number | null;
-}
+    helpText: string;
+};
 
 const AverageTime: React.FC<AverageTimeProps> = ({
     value,
     evolution,
     evolutionPercentage,
+    helpText,
 }) => {
     const totalSeconds = Math.round(value);
 
@@ -41,11 +43,15 @@ const AverageTime: React.FC<AverageTimeProps> = ({
                             {secs}<Stat.ValueUnit>sec</Stat.ValueUnit>
                         </Stat.ValueText>
                         <Badge background="transparent" gap="0" size="sm">
-                            {statHasIncreased ? <Stat.UpIndicator /> : <Stat.DownIndicator />}
+                            {statHasIncreased ?
+                                <Stat.UpIndicator color={evolutionPercentage === 0 ? "gray" : ""} />
+                                :
+                                <Stat.DownIndicator />
+                            }
                             {evolutionPercentage || 0}%
                         </Badge>
                     </HStack>
-                    <Stat.HelpText fontSize="xs">since last month</Stat.HelpText>
+                    <Stat.HelpText fontSize="xs">{helpText}</Stat.HelpText>
                 </Stat.Root>
             </Card.Body>
         </Card.Root>

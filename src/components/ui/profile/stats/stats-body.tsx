@@ -20,14 +20,16 @@ import {
     fetchCurrentUserYearlyStats
 } from "@/services/meApi";
 import { createHeaders } from "@/utils/apiUtils";
-import { StatsPeriod, UserStats } from "@/types/types";
+import { DailyParams, StatsPeriod, UserStats } from "@/types/types";
 
 
 import StatsGrid from "./stats-grid";
 import TooltipIconButton from "../../tooltip-icon-button";
+import { getPreviousDateParams } from "@/utils/date";
 
 interface PeriodStats {
-    data: UserStats | null;
+    current: UserStats | null;
+    previous: UserStats | null;
     isLoading: boolean;
 }
 
@@ -46,16 +48,29 @@ const StatsBody: React.FC = () => {
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const [selectedPeriod, setSelectedPeriod] = useState<StatsPeriod>("monthly");
 
-    // Stats data for different periods
+    // Updated interface for storing both current and previous stats
+    interface PeriodStats {
+        current: UserStats | null;
+        previous: UserStats | null;
+        isLoading: boolean;
+    }
+
+    interface StatsData {
+        daily: PeriodStats;
+        weekly: PeriodStats;
+        monthly: PeriodStats;
+        yearly: PeriodStats;
+        allTime: PeriodStats;
+    }
+
     const [statsData, setStatsData] = useState<StatsData>({
-        daily: { data: null, isLoading: false },
-        weekly: { data: null, isLoading: false },
-        monthly: { data: null, isLoading: false },
-        yearly: { data: null, isLoading: false },
-        allTime: { data: null, isLoading: false }
+        daily: { current: null, previous: null, isLoading: false },
+        weekly: { current: null, previous: null, isLoading: false },
+        monthly: { current: null, previous: null, isLoading: false },
+        yearly: { current: null, previous: null, isLoading: false },
+        allTime: { current: null, previous: null, isLoading: false }
     });
 
-    // Helper function to update stats for a specific period
     const updateStatsForPeriod = (period: StatsPeriod, data: Partial<PeriodStats>): void => {
         setStatsData(prev => ({
             ...prev,
@@ -66,7 +81,6 @@ const StatsBody: React.FC = () => {
         }));
     };
 
-    // Load stats for a specific period
     const loadStatsForPeriod = async (period: StatsPeriod): Promise<void> => {
         if (!session?.accessToken) {
             console.log("No session or access token available");
@@ -76,37 +90,74 @@ const StatsBody: React.FC = () => {
         updateStatsForPeriod(period, { isLoading: true });
 
         try {
-            let statsResponse: Response;
+            let currentStatsPromise: Promise<Response>;
+            let previousStatsPromise: Promise<Response>;
+
+            const previousParams = getPreviousDateParams(period);
 
             switch (period) {
                 case "daily":
-                    statsResponse = await fetchCurrentUserDailyStats(headers);
+                    if ("date" in previousParams) {
+                        currentStatsPromise = fetchCurrentUserDailyStats(headers);
+                        previousStatsPromise = fetchCurrentUserDailyStats(headers, previousParams.date);
+                    } else {
+                        throw new Error("Invalid parameters for daily stats");
+                    }
                     break;
 
                 case "weekly":
-                    statsResponse = await fetchCurrentUserWeeklyStats(headers);
+                    if ("week" in previousParams && "year" in previousParams) {
+                        currentStatsPromise = fetchCurrentUserWeeklyStats(headers);
+                        previousStatsPromise = fetchCurrentUserWeeklyStats(
+                            headers,
+                            previousParams.week,
+                            previousParams.year
+                        );
+                    } else {
+                        throw new Error("Invalid parameters for weekly stats");
+                    }
                     break;
 
                 case "monthly":
-                    statsResponse = await fetchCurrentUserMonthlyStats(headers);
+                    if ("month" in previousParams && "year" in previousParams) {
+                        currentStatsPromise = fetchCurrentUserMonthlyStats(headers);
+                        previousStatsPromise = fetchCurrentUserMonthlyStats(
+                            headers,
+                            previousParams.month,
+                            previousParams.year
+                        );
+                    } else {
+                        throw new Error("Invalid parameters for monthly stats");
+                    }
                     break;
 
                 case "yearly":
-                    statsResponse = await fetchCurrentUserYearlyStats(headers);
-                    break;
-
                 case "allTime":
-                    statsResponse = await fetchCurrentUserStats(headers);
+                    if ("year" in previousParams) {
+                        currentStatsPromise = period === "yearly" ? fetchCurrentUserYearlyStats(headers) : fetchCurrentUserStats(headers);
+                        previousStatsPromise = fetchCurrentUserYearlyStats(headers, previousParams.year);
+                    } else {
+                        throw new Error("Invalid parameters for yearly or all-time stats");
+                    }
                     break;
 
                 default:
                     throw new Error(`Unknown period: ${period}`);
             }
 
-            const stats = await statsResponse.json() as UserStats;
+            const [currentResponse, previousResponse] = await Promise.all([
+                currentStatsPromise,
+                previousStatsPromise
+            ]);
+
+            const [currentStats, previousStats] = await Promise.all([
+                currentResponse.json() as Promise<UserStats>,
+                previousResponse.json() as Promise<UserStats>
+            ]);
 
             updateStatsForPeriod(period, {
-                data: stats,
+                current: currentStats,
+                previous: previousStats,
                 isLoading: false
             });
 
@@ -129,7 +180,7 @@ const StatsBody: React.FC = () => {
         setSelectedPeriod(typedPeriod);
 
         // Load data for this period if not already loaded
-        if (!statsData[typedPeriod].data && !statsData[typedPeriod].isLoading) {
+        if (!statsData[typedPeriod].current && !statsData[typedPeriod].isLoading) {
             loadStatsForPeriod(typedPeriod);
         }
     };
@@ -209,36 +260,46 @@ const StatsBody: React.FC = () => {
 
                         <Tabs.Content value="daily">
                             <StatsGrid
-                                stats={statsData.daily.data}
+                                currentStats={statsData.daily.current}
+                                previousStats={statsData.daily.previous}
                                 isLoading={statsData.daily.isLoading}
+                                period="daily"
                             />
                         </Tabs.Content>
 
                         <Tabs.Content value="weekly">
                             <StatsGrid
-                                stats={statsData.weekly.data}
+                                currentStats={statsData.weekly.current}
+                                previousStats={statsData.weekly.previous}
                                 isLoading={statsData.weekly.isLoading}
+                                period="weekly"
                             />
                         </Tabs.Content>
 
                         <Tabs.Content value="monthly">
                             <StatsGrid
-                                stats={statsData.monthly.data}
+                                currentStats={statsData.monthly.current}
+                                previousStats={statsData.monthly.previous}
                                 isLoading={statsData.monthly.isLoading}
+                                period="monthly"
                             />
                         </Tabs.Content>
 
                         <Tabs.Content value="yearly">
                             <StatsGrid
-                                stats={statsData.yearly.data}
+                                currentStats={statsData.yearly.current}
+                                previousStats={statsData.yearly.previous}
                                 isLoading={statsData.yearly.isLoading}
+                                period="yearly"
                             />
                         </Tabs.Content>
 
                         <Tabs.Content value="allTime">
                             <StatsGrid
-                                stats={statsData.allTime.data}
+                                currentStats={statsData.allTime.current}
+                                previousStats={statsData.allTime.previous}
                                 isLoading={statsData.allTime.isLoading}
+                                period="allTime"
                             />
                         </Tabs.Content>
                     </Tabs.Root>

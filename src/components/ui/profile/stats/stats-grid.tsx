@@ -1,19 +1,30 @@
 import { Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
 
-import { UserStats } from "@/types/types";
+import { StatsPeriod, UserStats } from "@/types/types";
+
 import AverageTime from "./average-time";
 import GamesWon from "./games-won";
 import WinRate from "./win-rate";
 import GamesPlayed from "./games-played";
 import AverageScore from "./average-score";
 import TotalScore from "./total-score";
+import { useStatsEvolution } from "./use-stats-evolution";
 
 interface StatsGridProps {
-    stats: UserStats | null;
+    currentStats: UserStats | null;
+    previousStats: UserStats | null;
     isLoading: boolean;
-}
+    period: StatsPeriod;
+};
 
-const StatsGrid: React.FC<StatsGridProps> = ({ stats, isLoading }) => {
+const StatsGrid: React.FC<StatsGridProps> = ({
+    currentStats,
+    previousStats,
+    isLoading,
+    period,
+}) => {
+    const evolution = useStatsEvolution(currentStats, previousStats);
+
     if (isLoading) {
         return (
             <Flex justify="center" align="center" height="200px">
@@ -22,25 +33,57 @@ const StatsGrid: React.FC<StatsGridProps> = ({ stats, isLoading }) => {
         );
     }
 
+    // Helper function to get comparison text
+    const getComparisonText = (period: StatsPeriod): string => {
+        switch (period) {
+            case "daily": return "since yesterday";
+            case "weekly": return "since last week";
+            case "monthly": return "since last month";
+            case "yearly": return "since last year";
+            case "allTime": return "since last year";
+            default: return "since last period";
+        }
+    };
+
+    const comparisonText = getComparisonText(period);
+
     return (
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
             <TotalScore
-                value={stats ? stats.total_score : 0}
+                value={currentStats ? currentStats.total_score : 0}
+                evolution={evolution ? evolution.total_score : null}
+                evolutionPercentage={evolution ? evolution.percentageChanges.total_score : null}
+                helpText={comparisonText}
             />
             <AverageScore
-                value={stats ? stats.average_score : 0.0}
+                value={currentStats ? currentStats.average_score : 0.0}
+                evolution={evolution ? evolution.average_score : null}
+                evolutionPercentage={evolution ? evolution.percentageChanges.average_score : null}
+                helpText={comparisonText}
             />
             <GamesPlayed
-                value={stats ? stats.total_games : 0}
+                value={currentStats ? currentStats.total_games : 0}
+                evolution={evolution ? evolution.total_games : null}
+                evolutionPercentage={evolution ? evolution.percentageChanges.total_games : null}
+                helpText={comparisonText}
             />
             <WinRate
-                value={stats ? stats.win_rate : 0.0}
+                value={currentStats ? currentStats.win_rate : 0.0}
+                evolution={evolution ? evolution.win_rate : null}
+                evolutionPercentage={evolution ? evolution.percentageChanges.win_rate : null}
+                helpText={comparisonText}
             />
             <GamesWon
-                value={stats ? stats.won_games : 0}
+                value={currentStats ? currentStats.won_games : 0}
+                evolution={evolution ? evolution.won_games : null}
+                evolutionPercentage={evolution ? evolution.percentageChanges.won_games : null}
+                helpText={comparisonText}
             />
             <AverageTime
-                value={stats ? stats.average_time_seconds : 0.0}
+                value={currentStats ? currentStats.average_time_seconds : 0.0}
+                evolution={evolution ? evolution.average_time_seconds : null}
+                evolutionPercentage={evolution ? evolution.percentageChanges.average_time_seconds : null}
+                helpText={comparisonText}
             />
         </SimpleGrid>
     );
