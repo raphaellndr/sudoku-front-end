@@ -27,6 +27,7 @@ export interface ChartDataPoint {
     wins: number;
     losses: number;
     score: number;
+    average_score: number;
 }
 
 interface PeriodChartData {
@@ -89,6 +90,7 @@ const ChartsBody = () => {
                                 wins: data.won_games || 0,
                                 losses: data.lost_games || 0,
                                 score: data.total_score || 0,
+                                average_score: data.average_score || 0.0,
                             });
                         } catch (dayError) {
                             chartData.push({
@@ -97,6 +99,7 @@ const ChartsBody = () => {
                                 wins: 0,
                                 losses: 0,
                                 score: 0,
+                                average_score: 0.0,
                             });
                         }
                     }
@@ -120,6 +123,7 @@ const ChartsBody = () => {
                                 wins: data.won_games || 0,
                                 losses: data.lost_games || 0,
                                 score: data.total_score || 0,
+                                average_score: data.average_score || 0.0,
                             });
                         } catch (monthError) {
                             const monthName = date.toLocaleString("default", { month: "short" });
@@ -129,6 +133,7 @@ const ChartsBody = () => {
                                 wins: 0,
                                 losses: 0,
                                 score: 0,
+                                average_score: 0.0,
                             });
                         }
                     }

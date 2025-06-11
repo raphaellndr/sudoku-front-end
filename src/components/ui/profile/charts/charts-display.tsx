@@ -21,7 +21,10 @@ const ChartsDisplay = ({ data, period }: { data: ChartDataPoint[], period: Chart
 
             <ChartCard
                 data={data}
-                series={[{ name: "score", color: "purple.solid" }]}
+                series={[
+                    { name: "score", color: "purple.solid" },
+                    { name: "average_score", label: "average score", color: "yellow.solid" }
+                ]}
                 period={period}
                 heading="Score"
             />
