@@ -23,7 +23,7 @@ const ChartsDisplay = ({ data, period }: { data: ChartDataPoint[], period: Chart
                 data={data}
                 series={[{ name: "score", color: "purple.solid" }]}
                 period={period}
-                heading="Total Score"
+                heading="Score"
             />
         </Flex>
     );
