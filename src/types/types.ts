@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 
-import { GameStatusEnum, SudokuDifficultyEnum, SudokuStatusEnum } from "./enums";
+import { GameStatusEnum, StatsPeriodEnum, SudokuDifficultyEnum, SudokuStatusEnum } from "./enums";
 import {
     GameRecordSchema,
     RegisterFormSchema,
@@ -27,3 +27,5 @@ export type GameRecord = z.infer<typeof GameRecordSchema>;
 export type GameStatus = z.infer<typeof GameStatusEnum>;
 
 export type UserStats = z.infer<typeof UserStatsSchema>;
+
+export type StatsPeriod = z.infer<typeof StatsPeriodEnum>;
