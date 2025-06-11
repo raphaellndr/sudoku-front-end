@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { UserStats } from "@/types/types";
 
-type StatsEvolution = UserStats & {
+export type StatsEvolution = UserStats & {
     percentageChanges: {
         [key in keyof UserStats]: number;
     };
