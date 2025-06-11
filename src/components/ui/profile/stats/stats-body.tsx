@@ -2,110 +2,147 @@ import { useEffect, useState } from "react";
 
 import {
     Accordion,
-    SimpleGrid,
     Card,
     Flex,
     Heading,
     Spinner,
+    Tabs,
 } from "@chakra-ui/react";
-import { LuRefreshCw } from "react-icons/lu";
+import { LuRefreshCw, LuCalendarDays, LuCalendar, LuTrendingUp, LuClock } from "react-icons/lu";
 import { useSession } from "next-auth/react";
+import { IoBarChartOutline } from "react-icons/io5";
 
-import { fetchCurrentUserMonthlyStats, fetchCurrentUserStats } from "@/services/meApi";
+import {
+    fetchCurrentUserMonthlyStats,
+    fetchCurrentUserStats,
+    fetchCurrentUserDailyStats,
+    fetchCurrentUserWeeklyStats,
+    fetchCurrentUserYearlyStats
+} from "@/services/meApi";
 import { createHeaders } from "@/utils/apiUtils";
-import { UserStats } from "@/types/types";
+import { StatsPeriod, UserStats } from "@/types/types";
 
-import GamesWon from "./games-won";
-import WinRate from "./win-rate";
-import GamesPlayed from "./games-played";
-import TotalScore from "./total-score";
-import AverageScore from "./average-score";
+
+import StatsGrid from "./stats-grid";
 import TooltipIconButton from "../../tooltip-icon-button";
-import AverageTime from "./average-time";
-import { useStatsEvolution } from "./use-stats-evolution";
 
-const StatsBody = () => {
+interface PeriodStats {
+    data: UserStats | null;
+    isLoading: boolean;
+}
+
+interface StatsData {
+    daily: PeriodStats;
+    weekly: PeriodStats;
+    monthly: PeriodStats;
+    yearly: PeriodStats;
+    allTime: PeriodStats;
+}
+
+const StatsBody: React.FC = () => {
     const { data: session, status } = useSession();
     const headers = createHeaders(session);
 
-    const [isRefreshing, setIsRefreshing] = useState(false);
-    const [userStats, setUserStats] = useState<UserStats | null>(null);
-    const [currentMonthUserStats, setCurrentMonthUserStats] = useState<UserStats | null>(null);
-    const [previousMonthUserStats, setPreviousMonthUserStats] = useState<UserStats | null>(null);
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+    const [selectedPeriod, setSelectedPeriod] = useState<StatsPeriod>("monthly");
 
-    // Use the evolution hook
-    const statsEvolution = useStatsEvolution(currentMonthUserStats, previousMonthUserStats);
+    // Stats data for different periods
+    const [statsData, setStatsData] = useState<StatsData>({
+        daily: { data: null, isLoading: false },
+        weekly: { data: null, isLoading: false },
+        monthly: { data: null, isLoading: false },
+        yearly: { data: null, isLoading: false },
+        allTime: { data: null, isLoading: false }
+    });
 
-    useEffect(() => {
-        console.log("statsEvolution:", statsEvolution)
-        console.log("currentMonthUserStats:", currentMonthUserStats)
-        console.log("previousMonthUserStats:", previousMonthUserStats)
-    }, [statsEvolution]);
+    // Helper function to update stats for a specific period
+    const updateStatsForPeriod = (period: StatsPeriod, data: Partial<PeriodStats>): void => {
+        setStatsData(prev => ({
+            ...prev,
+            [period]: {
+                ...prev[period],
+                ...data
+            }
+        }));
+    };
 
-    useEffect(() => {
-        const loadAllStats = async () => {
-            if (!session?.accessToken) {
-                console.log("No session or access token available");
-                return;
+    // Load stats for a specific period
+    const loadStatsForPeriod = async (period: StatsPeriod): Promise<void> => {
+        if (!session?.accessToken) {
+            console.log("No session or access token available");
+            return;
+        }
+
+        updateStatsForPeriod(period, { isLoading: true });
+
+        try {
+            let statsResponse: Response;
+
+            switch (period) {
+                case "daily":
+                    statsResponse = await fetchCurrentUserDailyStats(headers);
+                    break;
+
+                case "weekly":
+                    statsResponse = await fetchCurrentUserWeeklyStats(headers);
+                    break;
+
+                case "monthly":
+                    statsResponse = await fetchCurrentUserMonthlyStats(headers);
+                    break;
+
+                case "yearly":
+                    statsResponse = await fetchCurrentUserYearlyStats(headers);
+                    break;
+
+                case "allTime":
+                    statsResponse = await fetchCurrentUserStats(headers);
+                    break;
+
+                default:
+                    throw new Error(`Unknown period: ${period}`);
             }
 
-            try {
-                // Load all-time stats
-                const userStatsResponse = await fetchCurrentUserStats(headers);
-                const allTimeStats = await userStatsResponse.json() as UserStats;
-                setUserStats(allTimeStats);
+            const stats = await statsResponse.json() as UserStats;
 
-                // Load current month stats
-                const currentMonthResponse = await fetchCurrentUserMonthlyStats(headers);
-                const currentMonthStats = await currentMonthResponse.json() as UserStats;
-                setCurrentMonthUserStats(currentMonthStats);
+            updateStatsForPeriod(period, {
+                data: stats,
+                isLoading: false
+            });
 
-                // Load previous month stats
-                const currentDate = new Date();
-                const currentMonth = currentDate.getMonth() + 1;
-                const currentYear = currentDate.getFullYear();
+        } catch (error) {
+            console.error(`Failed to load ${period} stats:`, error);
+            updateStatsForPeriod(period, { isLoading: false });
+        }
+    };
 
-                const previousMonth = currentMonth === 1 ? 12 : currentMonth - 1;
-                const previousYear = currentMonth === 1 ? currentYear - 1 : currentYear;
-
-                const previousMonthResponse = await fetchCurrentUserMonthlyStats(
-                    headers, previousMonth, previousYear
-                );
-
-                const previousMonthStats = await previousMonthResponse.json() as UserStats;
-                setPreviousMonthUserStats(previousMonthStats);
-
-
-            } catch (error) {
-                console.error("Failed to load user stats:", error);
-            }
-        };
-
-        loadAllStats();
+    // Load initial data (monthly by default)
+    useEffect(() => {
+        if (session?.accessToken) {
+            loadStatsForPeriod("monthly");
+        }
     }, [session?.accessToken]);
 
-    const handleRefresh = async () => {
+    // Handle period change
+    const handlePeriodChange = (period: string): void => {
+        const typedPeriod = period as StatsPeriod;
+        setSelectedPeriod(typedPeriod);
+
+        // Load data for this period if not already loaded
+        if (!statsData[typedPeriod].data && !statsData[typedPeriod].isLoading) {
+            loadStatsForPeriod(typedPeriod);
+        }
+    };
+
+    // Handle refresh for current period
+    const handleRefresh = async (): Promise<void> => {
         setIsRefreshing(true);
 
         try {
-            if (!session?.accessToken) {
-                return;
-            }
-
-            const [userStatsResponse, currentMonthResponse] = await Promise.all([
-                fetchCurrentUserStats(headers),
-                fetchCurrentUserMonthlyStats(headers)
-            ]);
-
-            const allTimeStats = await userStatsResponse.json() as UserStats;
-            const currentMonthStats = await currentMonthResponse.json() as UserStats;
-
-            setUserStats(allTimeStats);
-            setCurrentMonthUserStats(currentMonthStats);
-
-            console.log("Stats refreshed");
+            await loadStatsForPeriod(selectedPeriod);
+            console.log(`${selectedPeriod} stats refreshed`);
         } catch (error) {
-            console.error("Failed to refresh stats:", error);
+            console.error(`Failed to refresh ${selectedPeriod} stats:`, error);
         } finally {
             setIsRefreshing(false);
         }
@@ -142,38 +179,69 @@ const StatsBody = () => {
                     </Flex>
                 </Card.Header>
                 <Card.Body>
-                    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-                        <TotalScore
-                            value={userStats ? userStats.total_score : 0}
-                            evolution={statsEvolution?.total_score}
-                            evolutionPercentage={statsEvolution?.percentageChanges.total_score}
-                        />
-                        <AverageScore
-                            value={userStats ? userStats.average_score : 0.0}
-                            evolution={statsEvolution?.average_score}
-                            evolutionPercentage={statsEvolution?.percentageChanges.average_score}
-                        />
-                        <GamesPlayed
-                            value={userStats ? userStats.total_games : 0}
-                            evolution={statsEvolution?.total_games}
-                            evolutionPercentage={statsEvolution?.percentageChanges.total_games}
-                        />
-                        <WinRate
-                            value={userStats ? userStats.win_rate : 0.0}
-                            evolution={statsEvolution?.win_rate}
-                            evolutionPercentage={statsEvolution?.percentageChanges.win_rate}
-                        />
-                        <GamesWon
-                            value={userStats ? userStats.won_games : 0}
-                            evolution={statsEvolution?.won_games}
-                            evolutionPercentage={statsEvolution?.percentageChanges.won_games}
-                        />
-                        <AverageTime
-                            value={userStats ? userStats.average_time_seconds : 0.0}
-                            evolution={statsEvolution?.average_time_seconds}
-                            evolutionPercentage={statsEvolution?.percentageChanges.average_time_seconds}
-                        />
-                    </SimpleGrid>
+                    <Tabs.Root
+                        defaultValue="monthly"
+                        value={selectedPeriod}
+                        onValueChange={(d) => handlePeriodChange(d.value)}
+                    >
+                        <Tabs.List>
+                            <Tabs.Trigger value="daily">
+                                <LuClock />
+                                Today
+                            </Tabs.Trigger>
+                            <Tabs.Trigger value="weekly">
+                                <LuCalendarDays />
+                                This Week
+                            </Tabs.Trigger>
+                            <Tabs.Trigger value="monthly">
+                                <LuCalendar />
+                                This Month
+                            </Tabs.Trigger>
+                            <Tabs.Trigger value="yearly">
+                                <LuTrendingUp />
+                                This Year
+                            </Tabs.Trigger>
+                            <Tabs.Trigger value="allTime">
+                                <IoBarChartOutline />
+                                All Time
+                            </Tabs.Trigger>
+                        </Tabs.List>
+
+                        <Tabs.Content value="daily">
+                            <StatsGrid
+                                stats={statsData.daily.data}
+                                isLoading={statsData.daily.isLoading}
+                            />
+                        </Tabs.Content>
+
+                        <Tabs.Content value="weekly">
+                            <StatsGrid
+                                stats={statsData.weekly.data}
+                                isLoading={statsData.weekly.isLoading}
+                            />
+                        </Tabs.Content>
+
+                        <Tabs.Content value="monthly">
+                            <StatsGrid
+                                stats={statsData.monthly.data}
+                                isLoading={statsData.monthly.isLoading}
+                            />
+                        </Tabs.Content>
+
+                        <Tabs.Content value="yearly">
+                            <StatsGrid
+                                stats={statsData.yearly.data}
+                                isLoading={statsData.yearly.isLoading}
+                            />
+                        </Tabs.Content>
+
+                        <Tabs.Content value="allTime">
+                            <StatsGrid
+                                stats={statsData.allTime.data}
+                                isLoading={statsData.allTime.isLoading}
+                            />
+                        </Tabs.Content>
+                    </Tabs.Root>
                 </Card.Body>
             </Card.Root>
         </Accordion.ItemBody>
