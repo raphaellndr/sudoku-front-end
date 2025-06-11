@@ -1,6 +1,6 @@
 import { Chart, useChart } from "@chakra-ui/charts";
 import { Card, Heading } from "@chakra-ui/react";
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartsPeriod } from "@/types/types";
 
@@ -19,7 +19,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
     period,
     heading,
 }) => {
-    const dataChart = useChart({
+    const chartData = useChart({
         data: data,
         series: series,
     });
@@ -39,14 +39,14 @@ const ChartCard: React.FC<ChartCardProps> = ({
                 <Heading size="md">{heading}</Heading>
             </Card.Header>
             <Card.Body>
-                <Chart.Root maxH="sm" chart={dataChart}>
-                    <LineChart data={dataChart.data}>
-                        <CartesianGrid stroke={dataChart.color("border")} vertical={false} />
+                <Chart.Root maxH="sm" chart={chartData}>
+                    <LineChart data={chartData.data}>
+                        <CartesianGrid stroke={chartData.color("border")} vertical={false} />
                         <XAxis
                             axisLine={false}
-                            dataKey={dataChart.key("period")}
+                            dataKey={chartData.key("period")}
                             tickFormatter={formatXAxisLabel}
-                            stroke={dataChart.color("border")}
+                            stroke={chartData.color("border")}
                             angle={-45}
                             textAnchor="end"
                             height={60}
@@ -55,20 +55,24 @@ const ChartCard: React.FC<ChartCardProps> = ({
                             axisLine={false}
                             tickLine={false}
                             tickMargin={10}
-                            stroke={dataChart.color("border")}
+                            stroke={chartData.color("border")}
                         />
                         <Tooltip
                             animationDuration={100}
                             cursor={false}
                             content={<Chart.Tooltip />}
                         />
-                        {dataChart.series.map((item) => (
+                        <Legend content={<Chart.Legend interaction="hover" />} />
+                        {chartData.series.map((item) => (
                             <Line
                                 key={item.name}
                                 isAnimationActive={false}
-                                dataKey={dataChart.key(item.name)}
-                                stroke={dataChart.color(item.color)}
+                                dataKey={chartData.key(item.name)}
+                                stroke={chartData.color(item.color)}
                                 strokeWidth={2}
+                                fill={chartData.color("bg")}
+                                opacity={chartData.getSeriesOpacity(item.name)}
+                                type="bump"
                                 dot={false}
                             />
                         ))}
