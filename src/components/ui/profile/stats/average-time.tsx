@@ -42,14 +42,22 @@ const AverageTime: React.FC<AverageTimeProps> = ({
                             )}
                             {secs}<Stat.ValueUnit>sec</Stat.ValueUnit>
                         </Stat.ValueText>
-                        <Badge background="transparent" gap="0" size="sm">
-                            {statHasIncreased ?
-                                <Stat.UpIndicator color={evolutionPercentage === 0 ? "gray" : ""} />
-                                :
-                                <Stat.DownIndicator />
-                            }
-                            {evolutionPercentage || 0}%
-                        </Badge>
+                        {helpText !== "" && (
+                            <Badge
+                                background="transparent"
+                                gap="0"
+                                size="sm"
+                            >
+                                <>
+                                    {statHasIncreased ? (
+                                        <Stat.UpIndicator color={evolutionPercentage === 0 ? "gray" : undefined} />
+                                    ) : (
+                                        <Stat.DownIndicator />
+                                    )}
+                                    {evolutionPercentage}%
+                                </>
+                            </Badge>
+                        )}
                     </HStack>
                     <Stat.HelpText fontSize="xs">{helpText}</Stat.HelpText>
                 </Stat.Root>

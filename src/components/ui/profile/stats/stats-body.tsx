@@ -20,7 +20,7 @@ import {
     fetchCurrentUserYearlyStats
 } from "@/services/meApi";
 import { createHeaders } from "@/utils/apiUtils";
-import { DailyParams, StatsPeriod, UserStats } from "@/types/types";
+import { StatsPeriod, UserStats } from "@/types/types";
 
 
 import StatsGrid from "./stats-grid";
@@ -47,21 +47,6 @@ const StatsBody: React.FC = () => {
 
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const [selectedPeriod, setSelectedPeriod] = useState<StatsPeriod>("monthly");
-
-    // Updated interface for storing both current and previous stats
-    interface PeriodStats {
-        current: UserStats | null;
-        previous: UserStats | null;
-        isLoading: boolean;
-    }
-
-    interface StatsData {
-        daily: PeriodStats;
-        weekly: PeriodStats;
-        monthly: PeriodStats;
-        yearly: PeriodStats;
-        allTime: PeriodStats;
-    }
 
     const [statsData, setStatsData] = useState<StatsData>({
         daily: { current: null, previous: null, isLoading: false },
@@ -91,7 +76,7 @@ const StatsBody: React.FC = () => {
 
         try {
             let currentStatsPromise: Promise<Response>;
-            let previousStatsPromise: Promise<Response>;
+            let previousStatsPromise: Promise<Response> | null = null;
 
             const previousParams = getPreviousDateParams(period);
 
@@ -132,13 +117,16 @@ const StatsBody: React.FC = () => {
                     break;
 
                 case "yearly":
-                case "allTime":
                     if ("year" in previousParams) {
-                        currentStatsPromise = period === "yearly" ? fetchCurrentUserYearlyStats(headers) : fetchCurrentUserStats(headers);
+                        currentStatsPromise = fetchCurrentUserYearlyStats(headers);
                         previousStatsPromise = fetchCurrentUserYearlyStats(headers, previousParams.year);
                     } else {
-                        throw new Error("Invalid parameters for yearly or all-time stats");
+                        throw new Error("Invalid parameters for yearly stats");
                     }
+                    break;
+
+                case "allTime":
+                    currentStatsPromise = fetchCurrentUserStats(headers);
                     break;
 
                 default:
@@ -147,12 +135,12 @@ const StatsBody: React.FC = () => {
 
             const [currentResponse, previousResponse] = await Promise.all([
                 currentStatsPromise,
-                previousStatsPromise
+                previousStatsPromise ? previousStatsPromise : Promise.resolve(new Response(JSON.stringify(null)))
             ]);
 
             const [currentStats, previousStats] = await Promise.all([
                 currentResponse.json() as Promise<UserStats>,
-                previousResponse.json() as Promise<UserStats>
+                previousResponse.json().catch(() => null) as Promise<UserStats | null>
             ]);
 
             updateStatsForPeriod(period, {

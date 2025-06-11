@@ -23,7 +23,11 @@ const StatsGrid: React.FC<StatsGridProps> = ({
     isLoading,
     period,
 }) => {
-    const evolution = useStatsEvolution(currentStats, previousStats);
+    // Compute stats evolution only if previousStats isn't null
+    let evolution = null
+    if (previousStats) {
+        evolution = useStatsEvolution(currentStats, previousStats);
+    }
 
     if (isLoading) {
         return (
@@ -40,7 +44,7 @@ const StatsGrid: React.FC<StatsGridProps> = ({
             case "weekly": return "since last week";
             case "monthly": return "since last month";
             case "yearly": return "since last year";
-            case "allTime": return "since last year";
+            case "allTime": return "";
             default: return "since last period";
         }
     };

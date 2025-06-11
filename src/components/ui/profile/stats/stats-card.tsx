@@ -31,18 +31,22 @@ const StatCard: React.FC<StatCardProps> = ({
                                 minimumFractionDigits={numberStyle === "percent" ? 2 : undefined}
                             />
                         </Stat.ValueText>
-                        <Badge
-                            background="transparent"
-                            gap="0"
-                            size="sm"
-                        >
-                            {statHasIncreased ?
-                                <Stat.UpIndicator color={percentageChange === 0 ? "gray" : ""} />
-                                :
-                                <Stat.DownIndicator />
-                            }
-                            {percentageChange}%
-                        </Badge>
+                        {helpText !== "" && (
+                            <Badge
+                                background="transparent"
+                                gap="0"
+                                size="sm"
+                            >
+                                <>
+                                    {statHasIncreased ? (
+                                        <Stat.UpIndicator color={percentageChange === 0 ? "gray" : undefined} />
+                                    ) : (
+                                        <Stat.DownIndicator />
+                                    )}
+                                    {percentageChange}%
+                                </>
+                            </Badge>
+                        )}
                     </HStack>
                     <Stat.HelpText fontSize="xs">{helpText}</Stat.HelpText>
                 </Stat.Root>
