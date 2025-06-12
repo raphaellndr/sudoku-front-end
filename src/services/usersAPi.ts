@@ -33,6 +33,36 @@ export const fetchUserGames = async (
 };
 
 /**
+ * Fetches a specific user identified by their UUID.
+ *
+ * @param {HeadersInit} headers - The headers to be included in the API request.
+ * @param {string} userId - The UUID of the user.
+ * @returns {Promise<Response>} - A promise that resolves to the response.
+ * @throws {Error} - Throws an error if the request fails.
+ */
+export const fetchUser = async (
+    headers: HeadersInit,
+    userId: string,
+): Promise<Response> => {
+    try {
+        const response = await fetch(`${USERS_API_BASE_URL}${userId}/`, {
+            method: "GET",
+            headers,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        notifyError(`Error fetching user games: ${errorMessage}`);
+        throw error;
+    }
+}
+
+/**
  * Fetches the overall statistics for a specific user identified by UUID.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
@@ -186,14 +216,22 @@ export const fetchUserYearlyStats = async (
  * Fetches the leaderboard data.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
+ * @param {number} limit - The number of players to fetch.
  * @returns {Promise<Response>} - A promise that resolves to the response.
  * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchLeaderboard = async (
     headers: HeadersInit,
+    limit?: number,
 ): Promise<Response> => {
     try {
-        const response = await fetch(`${USERS_API_BASE_URL}stats/leaderboard/`, {
+        const url = new URL(`${USERS_API_BASE_URL}stats/leaderboard/`);
+
+        if (limit) {
+            url.searchParams.append("limit", limit.toString());
+        }
+
+        const response = await fetch(url.toString(), {
             method: "GET",
             headers,
         });
