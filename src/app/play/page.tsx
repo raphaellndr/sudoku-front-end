@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
+
 import { useSession } from "next-auth/react";
 import {
     Box,
@@ -11,7 +13,6 @@ import {
     useBreakpointValue,
 } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
-import { useRef, useState, useEffect } from "react";
 
 import Header from "@/components/ui/header/header";
 import Footer from "@/components/ui/footer/footer";
