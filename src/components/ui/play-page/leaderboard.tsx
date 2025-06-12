@@ -110,9 +110,9 @@ const Leaderboard = () => {
                                         index === 2 ? "orange.900" :
                                             "gray.800"
                             ) : (
-                                index === 0 ? "yellow.50" :
-                                    index === 1 ? "gray.50" :
-                                        index === 2 ? "orange.50" :
+                                index === 0 ? "yellow.100" :
+                                    index === 1 ? "gray.100" :
+                                        index === 2 ? "orange.100" :
                                             "white"
                             )
                         }
@@ -151,7 +151,6 @@ const Leaderboard = () => {
                         <Text
                             fontSize="lg"
                             fontWeight="bold"
-                            color={colorMode === "dark" ? "blue.400" : "blue.600"}
                         >
                             {data.total_score}
                         </Text>
