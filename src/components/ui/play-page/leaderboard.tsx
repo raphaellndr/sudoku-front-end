@@ -8,7 +8,6 @@ import {
     Text,
     Spinner,
     Flex,
-    Avatar,
 } from "@chakra-ui/react";
 
 import { fetchLeaderboard } from "@/services/usersAPi";
@@ -117,9 +116,6 @@ const Leaderboard = () => {
                                             "white"
                             )
                         }
-                        _hover={{
-                            bg: colorMode === "dark" ? "gray.700" : "gray.50"
-                        }}
                         transition="background 0.2s"
                     >
                         <Flex align="center" gap={4} flex="1">
@@ -143,10 +139,6 @@ const Leaderboard = () => {
                             >
                                 {index + 1}
                             </Text>
-
-                            <Avatar.Root size="sm">
-                                <Avatar.Fallback name={data.username} />
-                            </Avatar.Root>
 
                             <Text
                                 fontWeight="semibold"
