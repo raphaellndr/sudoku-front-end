@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { Accordion, Button, Field, Flex, Input, Spinner, Stack } from "@chakra-ui/react";
+import { Accordion, Button, Field, Input, Stack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { SettingsFormValues } from "@/types/types";
