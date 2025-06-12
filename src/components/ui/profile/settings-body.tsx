@@ -11,18 +11,7 @@ import { SettingsFormSchema } from "@/types/schemas";
 import { notifySuccess } from "@/toasts/toast";
 import { createHeaders } from "@/utils/apiUtils";
 import { partialUpdateCurrentUser } from "@/services/meApi";
-
-const filterNonEmptyFields = (data: SettingsFormValues) => {
-    const filteredData = Object.keys(data).reduce<Partial<SettingsFormValues>>((acc, key) => {
-        const k = key as keyof SettingsFormValues;
-        const value = data[k];
-        if (value !== undefined && value !== null && value !== "") {
-            acc[k] = value;
-        }
-        return acc;
-    }, {});
-    return filteredData;
-};
+import { filterNonEmptyFields } from "@/utils/formUtils";
 
 const SettingsBody = () => {
     const { data: session, status, update } = useSession();
