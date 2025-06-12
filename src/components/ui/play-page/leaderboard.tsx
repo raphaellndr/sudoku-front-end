@@ -161,7 +161,7 @@ const Leaderboard = () => {
                             fontWeight="bold"
                             color={colorMode === "dark" ? "blue.400" : "blue.600"}
                         >
-                            {data.total_score.toLocaleString()}
+                            {data.total_score}
                         </Text>
                     </Flex>
                 ))}
