@@ -1,4 +1,5 @@
 import { Box, CloseButton, Dialog, Portal } from "@chakra-ui/react";
+
 import LeaderboardButton from "./leaderboard-button";
 import Leaderboard from "./leaderboard";
 
