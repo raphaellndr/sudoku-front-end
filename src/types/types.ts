@@ -11,6 +11,7 @@ import {
 } from "./enums";
 import {
     GameRecordSchema,
+    LeaderboardSchema,
     RegisterFormSchema,
     SettingsFormSchema,
     SignInFormSchema,
@@ -36,6 +37,8 @@ export type UserStats = z.infer<typeof UserStatsSchema>;
 
 export type StatsPeriod = z.infer<typeof StatsPeriodEnum>;
 export type ChartsPeriod = z.infer<typeof ChartsPeriodEnum>;
+
+export type Leaderboard = z.infer<typeof LeaderboardSchema>
 
 export type DailyParams = {
     date: string;
