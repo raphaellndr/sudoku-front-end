@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
@@ -29,6 +29,8 @@ const SettingsBody = () => {
     const router = useRouter();
     const headers = createHeaders(session);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -47,6 +49,8 @@ const SettingsBody = () => {
     const emailValue = watch("email");
 
     const onSubmit = handleSubmit(async (data) => {
+        setIsSubmitting(true);
+
         const userData = filterNonEmptyFields(data);
         await partialUpdateCurrentUser(headers, userData);
 
@@ -58,6 +62,8 @@ const SettingsBody = () => {
                 ...userData
             }
         });
+
+        setIsSubmitting(false);
     });
 
     return (
@@ -78,7 +84,7 @@ const SettingsBody = () => {
                         )}
                     </Field.Root>
 
-                    <Button type="submit">Save changes</Button>
+                    <Button type="submit" loading={isSubmitting}>Save changes</Button>
                 </Stack>
             </form>
         </Accordion.ItemBody>
