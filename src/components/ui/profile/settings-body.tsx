@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SettingsFormValues } from "@/types/types";
 import { SettingsFormSchema } from "@/types/schemas";
 import { notifyError, notifySuccess } from "@/toasts/toast";
+import { createHeaders } from "@/utils/apiUtils";
+import { partialUpdateCurrentUser } from "@/services/meApi";
 
 const filterNonEmptyFields = (data: SettingsFormValues) => {
     const filteredData = Object.keys(data).reduce<Partial<SettingsFormValues>>((acc, key) => {
@@ -23,8 +25,9 @@ const filterNonEmptyFields = (data: SettingsFormValues) => {
 };
 
 const SettingsBody = () => {
-    const { data: session, update } = useSession();
+    const { data: session, status, update } = useSession();
     const router = useRouter();
+    const headers = createHeaders(session);
 
     const {
         register,
@@ -45,35 +48,16 @@ const SettingsBody = () => {
 
     const onSubmit = handleSubmit(async (data) => {
         const userData = filterNonEmptyFields(data);
+        await partialUpdateCurrentUser(headers, userData);
 
-        const response = await fetch(
-            process.env.NEXT_PUBLIC_BACKEND_URL + "api/auth/user/",
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + session?.accessToken,
-                },
-                body: JSON.stringify(userData),
+        notifySuccess("User data updated successfully!");
+        update({
+            ...session,
+            user: {
+                ...session?.user,
+                ...userData
             }
-        );
-
-        if (response.ok) {
-            notifySuccess("User data updated successfully!");
-
-            // Trigger a session update
-            update({
-                ...session,
-                user: {
-                    ...session?.user,
-                    ...userData
-                }
-            });
-        } else {
-            const errorData = await response.json();
-            console.error("Error updating user data: ", errorData);
-            notifyError("Error updating user data");
-        }
+        });
     });
 
     return (
