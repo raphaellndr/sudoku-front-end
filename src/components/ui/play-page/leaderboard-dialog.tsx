@@ -34,6 +34,7 @@ const LeaderboardDialog: React.FC<LeaderboardDialogProps> = ({
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
                     <Dialog.Content mx={4}>
+                        <Dialog.Title textAlign="center" mt="4">🏆 Leaderboard 🏆</Dialog.Title>
                         <Dialog.Header>
                             <Dialog.CloseTrigger asChild>
                                 <CloseButton size="sm" />
