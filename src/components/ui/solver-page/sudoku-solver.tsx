@@ -5,8 +5,9 @@ import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 import { notifyError } from "@/toasts/toast";
 import { Sudoku } from "@/types/types";
 import { abortSolving, createSudoku, solveSudoku } from "@/services/sudokusApi";
-import { useSudoku } from "../sudoku/use-sudoku";
-import { useSudokuWebSocket } from "../sudoku/use-sudoku-websocket";
+import { useSudokuWebSocket } from "@/hooks/use-sudoku-websocket";
+import { useSudoku } from "@/hooks/use-sudoku";
+
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import DisplayGrid from "../sudoku/grid/display-grid";
 
