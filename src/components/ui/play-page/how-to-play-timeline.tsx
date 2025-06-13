@@ -91,13 +91,10 @@ const HowToPlayTimeline: React.FC = () => {
                     title="Start Playing"
                     step={2}
                     color="green.400"
-                    isLast
                 >
                     Once you have filled in the grid, click the "Start Playing" button to begin the game. The puzzle will be validated and solved in the background.
                 </TimelineItem>
-            </GridItem>
 
-            <GridItem>
                 <TimelineItem
                     icon={LuClock}
                     title="Gameplay"
