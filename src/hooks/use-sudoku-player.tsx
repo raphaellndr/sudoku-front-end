@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { Sudoku } from "@/types/types";
 import { notifySuccess } from "@/toasts/toast";
-import { MAX_HINTS } from "./buttons/hint-button";
-import { MAX_CHECKS } from "./buttons/check-button";
-import { Cell } from "./sudoku-player";
+import { Cell } from "@/components/ui/play-page/sudoku-player";
+import { MAX_HINTS } from "@/components/ui/play-page/buttons/hint-button";
+import { MAX_CHECKS } from "@/components/ui/play-page/buttons/check-button";
 
 interface UseSudokuPlayerProps {
     grid: Cell[];

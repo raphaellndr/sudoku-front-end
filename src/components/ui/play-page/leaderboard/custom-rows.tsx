@@ -14,7 +14,7 @@ import {
     FormatNumber,
 } from "@chakra-ui/react";
 
-import { formatTime } from "../timer";
+import { formatTime } from "@/utils/time";
 
 export const ErrorRow = () => {
     return (

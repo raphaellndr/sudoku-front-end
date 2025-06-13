@@ -1,11 +1,7 @@
 import { Badge, IconButton } from "@chakra-ui/react";
 import { IoIosPause, IoIosPlay } from "react-icons/io";
 
-export const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-};
+import { formatTime } from "@/utils/time";
 
 interface TimerProps {
     timer: number;
