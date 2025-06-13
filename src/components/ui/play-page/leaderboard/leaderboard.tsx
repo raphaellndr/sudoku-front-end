@@ -39,6 +39,7 @@ const Leaderboard = () => {
     }, []);
 
     const rows = leaderboardData.map((item, index) => (
+        
         <Table.Row key={item.user_id}>
             <Table.Cell>{index + 1}</Table.Cell>
             <Table.Cell>{item.username}</Table.Cell>

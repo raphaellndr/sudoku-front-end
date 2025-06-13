@@ -18,8 +18,8 @@ import Header from "@/components/ui/header/header";
 import Footer from "@/components/ui/footer/footer";
 import SudokuPlayer from "@/components/ui/play-page/sudoku-player";
 import HowToPlayAccordion from "@/components/ui/play-page/how-to-play-accordion";
-import Leaderboard from "@/components/ui/play-page/leaderboard";
-import LeaderboardDialog from "@/components/ui/play-page/leaderboard-dialog";
+import Leaderboard from "@/components/ui/play-page/leaderboard/leaderboard";
+import LeaderboardDialog from "@/components/ui/play-page/leaderboard/leaderboard-dialog";
 
 export default function Home() {
     const { status } = useSession();
