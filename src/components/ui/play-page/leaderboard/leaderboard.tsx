@@ -6,7 +6,7 @@ import { createHeaders } from "@/utils/apiUtils";
 import { Leaderboard as LeaderboardData } from "@/types/types";
 import { fetchLeaderboard } from "@/services/usersAPi";
 
-import { ErrorRow } from "./custom-rows";
+import { ErrorRow, PlayerDetailRow } from "./custom-rows";
 
 interface LeaderboardResponse {
     count: number;
@@ -41,11 +41,11 @@ const Leaderboard = () => {
     }, []);
 
     const rows = leaderboardData.map((item, index) => (
-        <Table.Row key={item.user_id}>
-            <Table.Cell>{index + 1}</Table.Cell>
-            <Table.Cell>{item.username}</Table.Cell>
-            <Table.Cell textAlign="end">{item.total_score}</Table.Cell>
-        </Table.Row>
+        <PlayerDetailRow
+            key={item.user_id}
+            data={item}
+            index={index}
+        />
     ));
 
     if (loading) {
