@@ -15,7 +15,7 @@ import {
 import { PiCursorClick } from "react-icons/pi";
 import { IconType } from "react-icons";
 
-import { useColorModeValue } from "../color-mode";
+import { useColorModeValue } from "../../color-mode";
 
 interface TimelineItemProps {
     icon: IconType;

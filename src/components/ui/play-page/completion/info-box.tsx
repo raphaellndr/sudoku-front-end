@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-import { useColorModeValue } from "../color-mode";
+import { useColorModeValue } from "../../color-mode";
 
 interface InfoBoxProps {
     icon: React.ReactNode;

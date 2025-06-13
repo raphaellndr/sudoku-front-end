@@ -14,10 +14,10 @@ import { useSudoku } from "@/hooks/use-sudoku";
 import { useSudokuWebSocket } from "@/hooks/use-sudoku-websocket";
 import { useTimer } from "@/hooks/use-timer";
 
-import CompletionDialog from "./completion-dialog";
 import Timer from "./timer";
 import { HintButton, MAX_HINTS } from "./buttons/hint-button";
 import { CheckButton, MAX_CHECKS } from "./buttons/check-button";
+import CompletionDialog from "./completion/completion-dialog";
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../sudoku/grid/sudoku-game-grid";
 import PlayerResultGrid from "../sudoku/grid/player-result-grid";

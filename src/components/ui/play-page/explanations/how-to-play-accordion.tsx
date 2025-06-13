@@ -2,8 +2,8 @@ import { Accordion, Icon } from "@chakra-ui/react";
 import { FaLightbulb } from "react-icons/fa";
 import { MdOutlineRule } from "react-icons/md";
 
-import HowToPlayTimeline from "@/components/ui/play-page/how-to-play-timeline";
 import RulesSection from "./rules-section";
+import HowToPlayTimeline from "./how-to-play-timeline";
 
 const HowToPlayAccordion = () => {
     return (

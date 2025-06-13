@@ -1,7 +1,7 @@
 import { VStack, Box, Separator } from "@chakra-ui/react";
 
 import SudokuPlayer from "@/components/ui/play-page/sudoku-player";
-import HowToPlayAccordion from "@/components/ui/play-page/how-to-play-accordion";
+import HowToPlayAccordion from "@/components/ui/play-page/explanations/how-to-play-accordion";
 import LeaderboardDialogButton from "@/components/ui/play-page/leaderboard/leaderboard-dialog-button";
 
 interface MobileLayoutProps {

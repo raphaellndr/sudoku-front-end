@@ -15,7 +15,7 @@ import {
 } from "react-icons/md";
 import { IconType } from "react-icons";
 
-import { useColorModeValue } from "../color-mode";
+import { useColorModeValue } from "../../color-mode";
 
 interface RuleCardProps {
     icon: IconType;

@@ -4,10 +4,12 @@ import { Button, CloseButton, Dialog, Portal, Text, VStack } from "@chakra-ui/re
 import { FaRegClock, FaRegLightbulb, FaUndo } from "react-icons/fa";
 import confetti from "canvas-confetti";
 
-import { formatTime } from "./timer";
-import { MAX_HINTS } from "./buttons/hint-button";
+import { formatTime } from "@/utils/time";
+
 import InfoBox from "./info-box";
-import { useColorModeValue } from "../color-mode";
+import { MAX_HINTS } from "../buttons/hint-button";
+import { useColorModeValue } from "../../color-mode";
+
 
 const fireConfetti = (): void => {
     const count = 200;
