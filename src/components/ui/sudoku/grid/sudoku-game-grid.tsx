@@ -1,10 +1,9 @@
 import { Input, Text, Box, Flex, IconButton } from "@chakra-ui/react";
 import { IoIosPlay } from "react-icons/io";
 
-import { Sudoku } from "@/types/sudoku";
+import { Cell, Sudoku } from "@/types/sudoku";
 
 import { BaseSudokuGrid } from "./base-sudoku-grid";
-import { Cell } from "../../play-page/sudoku-player";
 import { useColorModeValue } from "../../color-mode";
 
 interface SudokuGameGridProps {

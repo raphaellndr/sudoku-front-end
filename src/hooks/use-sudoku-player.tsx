@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { Sudoku } from "@/types/sudoku";
+import { Cell, Sudoku } from "@/types/sudoku";
 import { notifySuccess } from "@/toasts/toast";
-import { Cell } from "@/components/ui/play-page/sudoku-player";
 import { MAX_HINTS } from "@/components/ui/play-page/buttons/hint-button";
 import { MAX_CHECKS } from "@/components/ui/play-page/buttons/check-button";
 

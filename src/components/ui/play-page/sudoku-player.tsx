@@ -13,7 +13,7 @@ import { useSudoku } from "@/hooks/use-sudoku";
 import { useSudokuWebSocket } from "@/hooks/use-sudoku-websocket";
 import { useTimer } from "@/hooks/use-timer";
 import { GameRecord } from "@/types/games";
-import { Sudoku } from "@/types/sudoku";
+import { Cell, Sudoku } from "@/types/sudoku";
 
 import Timer from "./timer";
 import { HintButton, MAX_HINTS } from "./buttons/hint-button";
@@ -23,13 +23,6 @@ import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import { SudokuGameGrid } from "../sudoku/grid/sudoku-game-grid";
 import PlayerResultGrid from "../sudoku/grid/player-result-grid";
 import DisplayGrid from "../sudoku/grid/display-grid";
-
-export type Cell = {
-    position: [number, number];
-    value: string;
-    isHint: boolean;
-    isVerified: boolean;
-};
 
 const SudokuPlayer = () => {
     // Session state

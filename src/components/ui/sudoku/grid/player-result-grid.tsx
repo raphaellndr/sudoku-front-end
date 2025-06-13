@@ -1,10 +1,9 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 
-import { Sudoku } from "@/types/sudoku";
+import { Cell, Sudoku } from "@/types/sudoku";
 
 import { BaseSudokuGrid } from "./base-sudoku-grid";
 import { useColorModeValue } from "../../color-mode";
-import { Cell } from "../../play-page/sudoku-player";
 
 interface PlayerResultGridProps {
     sudoku: Sudoku;
