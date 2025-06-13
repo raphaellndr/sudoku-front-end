@@ -6,11 +6,14 @@ import { useSession } from "next-auth/react";
 import {
     Box,
     Flex,
+    HStack,
+    VStack,
     Separator,
     Show,
     Spinner,
     Container,
     useBreakpointValue,
+    Card,
 } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
 
@@ -23,8 +26,10 @@ import LeaderboardDialogButton from "@/components/ui/play-page/leaderboard/leade
 
 export default function Home() {
     const { status } = useSession();
+
     const isLargeScreen = useBreakpointValue({ base: false, lg: true });
     const headerRef = useRef<HTMLDivElement>(null);
+
     const [headerHeight, setHeaderHeight] = useState(0);
     const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
 
@@ -38,9 +43,9 @@ export default function Home() {
     const buttonTop = headerHeight + 16;
 
     return (
-        <Flex direction="column" minHeight="100vh">
+        <VStack minHeight="100vh" gap={0}>
             <ToastContainer />
-            <Box ref={headerRef}>
+            <Box ref={headerRef} width="100%">
                 <Header />
             </Box>
 
@@ -58,28 +63,38 @@ export default function Home() {
                         </Flex>
                     }>
                         {isLargeScreen ? (
-                            <Flex direction="column">
-                                <Flex direction="row" gap={8} mb={8}>
+                            <VStack gap={8} align="stretch">
+                                <HStack gap={8}>
                                     <Box flex="2">
                                         <SudokuPlayer />
                                     </Box>
                                     <Box flex="1">
-                                        <Leaderboard />
+                                        <Card.Root
+                                            shadow="md"
+                                            maxHeight="500px"
+                                        >
+                                            <Card.Body>
+                                                <Card.Title mb="4" textAlign="center">
+                                                    🏆 Leaderboard 🏆
+                                                </Card.Title>
+                                                <Leaderboard />
+                                            </Card.Body>
+                                        </Card.Root>
                                     </Box>
-                                </Flex>
-                                <Separator mb={10} />
-                                <Box mb={6}>
+                                </HStack>
+                                <Separator />
+                                <Box>
                                     <HowToPlayAccordion />
                                 </Box>
-                            </Flex>
+                            </VStack>
                         ) : (
-                            <Flex direction="column">
+                            <VStack gap={6}>
                                 <SudokuPlayer />
-                                <Separator mb={10} mt={4} />
-                                <Box mb={6}>
+                                <Separator />
+                                <Box>
                                     <HowToPlayAccordion />
                                 </Box>
-                            </Flex>
+                            </VStack>
                         )}
                     </Show>
                 </Container>
@@ -95,6 +110,6 @@ export default function Home() {
 
             <Separator marginLeft="5" marginRight="5" />
             <Footer />
-        </Flex>
+        </VStack>
     );
 }

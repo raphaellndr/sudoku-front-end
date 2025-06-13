@@ -57,23 +57,25 @@ const Leaderboard = () => {
     }
 
     return (
-        <Table.Root size="sm" interactive>
-            <Table.ColumnGroup>
-                <Table.Column htmlWidth={!error ? "10%" : "100%"} />
-            </Table.ColumnGroup>
-            <Table.Header>
-                <Table.Row>
-                    <Table.ColumnHeader />
-                    {!error && (
-                        <>
-                            <Table.ColumnHeader>Player</Table.ColumnHeader>
-                            <Table.ColumnHeader textAlign="end">Total Score</Table.ColumnHeader>
-                        </>
-                    )}
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>{!error ? rows : <ErrorRow />}</Table.Body>
-        </Table.Root>
+        <Table.ScrollArea rounded="md" height="400px">
+            <Table.Root size="sm" interactive stickyHeader>
+                <Table.ColumnGroup>
+                    <Table.Column htmlWidth={!error ? "10%" : "100%"} />
+                </Table.ColumnGroup>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeader />
+                        {!error && (
+                            <>
+                                <Table.ColumnHeader>Player</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="end">Total Score</Table.ColumnHeader>
+                            </>
+                        )}
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>{!error ? rows : <ErrorRow />}</Table.Body>
+            </Table.Root>
+        </Table.ScrollArea>
     );
 };
 
