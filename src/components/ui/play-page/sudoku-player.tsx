@@ -4,15 +4,16 @@ import { useSession } from "next-auth/react";
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { notifyError } from "@/toasts/toast";
-import { GameRecord, Sudoku } from "@/types/types";
 import { abortSolving, createSudoku, solveSudoku } from "@/services/sudokusApi";
 import { createGame } from "@/services/gamesApi";
 import { calculateScore } from "@/utils/score";
-import { GameStatusEnum } from "@/types/enums";
+import { GameStatusEnum } from "@/enums/games";
 import { useSudokuPlayer } from "@/hooks/use-sudoku-player";
 import { useSudoku } from "@/hooks/use-sudoku";
 import { useSudokuWebSocket } from "@/hooks/use-sudoku-websocket";
 import { useTimer } from "@/hooks/use-timer";
+import { GameRecord } from "@/types/games";
+import { Sudoku } from "@/types/sudoku";
 
 import Timer from "./timer";
 import { HintButton, MAX_HINTS } from "./buttons/hint-button";

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
-import { Sudoku, SudokuSolution } from "@/types/types";
-import { SudokuStatusEnum } from "@/types/enums";
+import { Sudoku, SudokuSolution } from "@/types/sudoku";
+import { SudokuDifficultyEnum, SudokuStatusEnum } from "@/enums/sudoku";
 import { notifyError } from "@/toasts/toast";
 import { fetchSudokuSolution } from "@/services/sudokusApi";
 

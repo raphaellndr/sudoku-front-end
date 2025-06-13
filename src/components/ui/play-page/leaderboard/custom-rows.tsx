@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { Leaderboard as LeaderboardData } from "@/types/types";
 import {
     CloseButton,
     Dialog,
@@ -15,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 import { formatTime } from "@/utils/time";
+import { Leaderboard as LeaderboardData } from "@/types/stats";
 
 export const ErrorRow = () => {
     return (

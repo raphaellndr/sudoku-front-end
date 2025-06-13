@@ -1,6 +1,6 @@
 import { notifyError } from "@/toasts/toast";
-import { SudokuDifficultyEnum } from "@/types/enums";
-import { SudokuDifficulty } from "@/types/types";
+import { SudokuDifficultyEnum } from "@/enums/sudoku";
+import { SudokuDifficulty } from "@/types/sudoku";
 
 const SUDOKUS_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/sudokus/`;
 

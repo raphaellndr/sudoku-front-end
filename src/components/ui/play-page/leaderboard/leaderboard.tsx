@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Flex, Spinner, Table } from "@chakra-ui/react";
 
 import { createHeaders } from "@/utils/apiUtils";
-import { Leaderboard as LeaderboardData } from "@/types/types";
 import { fetchLeaderboard } from "@/services/usersAPi";
+import { Leaderboard as LeaderboardData } from "@/types/stats";
 
 import { ErrorRow, PlayerDetailRow } from "./custom-rows";
 

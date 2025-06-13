@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { notifyError } from "@/toasts/toast";
-import { Sudoku } from "@/types/types";
+import { Sudoku } from "@/types/sudoku";
 import { abortSolving, createSudoku, solveSudoku } from "@/services/sudokusApi";
 import { useSudokuWebSocket } from "@/hooks/use-sudoku-websocket";
 import { useSudoku } from "@/hooks/use-sudoku";

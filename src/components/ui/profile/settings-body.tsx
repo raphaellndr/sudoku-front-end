@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { Accordion, Button, Field, Input, Stack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { SettingsFormValues } from "@/types/types";
-import { SettingsFormSchema } from "@/types/schemas";
+import { SettingsFormValues } from "@/types/forms";
+import { SettingsFormSchema } from "@/schemas/forms";
 import { notifySuccess } from "@/toasts/toast";
 import { createHeaders } from "@/utils/apiUtils";
 import { partialUpdateCurrentUser } from "@/services/meApi";

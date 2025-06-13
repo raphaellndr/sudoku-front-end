@@ -1,6 +1,6 @@
 import { Float, Status } from "@chakra-ui/react";
 
-import { SudokuStatus as SudokuStatusType } from "@/types/types";
+import { SudokuStatus as SudokuStatusType } from "@/types/sudoku";
 
 const getStatusColor = (status: string | null) => {
     switch (status) {

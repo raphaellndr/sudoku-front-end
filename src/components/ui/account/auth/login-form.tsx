@@ -3,10 +3,11 @@ import { Button, Input, Stack } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { SignInFormValues } from "@/types/forms";
+import { SignInFormSchema } from "@/schemas/forms";
+
 import { Field } from "../../field"
 import { PasswordInput } from "../../password-input";
-import { SignInFormValues } from "@/types/types";
-import { SignInFormSchema } from "@/types/schemas";
 
 const LoginForm = () => {
     const {

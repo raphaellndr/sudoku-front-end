@@ -12,7 +12,7 @@ import {
 import { LuRefreshCw, LuCalendar, LuClock } from "react-icons/lu";
 
 import { createHeaders } from "@/utils/apiUtils";
-import { ChartsPeriod, UserStats } from "@/types/types";
+import { ChartsPeriod, UserStats } from "@/types/stats";
 import {
     fetchCurrentUserDailyStats,
     fetchCurrentUserMonthlyStats,

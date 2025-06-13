@@ -1,5 +1,5 @@
-import { Box } from "@chakra-ui/react";
-import { Sudoku } from "@/types/types";
+import { Sudoku } from "@/types/sudoku";
+
 import { SudokuCreatorGrid } from "../sudoku/grid/sudoku-creator-grid";
 import DisplayGrid from "../sudoku/grid/display-grid";
 

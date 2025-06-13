@@ -2,8 +2,8 @@ import { Box, Circle, Float } from "@chakra-ui/react";
 import { FaRegLightbulb } from "react-icons/fa";
 
 import TooltipIconButton from "@/components/ui/tooltip-icon-button";
-import { Sudoku } from "@/types/types";
 import { useColorModeValue } from "@/components/ui/color-mode";
+import { Sudoku } from "@/types/sudoku";
 
 export const MAX_HINTS = 3;
 

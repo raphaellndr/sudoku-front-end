@@ -2,7 +2,8 @@ import { ReactNode } from "react";
 
 import { Box, Grid } from "@chakra-ui/react";
 
-import { Sudoku } from "@/types/types";
+import { Sudoku } from "@/types/sudoku";
+
 import { useColorModeValue } from "../../color-mode";
 
 export interface BaseSudokuGridProps {

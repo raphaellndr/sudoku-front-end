@@ -1,5 +1,5 @@
 import { notifyError } from "@/toasts/toast";
-import { GameRecord } from "@/types/types";
+import { GameRecord } from "@/types/games";
 
 const GAMES_API_BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}api/games/`;
 

@@ -1,6 +1,6 @@
 import { Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
 
-import { StatsPeriod, UserStats } from "@/types/types";
+import { StatsPeriod, UserStats } from "@/types/stats";
 
 import AverageTime from "./average-time";
 import GamesWon from "./games-won";

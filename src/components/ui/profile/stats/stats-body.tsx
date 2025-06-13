@@ -20,8 +20,9 @@ import {
     fetchCurrentUserYearlyStats
 } from "@/services/meApi";
 import { createHeaders } from "@/utils/apiUtils";
-import { PreviousDateParams, StatsPeriod, UserStats } from "@/types/types";
 import { getWeekNumber } from "@/utils/date";
+import { StatsPeriod, UserStats } from "@/types/stats";
+import { PreviousDateParams } from "@/types/dates";
 
 import StatsGrid from "./stats-grid";
 import TooltipIconButton from "../../tooltip-icon-button";

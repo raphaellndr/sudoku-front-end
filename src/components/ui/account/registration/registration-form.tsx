@@ -3,10 +3,11 @@ import { Button, Input, Stack } from "@chakra-ui/react"
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { RegisterFormValues } from "@/types/forms";
+import { RegisterFormSchema } from "@/schemas/forms";
+
 import { Field } from "../../field"
 import { PasswordInput } from "../../password-input";
-import { RegisterFormValues } from "@/types/types";
-import { RegisterFormSchema } from "@/types/schemas";
 
 const RegistrationForm = () => {
     const {
