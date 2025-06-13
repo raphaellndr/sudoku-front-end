@@ -3,13 +3,13 @@ import { Box, CloseButton, Dialog, Portal } from "@chakra-ui/react";
 import LeaderboardButton from "./leaderboard-button";
 import Leaderboard from "./leaderboard";
 
-interface LeaderboardDialogProps {
+interface LeaderboardDialogButtonProps {
     isOpen: boolean;
     setIsLeaderboardOpen: React.Dispatch<React.SetStateAction<boolean>>;
     headerHeight: number;
 };
 
-const LeaderboardDialog: React.FC<LeaderboardDialogProps> = ({
+const LeaderboardDialogButton: React.FC<LeaderboardDialogButtonProps> = ({
     isOpen,
     setIsLeaderboardOpen,
     headerHeight,
@@ -50,4 +50,4 @@ const LeaderboardDialog: React.FC<LeaderboardDialogProps> = ({
     );
 };
 
-export default LeaderboardDialog;
+export default LeaderboardDialogButton;
