@@ -19,7 +19,7 @@ import Footer from "@/components/ui/footer/footer";
 import SudokuPlayer from "@/components/ui/play-page/sudoku-player";
 import HowToPlayAccordion from "@/components/ui/play-page/how-to-play-accordion";
 import Leaderboard from "@/components/ui/play-page/leaderboard/leaderboard";
-import LeaderboardDialog from "@/components/ui/play-page/leaderboard/leaderboard-dialog";
+import LeaderboardDialogButton from "@/components/ui/play-page/leaderboard/leaderboard-dialog-button";
 
 export default function Home() {
     const { status } = useSession();
@@ -85,7 +85,7 @@ export default function Home() {
                 </Container>
 
                 {!isLargeScreen &&
-                    <LeaderboardDialog
+                    <LeaderboardDialogButton
                         isOpen={isLeaderboardOpen}
                         setIsLeaderboardOpen={setIsLeaderboardOpen}
                         headerHeight={headerHeight}
