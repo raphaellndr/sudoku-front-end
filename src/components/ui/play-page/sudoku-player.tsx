@@ -90,15 +90,15 @@ const SudokuPlayer = () => {
     }, [grid, sudoku.grid]);
 
     // Event handlers
-    const handleStartPlaying = useCallback(() => {
+    const handleStartPlaying = () => {
         startPlaying(sudoku, setSudoku, headers, validateSudokuGrid);
-    }, [sudoku, setSudoku, headers, validateSudokuGrid, startPlaying]);
+    };
 
-    const handleAbortButton = useCallback(() => {
+    const handleAbortButton = () => {
         if (sudoku.id) {
             abortGame(sudoku.id, headers);
         }
-    }, [sudoku.id, headers, abortGame]);
+    };
 
     const handleGiveUpButton = useCallback(async () => {
         const gameData = createGameRecord(
@@ -111,16 +111,16 @@ const SudokuPlayer = () => {
         completeGame(false);
     }, [sudoku, grid, remainingHints, remainingChecks, cellDeletionCount, timer, headers, createGameRecord, saveGame, revealSolution, resetTimer, completeGame]);
 
-    const handleStartNewPuzzle = useCallback(() => {
+    const handleStartNewPuzzle = () => {
         clearSudokuGrid();
         startNewGame();
         resetTimer();
-    }, [clearSudokuGrid, startNewGame, resetTimer]);
+    };
 
-    const handleRestartPuzzle = useCallback(() => {
+    const handleRestartPuzzle = () => {
         resetPlayerGrid();
         restartTimer();
-    }, [resetPlayerGrid, restartTimer]);
+    };
 
     // Render grid based on mode
     const renderGrid = () => {
