@@ -1,13 +1,13 @@
 "use client";
 
-import { VStack, Box } from "@chakra-ui/react";
+import { VStack, Box, Flex, Separator } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
 
 import PageHeader from "@/components/ui/play-page/page-header";
-import PageFooter from "@/components/ui/play-page/page-footer";
 import MainContent from "@/components/ui/play-page/main-content";
 import { useHeaderHeight } from "@/hooks/useHeaderHeight";
 import { useLeaderboardState } from "@/hooks/useLeaderboardState";
+import Footer from "@/components/ui/footer/footer";
 
 export default function Home() {
     const { headerRef, headerHeight } = useHeaderHeight();
@@ -16,7 +16,7 @@ export default function Home() {
     const buttonTop = headerHeight + 16;
 
     return (
-        <VStack minHeight="100vh" gap={0}>
+        <Flex direction="column" minHeight="100vh">
             <ToastContainer />
 
             <PageHeader ref={headerRef} />
@@ -35,7 +35,8 @@ export default function Home() {
                 />
             </Box>
 
-            <PageFooter />
-        </VStack>
+            <Separator marginLeft="5" marginRight="5" marginTop="5" />
+            <Footer />
+        </Flex>
     );
 }
