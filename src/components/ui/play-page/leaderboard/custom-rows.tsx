@@ -53,7 +53,7 @@ export const PlayerDetailRow: React.FC<PlayerDetailRowProps> = ({
                 <Portal>
                     <Dialog.Backdrop />
                     <Dialog.Positioner>
-                        <Dialog.Content maxW="400px">
+                        <Dialog.Content maxW="400px" mx={4}>
                             <Dialog.Header>
                                 <Dialog.Title>{data.username}</Dialog.Title>
                                 <Dialog.CloseTrigger asChild>
@@ -105,7 +105,7 @@ export const PlayerDetailRow: React.FC<PlayerDetailRowProps> = ({
                                         <HStack justify="space-between">
                                             <Text>Average Score</Text>
                                             <Text fontWeight="medium">
-                                                {data.average_score || 'N/A'}
+                                                {data.average_score || 0}
                                             </Text>
                                         </HStack>
                                     </VStack>
