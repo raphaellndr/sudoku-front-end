@@ -1,4 +1,4 @@
-import { VStack, HStack, Box, Separator, Card } from "@chakra-ui/react";
+import { VStack, HStack, Box, Separator } from "@chakra-ui/react";
 
 import SudokuPlayer from "@/components/ui/play-page/sudoku-player";
 import HowToPlayAccordion from "@/components/ui/play-page/explanations/how-to-play-accordion";
@@ -12,7 +12,7 @@ const DesktopLayout = () => {
                     <SudokuPlayer />
                 </Box>
                 <Box flex="1">
-                    <LeaderboardCard />
+                    <Leaderboard />
                 </Box>
             </HStack>
             <Separator />
@@ -20,19 +20,6 @@ const DesktopLayout = () => {
                 <HowToPlayAccordion />
             </Box>
         </VStack>
-    );
-};
-
-const LeaderboardCard = () => {
-    return (
-        <Card.Root shadow="md" maxHeight="500px">
-            <Card.Body>
-                <Card.Title mb="4" textAlign="center">
-                    🏆 Leaderboard 🏆
-                </Card.Title>
-                <Leaderboard />
-            </Card.Body>
-        </Card.Root>
     );
 };
 

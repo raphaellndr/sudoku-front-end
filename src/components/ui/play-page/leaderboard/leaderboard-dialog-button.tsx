@@ -1,4 +1,5 @@
 import { Box, CloseButton, Dialog, Portal } from "@chakra-ui/react";
+import { FaTrophy } from "react-icons/fa";
 
 import LeaderboardButton from "./leaderboard-button";
 import Leaderboard from "./leaderboard";
@@ -34,7 +35,7 @@ const LeaderboardDialogButton: React.FC<LeaderboardDialogButtonProps> = ({
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
                     <Dialog.Content mx={4}>
-                        <Dialog.Title textAlign="center" mt="4">🏆 Leaderboard 🏆</Dialog.Title>
+                        <Dialog.Title textAlign="center" mt="4"><FaTrophy /> Leaderboard <FaTrophy /></Dialog.Title>
                         <Dialog.Header>
                             <Dialog.CloseTrigger asChild>
                                 <CloseButton size="sm" />

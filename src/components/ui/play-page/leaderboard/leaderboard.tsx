@@ -1,81 +1,70 @@
-import { useEffect, useState } from "react";
+import { Flex, Spinner, Table, Text, VStack, Box, HStack } from "@chakra-ui/react";
+import { FaTrophy } from "react-icons/fa";
 
-import { Flex, Spinner, Table } from "@chakra-ui/react";
+import useLeaderboard from "@/hooks/use-leaderboard";
 
-import { createHeaders } from "@/utils/apiUtils";
-import { fetchLeaderboard } from "@/services/usersAPi";
-import { Leaderboard as LeaderboardData } from "@/types/stats";
+import ErrorRow from "./rows/error-row";
+import PlayerDetailRow from "./rows/player-detail-row";
 
-import { ErrorRow, PlayerDetailRow } from "./custom-rows";
-
-interface LeaderboardResponse {
-    count: number;
-    results: LeaderboardData[];
-}
 
 const Leaderboard = () => {
-    const headers = createHeaders();
-
-    const [leaderboardData, setLeaderboardData] = useState<LeaderboardData[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const loadLeaderboard = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            const response = await fetchLeaderboard(headers);
-            const data = await response.json() as LeaderboardResponse;
-
-            setLeaderboardData(data.results);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to load leaderboard");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        loadLeaderboard();
-    }, []);
-
-    const rows = leaderboardData.map((item, index) => (
-        <PlayerDetailRow
-            key={item.user_id}
-            data={item}
-            index={index}
-        />
-    ));
+    const { leaderboardData, loading, error } = useLeaderboard();
 
     if (loading) {
         return (
-            <Flex justify="center" align="center" height="300px">
-                <Spinner size="xl" color="blue.500" />
+            <Flex justify="center" align="center" height="400px">
+                <VStack gap={4}>
+                    <Spinner size="xl" color="blue.500" />
+                    <Text color="gray.600">Loading leaderboard...</Text>
+                </VStack>
             </Flex>
         );
     }
 
     return (
-        <Table.ScrollArea rounded="md" height="400px">
-            <Table.Root size="sm" interactive stickyHeader>
-                <Table.ColumnGroup>
-                    <Table.Column htmlWidth={!error ? "10%" : "100%"} />
-                </Table.ColumnGroup>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.ColumnHeader />
-                        {!error && (
-                            <>
-                                <Table.ColumnHeader>Player</Table.ColumnHeader>
-                                <Table.ColumnHeader textAlign="end">Total Score</Table.ColumnHeader>
-                            </>
+        <Box>
+            <HStack gap={2} mb={4} justify="center">
+                <FaTrophy size={24} color="#3182CE" />
+                <Text fontSize="xl" fontWeight="bold">
+                    Leaderboard
+                </Text>
+            </HStack>
+
+            <Table.ScrollArea
+                rounded="xl"
+                height="500px"
+                boxShadow="sm"
+            >
+                <Table.Root size="md" stickyHeader interactive>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.ColumnHeader w="20%" fontWeight="semibold">
+                                Rank
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader fontWeight="semibold">
+                                Player
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader textAlign="end" fontWeight="semibold">
+                                Score
+                            </Table.ColumnHeader>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {error ? (
+                            <ErrorRow />
+                        ) : (
+                            leaderboardData.map((item, index) => (
+                                <PlayerDetailRow
+                                    key={item.user_id}
+                                    data={item}
+                                    position={index}
+                                />
+                            ))
                         )}
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>{!error ? rows : <ErrorRow />}</Table.Body>
-            </Table.Root>
-        </Table.ScrollArea>
+                    </Table.Body>
+                </Table.Root>
+            </Table.ScrollArea>
+        </Box>
     );
 };
 
