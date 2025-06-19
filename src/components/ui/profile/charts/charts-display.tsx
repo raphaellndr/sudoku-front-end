@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 
 import { ChartsPeriod } from "@/types/stats";
+
 import { ChartDataPoint } from "./charts-body";
 import ChartCard from "./chart-card";
 import { useColorModeValue } from "../../color-mode";
