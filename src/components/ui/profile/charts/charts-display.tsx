@@ -1,19 +1,28 @@
 import { Flex } from "@chakra-ui/react";
 
 import { ChartsPeriod } from "@/types/stats";
-
 import { ChartDataPoint } from "./charts-body";
 import ChartCard from "./chart-card";
+import { useColorModeValue } from "../../color-mode";
 
 const ChartsDisplay = ({ data, period }: { data: ChartDataPoint[], period: ChartsPeriod }) => {
+    // Games colors
+    const gamesPlayedColor = useColorModeValue("black", "white");
+    const winsColor = useColorModeValue("green", "green.400");
+    const lossesColor = useColorModeValue("red", "red.400");
+
+    // Score colors
+    const scoreColor = useColorModeValue("black", "white");
+const averageScoreColor = useColorModeValue("teal.500", "teal.200");
+
     return (
         <Flex direction="column" gap={6}>
             <ChartCard
                 data={data}
                 series={[
-                    { name: "games_played", label: "games played", color: "blue.solid" },
-                    { name: "wins", color: "green.solid" },
-                    { name: "losses", color: "red.solid" }
+                    { name: "games_played", label: "games played", color: gamesPlayedColor },
+                    { name: "wins", color: winsColor },
+                    { name: "losses", color: lossesColor }
                 ]}
                 period={period}
                 heading="Games Played, Wins & Losses"
@@ -22,8 +31,8 @@ const ChartsDisplay = ({ data, period }: { data: ChartDataPoint[], period: Chart
             <ChartCard
                 data={data}
                 series={[
-                    { name: "score", color: "purple.solid" },
-                    { name: "average_score", label: "average score", color: "yellow.solid" }
+                    { name: "score", color: scoreColor },
+                    { name: "average_score", label: "average score", color: averageScoreColor }
                 ]}
                 period={period}
                 heading="Score"
