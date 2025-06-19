@@ -12,7 +12,6 @@ const HowToPlayAccordion = () => {
             multiple
             orientation="horizontal"
             variant="plain"
-            defaultValue={["how-to-play"]}
         >
             <Accordion.Item value="how-to-play">
                 <Accordion.ItemTrigger>
