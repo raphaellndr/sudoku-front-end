@@ -45,7 +45,7 @@ const ChartsBody = () => {
     const headers = createHeaders(session);
 
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const [selectedPeriod, setSelectedPeriod] = useState<ChartsPeriod>("monthly");
+    const [selectedPeriod, setSelectedPeriod] = useState<ChartsPeriod>("daily");
 
     const [chartsData, setChartsData] = useState<ChartsData>({
         daily: { data: null, isLoading: false },
