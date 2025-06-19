@@ -1,4 +1,4 @@
-import { Badge, Card, HStack, Stat } from "@chakra-ui/react";
+import { Badge, Card, HStack, Show, Stat } from "@chakra-ui/react";
 
 interface AverageTimeProps {
     value: number;
@@ -48,14 +48,10 @@ const AverageTime: React.FC<AverageTimeProps> = ({
                                 gap="0"
                                 size="sm"
                             >
-                                <>
-                                    {statHasIncreased ? (
-                                        <Stat.UpIndicator color={evolutionPercentage === 0 ? "gray" : undefined} />
-                                    ) : (
-                                        <Stat.DownIndicator />
-                                    )}
-                                    {evolutionPercentage}%
-                                </>
+                                <Show when={statHasIncreased} fallback={<Stat.UpIndicator color="red" />}>
+                                    <Stat.DownIndicator color={evolutionPercentage === 0 ? "gray" : "green.600"} />
+                                </Show>
+                                {evolutionPercentage}%
                             </Badge>
                         )}
                     </HStack>
