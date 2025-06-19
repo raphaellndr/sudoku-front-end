@@ -13,7 +13,7 @@ const ChartsDisplay = ({ data, period }: { data: ChartDataPoint[], period: Chart
 
     // Score colors
     const scoreColor = useColorModeValue("black", "white");
-const averageScoreColor = useColorModeValue("teal.500", "teal.200");
+    const averageScoreColor = useColorModeValue("teal.500", "teal.200");
 
     return (
         <Flex direction="column" gap={6}>
