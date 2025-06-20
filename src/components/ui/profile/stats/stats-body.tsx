@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { IoBarChartOutline } from "react-icons/io5";
 
 import { useStats } from "@/hooks/use-stats";
+import { StatsPeriodEnum } from "@/enums/stats";
 
 import StatsGrid from "./stats-grid";
 import TooltipIconButton from "../../tooltip-icon-button";
@@ -84,7 +85,7 @@ const StatsBody = () => {
                             </Tabs.Trigger>
                         </Tabs.List>
 
-                        {(['daily', 'weekly', 'monthly', 'yearly', 'allTime'] as const).map((period) => (
+                        {StatsPeriodEnum.options.map((period) => (
                             <Tabs.Content key={period} value={period}>
                                 <StatsGrid
                                     currentStats={statsData[period].current}
