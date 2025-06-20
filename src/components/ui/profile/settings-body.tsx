@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
-import { Accordion, Button, Field, Input, Stack } from "@chakra-ui/react";
+import { Accordion, Button, Card, Field, Heading, Input, Stack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { SettingsFormValues } from "@/types/forms";
@@ -57,25 +57,34 @@ const SettingsBody = () => {
 
     return (
         <Accordion.ItemBody>
-            <form onSubmit={onSubmit}>
-                <Stack gap="4" align="flex-end" maxW="sm">
-                    <Field.Root invalid={!!errors.username}>
-                        <Field.Label>Username</Field.Label>
-                        <Input {...register("username")} placeholder="New username" />
-                        <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
-                    </Field.Root>
+            <Card.Root>
+                <Card.Header>
+                    <Heading size="lg" color="fg.emphasized">
+                        Your Settings
+                    </Heading>
+                </Card.Header>
+                <Card.Body>
+                    <form onSubmit={onSubmit}>
+                        <Stack gap="4" align="flex-end" maxW="sm">
+                            <Field.Root invalid={!!errors.username}>
+                                <Field.Label>Username</Field.Label>
+                                <Input {...register("username")} placeholder="New username" />
+                                <Field.ErrorText>{errors.username?.message}</Field.ErrorText>
+                            </Field.Root>
 
-                    <Field.Root invalid={Boolean(errors.email) && Boolean(emailValue)}>
-                        <Field.Label>Email</Field.Label>
-                        <Input {...register("email")} placeholder="New email" />
-                        {errors.email && emailValue && (
-                            <Field.ErrorText>{errors.email.message}</Field.ErrorText>
-                        )}
-                    </Field.Root>
+                            <Field.Root invalid={Boolean(errors.email) && Boolean(emailValue)}>
+                                <Field.Label>Email</Field.Label>
+                                <Input {...register("email")} placeholder="New email" />
+                                {errors.email && emailValue && (
+                                    <Field.ErrorText>{errors.email.message}</Field.ErrorText>
+                                )}
+                            </Field.Root>
 
-                    <Button type="submit" loading={isSubmitting}>Save changes</Button>
-                </Stack>
-            </form>
+                            <Button type="submit" loading={isSubmitting}>Save changes</Button>
+                        </Stack>
+                    </form>
+                </Card.Body>
+            </Card.Root>
         </Accordion.ItemBody>
     );
 };
