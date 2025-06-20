@@ -21,7 +21,8 @@ export const useStatsEvolution = (
             if (previous === 0 || previous === null) {
                 return current > 0 ? 100 : 0;
             }
-            return ((current - previous) / previous) * 100;
+            var percentage = (current - previous) / previous * 100;
+            return Math.round((percentage + Number.EPSILON) * 100) / 100
         };
 
         const evolution: UserStats = {
