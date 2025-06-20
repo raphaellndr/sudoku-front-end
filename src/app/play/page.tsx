@@ -1,6 +1,6 @@
 "use client";
 
-import { VStack, Box, Flex, Separator } from "@chakra-ui/react";
+import { Box, Flex, Separator } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
 
 import PageHeader from "@/components/ui/play-page/page-header";
