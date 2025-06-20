@@ -25,7 +25,7 @@ export const useGameManager = () => {
     ): GameRecord => {
         const endDate = new Date();
         const score = won ? calculateScore(remainingHints, remainingChecks, cellDeletionCount, timer) : 0;
-        const hintsUsed = won ? MAX_HINTS - remainingHints : MAX_HINTS;
+        const hintsUsed = MAX_HINTS - remainingHints;
 
         return {
             sudoku_id: sudoku.id,
@@ -44,18 +44,15 @@ export const useGameManager = () => {
         };
     }, [startDate]);
 
-    const saveGame = useCallback(async (
-        headers: any,
-        gameData: GameRecord
-    ) => {
+    const saveGame = async (headers: any, gameData: GameRecord) => {
         if (session) {
             await createGame(headers, gameData);
         }
-    }, [session]);
+    };
 
-    const resetStartDate = useCallback(() => {
+    const resetStartDate = () => {
         setStartDate(new Date());
-    }, []);
+    };
 
     return {
         createGameRecord,
