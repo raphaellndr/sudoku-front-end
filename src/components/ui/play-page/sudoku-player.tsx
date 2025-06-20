@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState } from "react";
 
 import { Box, Button, HStack, VStack } from "@chakra-ui/react";
 
@@ -10,6 +10,7 @@ import { useTimer } from "@/hooks/use-timer";
 import { useGameManager } from "@/hooks/use-game-manager";
 import { useSudokuGameFlow } from "@/hooks/use-sudoku-game-flow";
 import { GameStatusEnum } from "@/enums/games";
+import useSudokuPlayerActions from "@/hooks/use-sudoku-player-actions";
 
 import Timer from "./timer";
 import { HintButton } from "./buttons/hint-button";
@@ -89,38 +90,11 @@ const SudokuPlayer = () => {
         });
     }, [grid, sudoku.grid]);
 
-    // Event handlers
-    const handleStartPlaying = () => {
-        startPlaying(sudoku, setSudoku, headers, validateSudokuGrid);
-    };
-
-    const handleAbortButton = () => {
-        if (sudoku.id) {
-            abortGame(sudoku.id, headers);
-        }
-    };
-
-    const handleGiveUpButton = useCallback(async () => {
-        const gameData = createGameRecord(
-            sudoku, grid, remainingHints, remainingChecks,
-            cellDeletionCount, timer, false, GameStatusEnum.Values.abandoned
-        );
-        await saveGame(headers, gameData);
-        revealSolution();
-        resetTimer();
-        completeGame(false);
-    }, [sudoku, grid, remainingHints, remainingChecks, cellDeletionCount, timer, headers, createGameRecord, saveGame, revealSolution, resetTimer, completeGame]);
-
-    const handleStartNewPuzzle = () => {
-        clearSudokuGrid();
-        startNewGame();
-        resetTimer();
-    };
-
-    const handleRestartPuzzle = () => {
-        resetPlayerGrid();
-        restartTimer();
-    };
+    const actions = useSudokuPlayerActions({
+        sudoku, setSudoku, grid, remainingHints, remainingChecks, cellDeletionCount, timer, headers,
+        createGameRecord, saveGame, revealSolution, resetTimer, completeGame, startPlaying, abortGame,
+        clearSudokuGrid, startNewGame, resetPlayerGrid, restartTimer, validateSudokuGrid
+    });
 
     // Render grid based on mode
     const renderGrid = () => {
@@ -172,7 +146,7 @@ const SudokuPlayer = () => {
                                     isPaused={isPaused}
                                     isCheckModeActive={isCheckModeActive}
                                 />
-                                <Button variant="solid" onClick={handleRestartPuzzle}>
+                                <Button variant="solid" onClick={actions.handleRestartPuzzle}>
                                     Restart
                                 </Button>
                             </VStack>
@@ -180,10 +154,10 @@ const SudokuPlayer = () => {
                     </HStack>
                     {mode === "play" && (
                         <HStack gap="4">
-                            <Button colorPalette="red" variant="outline" onClick={handleStartNewPuzzle}>
+                            <Button colorPalette="red" variant="outline" onClick={actions.handleStartNewPuzzle}>
                                 New puzzle
                             </Button>
-                            <Button colorPalette="red" variant="solid" onClick={handleGiveUpButton}>
+                            <Button colorPalette="red" variant="solid" onClick={actions.handleGiveUpButton}>
                                 Give up
                             </Button>
                         </HStack>
@@ -198,7 +172,7 @@ const SudokuPlayer = () => {
                             </Button>
                         )}
                         {!isLoading && (
-                            <Button disabled={!/[1-9]/.test(sudoku.grid)} onClick={handleStartPlaying}>
+                            <Button disabled={!/[1-9]/.test(sudoku.grid)} onClick={actions.handleStartPlaying}>
                                 Start playing
                             </Button>
                         )}
@@ -207,7 +181,7 @@ const SudokuPlayer = () => {
 
                 {mode === "display" && isLoading && (
                     <HStack gap={2}>
-                        <Button variant="outline" colorPalette="red" onClick={handleAbortButton}>
+                        <Button variant="outline" colorPalette="red" onClick={actions.handleAbortButton}>
                             Cancel
                         </Button>
                     </HStack>
@@ -220,7 +194,7 @@ const SudokuPlayer = () => {
                         </Button>
                     )}
                     {mode === "completed" && (
-                        <Button variant="solid" onClick={handleStartNewPuzzle}>
+                        <Button variant="solid" onClick={actions.handleStartNewPuzzle}>
                             New puzzle
                         </Button>
                     )}
@@ -232,7 +206,7 @@ const SudokuPlayer = () => {
                 setIsDialogOpen={setIsDialogOpen}
                 timer={timer}
                 remainingHints={remainingHints}
-                clearSudokuGrid={handleStartNewPuzzle}
+                clearSudokuGrid={actions.handleStartNewPuzzle}
                 cellDeletionCount={cellDeletionCount}
                 won={isGameWon}
             />
