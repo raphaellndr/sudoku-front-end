@@ -1,6 +1,7 @@
 import { Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
 
 import { StatsPeriod, UserStats } from "@/types/stats";
+import { useStatsEvolution } from "@/hooks/use-stats-evolution";
 
 import AverageTime from "./average-time";
 import GamesWon from "./games-won";
@@ -8,7 +9,6 @@ import WinRate from "./win-rate";
 import GamesPlayed from "./games-played";
 import AverageScore from "./average-score";
 import TotalScore from "./total-score";
-import { useStatsEvolution } from "./use-stats-evolution";
 
 interface StatsGridProps {
     currentStats: UserStats | null;
