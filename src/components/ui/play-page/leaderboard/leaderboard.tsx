@@ -4,10 +4,14 @@ import useLeaderboard from "@/hooks/use-leaderboard";
 
 import ErrorRow from "./rows/error-row";
 import PlayerDetailRow from "./rows/player-detail-row";
+import { useColorMode, useColorModeValue } from "../../color-mode";
 
 
 const Leaderboard = () => {
     const { leaderboardData, loading, error } = useLeaderboard();
+
+    const { colorMode } = useColorMode();
+    const borderColor = useColorModeValue("white", "undefined");
 
     if (loading) {
         return (
@@ -25,6 +29,8 @@ const Leaderboard = () => {
             rounded="xl"
             maxHeight="500px"
             boxShadow="sm"
+            border={colorMode === "dark" ? "1px solid" : "none"}
+            borderColor={borderColor}
         >
             <Table.Root size="md" stickyHeader interactive>
                 <Table.Header>
