@@ -21,7 +21,7 @@ import {
 } from "@/services/meApi";
 import { createHeaders } from "@/utils/apiUtils";
 import { getWeekNumber } from "@/utils/date";
-import { StatsPeriod, UserStats } from "@/types/stats";
+import { PeriodStats, StatsData, StatsPeriod, UserStats } from "@/types/stats";
 import { PreviousDateParams } from "@/types/dates";
 
 import StatsGrid from "./stats-grid";
@@ -71,20 +71,6 @@ const getPreviousDateParams = (
         default:
             return {};
     }
-};
-
-interface PeriodStats {
-    current: UserStats | null;
-    previous: UserStats | null;
-    isLoading: boolean;
-};
-
-interface StatsData {
-    daily: PeriodStats;
-    weekly: PeriodStats;
-    monthly: PeriodStats;
-    yearly: PeriodStats;
-    allTime: PeriodStats;
 };
 
 const StatsBody = () => {

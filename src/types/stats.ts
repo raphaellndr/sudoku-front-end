@@ -7,6 +7,18 @@ import { ChartsPeriodEnum, StatsPeriodEnum } from "@/enums/stats";
 export type UserStats = z.infer<typeof UserStatsSchema>;
 export type StatsPeriod = z.infer<typeof StatsPeriodEnum>;
 export type ChartsPeriod = z.infer<typeof ChartsPeriodEnum>;
+export interface PeriodStats {
+    current: UserStats | null;
+    previous: UserStats | null;
+    isLoading: boolean;
+};
+export interface StatsData {
+    daily: PeriodStats;
+    weekly: PeriodStats;
+    monthly: PeriodStats;
+    yearly: PeriodStats;
+    allTime: PeriodStats;
+};
 
 export type Leaderboard = z.infer<typeof LeaderboardSchema>;
 export interface LeaderboardResponse {
