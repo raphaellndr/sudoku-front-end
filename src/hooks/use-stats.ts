@@ -52,7 +52,7 @@ const getPreviousDateParams = (period: StatsPeriod): PreviousDateParams | {} => 
     }
 };
 
-export const useStats = () => {
+const useStats = () => {
     const { data: session } = useSession();
     const headers = createHeaders(session);
 
@@ -205,3 +205,5 @@ export const useStats = () => {
         handleRefresh
     };
 };
+
+export default useStats;
