@@ -10,7 +10,7 @@ import { LuRefreshCw, LuCalendarDays, LuCalendar, LuTrendingUp, LuClock } from "
 import { useSession } from "next-auth/react";
 import { IoBarChartOutline } from "react-icons/io5";
 
-import { useStats } from "@/hooks/use-stats";
+import useStats from "@/hooks/use-stats";
 import { StatsPeriodEnum } from "@/enums/stats";
 
 import StatsGrid from "./stats-grid";
