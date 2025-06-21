@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { createHeaders } from "@/utils/apiUtils";
 import { fetchLeaderboard } from "@/services/usersAPi";
-import { Leaderboard as LeaderboardData, LeaderboardResponse } from "@/types/stats";
+import { Leaderboard as LeaderboardData, LeaderboardResponse } from "@/types/leaderboard";
 
 const useLeaderboard = () => {
     const [leaderboardData, setLeaderboardData] = useState<LeaderboardData[]>([]);

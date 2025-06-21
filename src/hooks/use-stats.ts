@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import {
@@ -54,7 +54,7 @@ const getPreviousDateParams = (period: StatsPeriod): PreviousDateParams | {} => 
 
 const useStats = () => {
     const { data: session } = useSession();
-    const headers = createHeaders(session);
+    const headers = useMemo(() => createHeaders(session), [session]);
 
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const [selectedPeriod, setSelectedPeriod] = useState<StatsPeriod>("monthly");

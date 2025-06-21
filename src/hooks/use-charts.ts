@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useSession } from "next-auth/react";
 
@@ -12,7 +12,7 @@ import { ChartDataPoint, ChartsData, ChartsPeriod, PeriodChartData } from "@/typ
 
 const useCharts = () => {
     const { data: session, status } = useSession();
-    const headers = createHeaders(session);
+    const headers = useMemo(() => createHeaders(session), [session]);
 
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
     const [selectedPeriod, setSelectedPeriod] = useState<ChartsPeriod>("daily");

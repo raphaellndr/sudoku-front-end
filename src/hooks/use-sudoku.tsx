@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
 import { useSession } from "next-auth/react";
 
 import { Sudoku } from "@/types/sudoku";
@@ -20,7 +21,7 @@ export const defaultSudoku: Sudoku = {
 export const useSudoku = () => {
     const { data: session } = useSession();
     const [sudoku, setSudoku] = useState<Sudoku>(defaultSudoku);
-    const headers = createHeaders(session);
+    const headers = useMemo(() => createHeaders(session), [session]);
 
     /**
      * Handles cell change in the grid
