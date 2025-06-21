@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
@@ -16,7 +16,7 @@ import { filterNonEmptyFields } from "@/utils/formUtils";
 const SettingsBody = () => {
     const { data: session, status, update } = useSession();
     const router = useRouter();
-    const headers = createHeaders(session);
+    const headers = useMemo(() => createHeaders(session), [session]);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
