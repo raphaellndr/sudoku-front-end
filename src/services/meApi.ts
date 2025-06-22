@@ -92,18 +92,36 @@ export const fullUpdateCurrentUser = async (
     }
 };
 
+interface PaginationParams {
+    page?: number;
+    page_size?: number;
+};
+
 /**
  * Fetches the games data for the current user.
  *
  * @param {HeadersInit} headers - The headers to be included in the API request.
+ * @param {PaginationParams} params - Optional pagination parameters (page and page_size).
  * @returns {Promise<Response>} - A promise that resolves to the response.
  * @throws {Error} - Throws an error if the request fails.
  */
 export const fetchCurrentUserGames = async (
     headers: HeadersInit,
+    params?: PaginationParams
 ): Promise<Response> => {
     try {
-        const response = await fetch(`${ME_API_BASE_URL}games/`, {
+        // Build URL with optional query parameters
+        const url = new URL(`${ME_API_BASE_URL}games/`);
+
+        if (params?.page !== undefined) {
+            url.searchParams.append("page", params.page.toString());
+        }
+
+        if (params?.page_size !== undefined) {
+            url.searchParams.append("page_size", params.page_size.toString());
+        }
+
+        const response = await fetch(url.toString(), {
             method: "GET",
             headers,
         });
