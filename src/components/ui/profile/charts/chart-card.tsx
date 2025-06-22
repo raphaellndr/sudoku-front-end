@@ -2,9 +2,7 @@ import { Chart, useChart } from "@chakra-ui/charts";
 import { Card, Heading } from "@chakra-ui/react";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 
-import { ChartsPeriod } from "@/types/stats";
-
-import { ChartDataPoint } from "./charts-body";
+import { ChartsPeriod, ChartDataPoint } from "@/types/charts";
 
 interface ChartCardProps {
     data: ChartDataPoint[];
