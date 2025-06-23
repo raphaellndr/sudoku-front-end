@@ -8,17 +8,7 @@ import { useBreakpointValue } from "@chakra-ui/react";
 import DesktopLayout from "./desktop-layout";
 import MobileLayout from "./mobile-layout";
 
-interface MainContentProps {
-    headerHeight: number;
-    isLeaderboardOpen: boolean;
-    setIsLeaderboardOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const MainContent = ({
-    headerHeight,
-    isLeaderboardOpen,
-    setIsLeaderboardOpen
-}: MainContentProps) => {
+const MainContent = () => {
     const { status } = useSession();
     const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
@@ -37,11 +27,7 @@ const MainContent = ({
             {isLargeScreen ? (
                 <DesktopLayout />
             ) : (
-                <MobileLayout
-                    headerHeight={headerHeight}
-                    isLeaderboardOpen={isLeaderboardOpen}
-                    setIsLeaderboardOpen={setIsLeaderboardOpen}
-                />
+                <MobileLayout />
             )}
         </Container>
     );

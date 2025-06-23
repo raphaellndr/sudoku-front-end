@@ -1,36 +1,15 @@
-import { Box, CloseButton, Container, Dialog, HStack, Portal } from "@chakra-ui/react";
+import { CloseButton, Container, Dialog, HStack, Portal } from "@chakra-ui/react";
 import { FaTrophy } from "react-icons/fa";
 
 import LeaderboardButton from "./leaderboard-button";
-import Leaderboard from "./leaderboard";
+import Leaderboard from "../leaderboard";
 
-interface LeaderboardDialogButtonProps {
-    isOpen: boolean;
-    setIsLeaderboardOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    headerHeight: number;
-};
-
-const LeaderboardDialogButton: React.FC<LeaderboardDialogButtonProps> = ({
-    isOpen,
-    setIsLeaderboardOpen,
-    headerHeight,
-}) => {
+const LeaderboardDialogButton = () => {
     return (
-        <Dialog.Root
-            open={isOpen}
-            onOpenChange={(details) => setIsLeaderboardOpen(details.open)}
-        >
-            <Box
-                position="fixed"
-                top={`${headerHeight + 16}px`}
-                left={4}
-                zIndex="docked"
-            >
-                <LeaderboardButton
-                    onClick={() => setIsLeaderboardOpen(true)}
-                />
-            </Box>
-
+        <Dialog.Root>
+            <Dialog.Trigger asChild>
+                <LeaderboardButton />
+            </Dialog.Trigger>
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>

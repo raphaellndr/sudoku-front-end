@@ -7,7 +7,7 @@ import { Leaderboard } from "@/types/leaderboard";
 import PlayerAvatar from "./player-avatar"
 import RankDisplay from "../rank-display";
 import ScoreDisplay from "../score-display";
-import PlayerDetailDialog from "../dialog/player-detail-dialog";
+import PlayerDetailDialog from "../player-dialog/player-detail-dialog";
 
 interface PlayerDetailRowProps {
     data: Leaderboard;

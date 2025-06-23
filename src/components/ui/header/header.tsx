@@ -1,17 +1,13 @@
-import { signIn, signOut, useSession } from "next-auth/react";
-import {
-    Box,
-    Flex,
-    Button,
-    HStack,
-} from "@chakra-ui/react";
-import { IoMdExit } from "react-icons/io";
+import { useSession } from "next-auth/react";
+import { Box, Flex, HStack } from "@chakra-ui/react";
 
-import HeaderButton from "./header-button";
 import CustomDrawer from "./custom-drawer";
-import TooltipIconButton from "../tooltip-icon-button";
+import SignOutButton from "./buttons/sign-out-button";
+import HeaderButton from "./buttons/header-button";
+import SignInButton from "./buttons/sign-in-button";
 import { ColorModeButton } from "../color-mode";
 import { SudokuArenaButton } from "../sudoku-arena-button";
+import LeaderboardDialogButton from "./leaderboard/dialog/leaderboard-dialog";
 
 const Header: React.FC = () => {
     const { data: session } = useSession();
@@ -46,24 +42,13 @@ const Header: React.FC = () => {
                     </HStack>
 
                     <HStack>
+                        <LeaderboardDialogButton />
                         <ColorModeButton />
 
                         {session ? (
-                            <TooltipIconButton
-                                leftIcon={<IoMdExit />}
-                                tooltipText="Sign out"
-                                variant="ghost"
-                                display={{ base: "none", md: "inline-flex" }}
-                                onClick={() => signOut()}
-                            />
+                            <SignOutButton />
                         ) : (
-                            <Button
-                                variant="outline"
-                                display={{ base: "none", md: "inline-flex" }}
-                                onClick={() => signIn(undefined, { callbackUrl: "/" })}
-                            >
-                                Sign in
-                            </Button>
+                            <SignInButton />
                         )}
 
                         <CustomDrawer />

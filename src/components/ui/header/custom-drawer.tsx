@@ -4,7 +4,7 @@ import { signOut, useSession } from "next-auth/react";
 import { CloseButton, Drawer, IconButton, Portal, VStack } from "@chakra-ui/react";
 import { RxHamburgerMenu } from "react-icons/rx";
 
-import DrawerButton from "./drawer-button";
+import DrawerButton from "./buttons/drawer-button";
 
 const CustomDrawer = () => {
     const { data: session } = useSession();
