@@ -6,7 +6,7 @@ import {
     Avatar,
 } from "@chakra-ui/react";
 
-import { Leaderboard } from "@/types/stats";
+import { Leaderboard } from "@/types/leaderboard";
 
 import PlayerStats from "./player-stats";
 import RankDisplay from "../rank-display";

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Table, HStack } from "@chakra-ui/react";
 
-import { Leaderboard } from "@/types/stats";
+import { Leaderboard } from "@/types/leaderboard";
 
 import PlayerAvatar from "./player-avatar"
 import RankDisplay from "../rank-display";

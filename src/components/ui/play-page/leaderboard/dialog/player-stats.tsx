@@ -1,7 +1,7 @@
 import { VStack, HStack, Text, Separator, FormatNumber } from "@chakra-ui/react";
 
 import { formatTime } from "@/utils/time";
-import { Leaderboard } from "@/types/stats";
+import { Leaderboard } from "@/types/leaderboard";
 
 import StatCard from "./stat-card";
 
