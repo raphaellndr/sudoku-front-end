@@ -5,8 +5,8 @@ import { Table, HStack } from "@chakra-ui/react";
 import { Leaderboard } from "@/types/leaderboard";
 
 import PlayerAvatar from "./player-avatar"
+import ScoreDisplay from "./score-display";
 import RankDisplay from "../rank-display";
-import ScoreDisplay from "../score-display";
 import PlayerDetailDialog from "../player-dialog/player-detail-dialog";
 
 interface PlayerDetailRowProps {
