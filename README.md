@@ -96,15 +96,6 @@ Describes my background, the inspiration, the journey and the purpose of the pro
 
 ---
 
-### 🏆 Leaderboard (`/leaderboard`)
-
-Displays top players ranked by total points.
-
-📸 _Screenshots:_
-- ![Leaderboard screenshot](public/screenshots/leaderboard.png)
-
----
-
 ### 🧪 Image-Based Sudoku Detection (Experimental)
 
 A new feature is currently in development that allows users to **detect and autofill Sudoku grids from images**.
@@ -139,6 +130,7 @@ A new feature is currently in development that allows users to **detect and auto
 
 - Clickable logo that redirects to the landing page.
 - Navigation: **Play**, **Solver**, **About**, **Leaderboard**.
+- Leaderboard that displays top players ranked by total points.
 - **Dark/Light Mode** toggle.
 - **Sign In / Sign Out** button.
 - **Profile** (only if authenticated).
