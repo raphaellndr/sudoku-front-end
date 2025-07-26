@@ -27,7 +27,7 @@ The landing page provides a quick visual introduction to the website. It include
 - A step-by-step explanation of how the platform works.
 
 📸 _Screenshots:_
-- ![Landing page screenshot](public/screenshots/landing.png)
+- ![Landing page screenshot](public/screenshots/landing_page.png)
 
 ---
 
@@ -36,8 +36,8 @@ The landing page provides a quick visual introduction to the website. It include
 Log in or register with credentials or Google using **NextAuth**.
 
 📸 _Screenshots:_
-- ![Sign in screenshot](public/screenshots/signin.png)
-- ![Sign up screenshot](public/screenshots/signup.png)
+- ![Sign in screenshot](public/screenshots/signin_page.png)
+- ![Sign up screenshot](public/screenshots/signup_page.png)
 
 ---
 
@@ -59,7 +59,15 @@ The page also includes:
 - 📏 A clear explanation of classic Sudoku rules
 
 📸 _Screenshots:_
-- ![Play page screenshot](public/screenshots/play.png)
+- ![Play page screenshot](public/screenshots/play_page.png)
+- ![Play page dark screenshot](public/screenshots/play_page_dark.png)
+- ![How to play screenshot](public/screenshots/how_to_play.png)
+- ![Rules screenshot](public/screenshots/sudoku_rules.png)
+- ![Play page game on screenshot](public/screenshots/play_page_game_on.png)
+- ![Play page game paused screenshot](public/screenshots/play_page_game_paused.png)
+- ![Play page hint screenshot](public/screenshots/play_page_hint.png)
+- ![Play page verify screenshot](public/screenshots/play_page_verify.png)
+- 
 
 ---
 
@@ -71,7 +79,7 @@ Solve custom Sudoku puzzles by:
 - Backend-powered algorithms
 
 📸 _Screenshots:_
-- ![Solver page screenshot](public/screenshots/solver.png)
+- ![Solver page screenshot](public/screenshots/solver_page.png)
 
 ---
 
@@ -83,7 +91,12 @@ View your:
 - User settings
 
 📸 _Screenshots:_
-- ![Profile page screenshot](public/screenshots/profile.png)
+- ![Profile page screenshot](public/screenshots/profile_page.png)
+- ![Games history screenshot](public/screenshots/games_history.png)
+- ![Games statistics screenshot](public/screenshots/games_statistics.png)
+- ![Games charts screenshot](public/screenshots/games_charts.png)
+- ![Games charts score screenshot](public/screenshots/games_score_charts.png)
+- ![Settings screenshot](public/screenshots/settings.png)
 
 ---
 
@@ -92,7 +105,7 @@ View your:
 Describes my background, the inspiration, the journey and the purpose of the project.
 
 📸 _Screenshots:_
-- ![About page screenshot](public/screenshots/about.png)
+- ![About page screenshot](public/screenshots/about_page.png)
 
 ---
 
@@ -135,11 +148,18 @@ A new feature is currently in development that allows users to **detect and auto
 - **Sign In / Sign Out** button.
 - **Profile** (only if authenticated).
 
+📸 _Screenshots:_
+- ![Header screenshot](public/screenshots/header.png)
+- ![Leaderboard screenshot](public/screenshots/leaderboard.png)
+
 #### Footer
 
 - 🔗 Source Code (GitHub)
 - 💼 LinkedIn
 - 📧 Email contact
+
+📸 _Screenshots:_
+- ![Footer screenshot](public/screenshots/footer.png)
 
 ---
 
