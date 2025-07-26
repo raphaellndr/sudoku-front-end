@@ -29,6 +29,9 @@ The landing page provides a quick visual introduction to the website. It include
 📸 _Screenshots:_
 - ![Landing page screenshot](public/screenshots/landing_page.png)
 
+Dark mode is also available. Example:
+- ![Landing page dark screenshot](public/screenshots/landing_page_dark.png)
+
 ---
 
 ### 🔐 Sign In (`/signin`) / Sign Up (`/signup`)
@@ -60,7 +63,6 @@ The page also includes:
 
 📸 _Screenshots:_
 - ![Play page screenshot](public/screenshots/play_page.png)
-- ![Play page dark screenshot](public/screenshots/play_page_dark.png)
 - ![How to play screenshot](public/screenshots/how_to_play.png)
 - ![Rules screenshot](public/screenshots/sudoku_rules.png)
 - ![Play page game on screenshot](public/screenshots/play_page_game_on.png)
